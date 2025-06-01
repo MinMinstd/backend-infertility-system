@@ -11,7 +11,7 @@
 
         // TreatmentRoadmap N-1 Service
         public int ServiceId { get; set; }
-        public Service? Service { get; set; }
+        public ServiceDB? Service { get; set; }
 
         // TreatmentRoadmap 1-1 MedicalRecord
         public MedicalRecord? MedicalRecord { get; set; }

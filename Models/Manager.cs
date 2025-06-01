@@ -18,7 +18,7 @@
         public List<Order>? Orders { get; set; }
 
         // Manager 1-N Service
-        public List<Service>? Services { get; set; }
+        public List<ServiceDB>? Services { get; set; }
 
         // Manager 1-N DoctorSchedule
         public List<DoctorSchedule>? DoctorSchedules { get; set; }

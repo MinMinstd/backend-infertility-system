@@ -12,7 +12,7 @@ using infertility_system.Data;
 namespace infertility_system.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250601094534_Init")]
+    [Migration("20250601172937_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -325,7 +325,7 @@ namespace infertility_system.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.Property<int>("ServiceId")
+                    b.Property<int>("ServiceDBId")
                         .HasColumnType("int");
 
                     b.HasKey("FeedbackId");
@@ -334,7 +334,7 @@ namespace infertility_system.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("ServiceDBId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -414,7 +414,7 @@ namespace infertility_system.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MedicalRecordDetailId"));
 
-                    b.Property<int?>("ConsulationResultId")
+                    b.Property<int>("ConsulationResultId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("Date")
@@ -425,9 +425,6 @@ namespace infertility_system.Migrations
 
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ResultId")
-                        .HasColumnType("int");
 
                     b.Property<string>("TestResult")
                         .HasColumnType("nvarchar(max)");
@@ -621,13 +618,13 @@ namespace infertility_system.Migrations
                     b.ToTable("PrescriptionDetails");
                 });
 
-            modelBuilder.Entity("infertility_system.Models.Service", b =>
+            modelBuilder.Entity("infertility_system.Models.ServiceDB", b =>
                 {
-                    b.Property<int>("ServiceId")
+                    b.Property<int>("ServiceDBId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceDBId"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -641,7 +638,7 @@ namespace infertility_system.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("ServiceId");
+                    b.HasKey("ServiceDBId");
 
                     b.HasIndex("ManagerId");
 
@@ -668,13 +665,10 @@ namespace infertility_system.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("RoadId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Stage")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TreatmentRoadmapId")
+                    b.Property<int>("TreatmentRoadmapId")
                         .HasColumnType("int");
 
                     b.HasKey("TreatmentResultId");
@@ -806,7 +800,7 @@ namespace infertility_system.Migrations
             modelBuilder.Entity("infertility_system.Models.DoctorDegree", b =>
                 {
                     b.HasOne("infertility_system.Models.Doctor", "Doctor")
-                        .WithMany("Degrees")
+                        .WithMany("DoctorDegrees")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -858,10 +852,10 @@ namespace infertility_system.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("infertility_system.Models.Service", "Service")
+                    b.HasOne("infertility_system.Models.ServiceDB", "Service")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ServiceDBId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -902,7 +896,9 @@ namespace infertility_system.Migrations
                 {
                     b.HasOne("infertility_system.Models.ConsulationResult", "ConsulationResult")
                         .WithMany("MedicalRecordDetails")
-                        .HasForeignKey("ConsulationResultId");
+                        .HasForeignKey("ConsulationResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("infertility_system.Models.MedicalRecord", "MedicalRecord")
                         .WithMany("MedicalRecordDetails")
@@ -911,9 +907,9 @@ namespace infertility_system.Migrations
                         .IsRequired();
 
                     b.HasOne("infertility_system.Models.TreatmentResult", "TreatmentResult")
-                        .WithMany()
+                        .WithMany("MedicalRecordDetails")
                         .HasForeignKey("TreatmentResultId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ConsulationResult");
@@ -934,13 +930,13 @@ namespace infertility_system.Migrations
                     b.HasOne("infertility_system.Models.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("infertility_system.Models.Manager", "Manager")
                         .WithMany("Orders")
                         .HasForeignKey("ManagerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Booking");
@@ -961,10 +957,10 @@ namespace infertility_system.Migrations
                     b.HasOne("infertility_system.Models.Order", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("infertility_system.Models.Service", "Service")
+                    b.HasOne("infertility_system.Models.ServiceDB", "Service")
                         .WithMany("OrderDetails")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -988,7 +984,7 @@ namespace infertility_system.Migrations
                     b.HasOne("infertility_system.Models.TreatmentRoadmap", "TreatmentRoadmap")
                         .WithOne("Payment")
                         .HasForeignKey("infertility_system.Models.Payment", "TreatmentRoadmapId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
@@ -1018,7 +1014,7 @@ namespace infertility_system.Migrations
                     b.Navigation("Prescription");
                 });
 
-            modelBuilder.Entity("infertility_system.Models.Service", b =>
+            modelBuilder.Entity("infertility_system.Models.ServiceDB", b =>
                 {
                     b.HasOne("infertility_system.Models.Manager", "Manager")
                         .WithMany("Services")
@@ -1033,14 +1029,16 @@ namespace infertility_system.Migrations
                 {
                     b.HasOne("infertility_system.Models.TreatmentRoadmap", "TreatmentRoadmap")
                         .WithMany("TreatmentResults")
-                        .HasForeignKey("TreatmentRoadmapId");
+                        .HasForeignKey("TreatmentRoadmapId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("TreatmentRoadmap");
                 });
 
             modelBuilder.Entity("infertility_system.Models.TreatmentRoadmap", b =>
                 {
-                    b.HasOne("infertility_system.Models.Service", "Service")
+                    b.HasOne("infertility_system.Models.ServiceDB", "Service")
                         .WithMany("TreatmentRoadmaps")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1106,7 +1104,7 @@ namespace infertility_system.Migrations
 
             modelBuilder.Entity("infertility_system.Models.Doctor", b =>
                 {
-                    b.Navigation("Degrees");
+                    b.Navigation("DoctorDegrees");
 
                     b.Navigation("DoctorSchedules");
 
@@ -1148,7 +1146,7 @@ namespace infertility_system.Migrations
                     b.Navigation("PrescriptionDetails");
                 });
 
-            modelBuilder.Entity("infertility_system.Models.Service", b =>
+            modelBuilder.Entity("infertility_system.Models.ServiceDB", b =>
                 {
                     b.Navigation("Feedbacks");
 
@@ -1159,6 +1157,8 @@ namespace infertility_system.Migrations
 
             modelBuilder.Entity("infertility_system.Models.TreatmentResult", b =>
                 {
+                    b.Navigation("MedicalRecordDetails");
+
                     b.Navigation("Prescriptions");
 
                     b.Navigation("TypeTest");

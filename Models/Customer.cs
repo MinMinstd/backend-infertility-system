@@ -13,7 +13,7 @@
         // Customer 1-N Embryo
         public List<Embryo>? Embryos { get; set; }
 
-        // Customer 1-N Doctor
+        // Customer 1-N Booking
         public List<Booking>? Bookings { get; set; }
 
         // Customer 1-N Feedback
