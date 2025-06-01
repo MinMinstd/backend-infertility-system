@@ -1,0 +1,23 @@
+﻿namespace infertility_system.Models
+{
+    public class MedicalRecordDetail
+    {
+        public int MedicalRecordDetailId { get; set; }
+        public DateOnly Date { get; set; }
+        public string? TestResult { get; set; }
+        public string? Note { get; set; } 
+        public string? Type { get; set; }
+
+        // MedicalRecordDetail N-1 MedicalRecord
+        public int MedicalRecordId { get; set; }
+        public MedicalRecord? MedicalRecord { get; set; }
+
+        // MedicalRecordDetail N-1 ConsulationResult
+        public int ResultId { get; set; }
+        public ConsulationResult? ConsulationResult { get; set; }
+
+        // MedicalRecordDetail N-1 TreatmentResult
+        public int TreatmentResultId { get; set; }
+        public TreatmentResult? TreatmentResult { get; set; }
+    }
+}
