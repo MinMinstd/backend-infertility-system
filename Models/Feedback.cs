@@ -1,0 +1,22 @@
+﻿namespace infertility_system.Models
+{
+    public class Feedback
+    {
+        public int FeedbackId { get; set; }
+        public DateOnly Date { get; set; }
+        public string? Comments { get; set; }
+        public int Rating { get; set; }
+
+        // Feedback N-1 Customer
+        public int CustomerId { get; set; }
+        public Customer? Customer { get; set; }
+
+        // Feedback N-1 Service
+        public int ServiceId { get; set; }
+        public Service? Service { get; set; }
+
+        // Feedback N-1 Manager
+        public int ManagerId { get; set; }
+        public Manager? Manager { get; set; }
+    }
+}
