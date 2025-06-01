@@ -9,7 +9,7 @@
         public int Experience { get; set; }
 
         // Doctor 1-N DoctorDegree
-        public List<DoctorDegree>? Degrees { get; set; }
+        public List<DoctorDegree>? DoctorDegrees { get; set; }
 
         // Doctor 1-N DoctorSchedule
         public List<DoctorSchedule>? DoctorSchedules { get; set; }

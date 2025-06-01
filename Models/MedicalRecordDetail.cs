@@ -13,7 +13,7 @@
         public MedicalRecord? MedicalRecord { get; set; }
 
         // MedicalRecordDetail N-1 ConsulationResult
-        public int ResultId { get; set; }
+        public int ConsulationResultId { get; set; }
         public ConsulationResult? ConsulationResult { get; set; }
 
         // MedicalRecordDetail N-1 TreatmentResult

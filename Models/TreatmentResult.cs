@@ -10,7 +10,7 @@
         public decimal Price { get; set; }
 
         // TreatmentResult N-1 TreatementRoadmap
-        public int RoadId { get; set; }
+        public int TreatmentRoadmapId { get; set; }
         public TreatmentRoadmap? TreatmentRoadmap { get; set; }
 
         // TreatmentResult 1-N TypeTest

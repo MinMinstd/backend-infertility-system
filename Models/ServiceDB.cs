@@ -1,8 +1,8 @@
 ﻿namespace infertility_system.Models
 {
-    public class Service
+    public class ServiceDB
     {
-        public int ServiceId { get; set; }
+        public int ServiceDBId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public decimal Price { get; set; }

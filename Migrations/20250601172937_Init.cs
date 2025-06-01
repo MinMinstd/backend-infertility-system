@@ -208,7 +208,7 @@ namespace infertility_system.Migrations
                 name: "Services",
                 columns: table => new
                 {
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                    ServiceDBId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -217,7 +217,7 @@ namespace infertility_system.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Services", x => x.ServiceId);
+                    table.PrimaryKey("PK_Services", x => x.ServiceDBId);
                     table.ForeignKey(
                         name: "FK_Services_Managers_ManagerId",
                         column: x => x.ManagerId,
@@ -237,8 +237,8 @@ namespace infertility_system.Migrations
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    ConsulationRegistrationId = table.Column<int>(type: "int", nullable: false),
-                    DoctorScheduleId = table.Column<int>(type: "int", nullable: false)
+                    DoctorScheduleId = table.Column<int>(type: "int", nullable: false),
+                    ConsulationRegistrationId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,7 +273,7 @@ namespace infertility_system.Migrations
                     Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false),
+                    ServiceDBId = table.Column<int>(type: "int", nullable: false),
                     ManagerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -292,11 +292,10 @@ namespace infertility_system.Migrations
                         principalColumn: "ManagerId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_Services_ServiceId",
-                        column: x => x.ServiceId,
+                        name: "FK_Feedbacks_Services_ServiceDBId",
+                        column: x => x.ServiceDBId,
                         principalTable: "Services",
-                        principalColumn: "ServiceId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ServiceDBId");
                 });
 
             migrationBuilder.CreateTable(
@@ -319,7 +318,7 @@ namespace infertility_system.Migrations
                         name: "FK_TreatmentRoadmaps_Services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Services",
-                        principalColumn: "ServiceId",
+                        principalColumn: "ServiceDBId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -335,8 +334,8 @@ namespace infertility_system.Migrations
                     Wife = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Husband = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false),
-                    BookingId = table.Column<int>(type: "int", nullable: false)
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    ManagerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -351,14 +350,12 @@ namespace infertility_system.Migrations
                         name: "FK_Orders_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "CustomerId");
                     table.ForeignKey(
                         name: "FK_Orders_Managers_ManagerId",
                         column: x => x.ManagerId,
                         principalTable: "Managers",
-                        principalColumn: "ManagerId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ManagerId");
                 });
 
             migrationBuilder.CreateTable(
@@ -409,8 +406,7 @@ namespace infertility_system.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DurationDay = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    RoadId = table.Column<int>(type: "int", nullable: false),
-                    TreatmentRoadmapId = table.Column<int>(type: "int", nullable: true)
+                    TreatmentRoadmapId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -419,7 +415,8 @@ namespace infertility_system.Migrations
                         name: "FK_TreatmentResults_TreatmentRoadmaps_TreatmentRoadmapId",
                         column: x => x.TreatmentRoadmapId,
                         principalTable: "TreatmentRoadmaps",
-                        principalColumn: "TreatmentRoadmapId");
+                        principalColumn: "TreatmentRoadmapId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -447,13 +444,12 @@ namespace infertility_system.Migrations
                         name: "FK_OrderDetails_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "OrderId");
                     table.ForeignKey(
                         name: "FK_OrderDetails_Services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Services",
-                        principalColumn: "ServiceId",
+                        principalColumn: "ServiceDBId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -483,8 +479,7 @@ namespace infertility_system.Migrations
                         name: "FK_Payments_TreatmentRoadmaps_TreatmentRoadmapId",
                         column: x => x.TreatmentRoadmapId,
                         principalTable: "TreatmentRoadmaps",
-                        principalColumn: "TreatmentRoadmapId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TreatmentRoadmapId");
                 });
 
             migrationBuilder.CreateTable(
@@ -498,8 +493,7 @@ namespace infertility_system.Migrations
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MedicalRecordId = table.Column<int>(type: "int", nullable: false),
-                    ResultId = table.Column<int>(type: "int", nullable: false),
-                    ConsulationResultId = table.Column<int>(type: "int", nullable: true),
+                    ConsulationResultId = table.Column<int>(type: "int", nullable: false),
                     TreatmentResultId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -509,7 +503,8 @@ namespace infertility_system.Migrations
                         name: "FK_MedicalRecordDetails_ConsulationResults_ConsulationResultId",
                         column: x => x.ConsulationResultId,
                         principalTable: "ConsulationResults",
-                        principalColumn: "ConsulationResultId");
+                        principalColumn: "ConsulationResultId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MedicalRecordDetails_MedicalRecords_MedicalRecordId",
                         column: x => x.MedicalRecordId,
@@ -520,8 +515,7 @@ namespace infertility_system.Migrations
                         name: "FK_MedicalRecordDetails_TreatmentResults_TreatmentResultId",
                         column: x => x.TreatmentResultId,
                         principalTable: "TreatmentResults",
-                        principalColumn: "TreatmentResultId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TreatmentResultId");
                 });
 
             migrationBuilder.CreateTable(
@@ -659,9 +653,9 @@ namespace infertility_system.Migrations
                 column: "ManagerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_ServiceId",
+                name: "IX_Feedbacks_ServiceDBId",
                 table: "Feedbacks",
-                column: "ServiceId");
+                column: "ServiceDBId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalRecordDetails_ConsulationResultId",

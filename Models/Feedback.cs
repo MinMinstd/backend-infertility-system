@@ -12,8 +12,8 @@
         public Customer? Customer { get; set; }
 
         // Feedback N-1 Service
-        public int ServiceId { get; set; }
-        public Service? Service { get; set; }
+        public int ServiceDBId { get; set; }
+        public ServiceDB? Service { get; set; }
 
         // Feedback N-1 Manager
         public int ManagerId { get; set; }
