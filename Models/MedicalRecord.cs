@@ -7,6 +7,7 @@
         public string? Stage { get; set; }
         public string? Diagnosis { get; set; }
         public string? Status { get; set; }
+        public int Attempt { get; set; } = 1;
 
         // MedicalRecord 1-1 Customer
         public int CustomerId { get; set; }
