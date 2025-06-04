@@ -2,6 +2,7 @@
 {
     public class Doctor
     {
+        public int UserId { get; set; }
         public int DoctorId { get; set; }
         public string? FullName { get; set; }
         public string? Email { get; set; }

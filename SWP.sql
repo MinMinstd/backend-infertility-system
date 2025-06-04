@@ -12,11 +12,11 @@ CREATE TABLE Customer (
   Address NVARCHAR(255)
 );
 
-INSERT INTO Customer VALUES (1, N'Nguyen Van A', 'a@gmail.com', '0900000001', N'Nam', '1990-01-01', N'Hanoi');
-INSERT INTO Customer VALUES (2, N'Tran Thi B', 'b@gmail.com', '0900000002', N'Nữ', '1992-02-02', N'HCMC');
-INSERT INTO Customer VALUES (3, N'Le Van C', 'c@gmail.com', '0900000003', N'Nam', '1988-03-03', N'Danang');
-INSERT INTO Customer VALUES (4, N'Pham Thi D', 'd@gmail.com', '0900000004', N'Nữ', '1995-04-04', N'Hue');
-INSERT INTO Customer VALUES (5, N'Do Van E', 'e@gmail.com', '0900000005', N'Nam', '1993-05-05', N'Can Tho');
+INSERT INTO Customers VALUES (1, N'Nguyen Van A', 'a@gmail.com', '0900000001', 'M', '1990-01-01', N'Hanoi');
+INSERT INTO Customers VALUES (2, N'Tran Thi B', 'b@gmail.com', '0900000002', 'F', '1992-02-02', N'HCMC');
+INSERT INTO Customers VALUES (3, N'Le Van C', 'c@gmail.com', '0900000003', 'M', '1988-03-03', N'Danang');
+INSERT INTO Customers VALUES (4, N'Pham Thi D', 'd@gmail.com', '0900000004', 'F', '1995-04-04', N'Hue');
+INSERT INTO Customers VALUES (5, N'Do Van E', 'e@gmail.com', '0900000005', 'M', '1993-05-05', N'Can Tho');
 
 -- Manager table
 CREATE TABLE Manager (

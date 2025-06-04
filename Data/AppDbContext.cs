@@ -30,6 +30,8 @@ namespace infertility_system.Data
         public DbSet<Models.TreatmentResult> TreatmentResults { get; set; }
         public DbSet<Models.TreatmentRoadmap> TreatmentRoadmaps { get; set; }
         public DbSet<Models.TypeTest> TypeTests { get; set; }
+        public DbSet<Models.User> Users { get; set; }
+        public DbSet<Models.Admin> Admins { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
