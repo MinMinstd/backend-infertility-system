@@ -6,6 +6,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using infertility_system.Dtos.User;
+using infertility_system.Dtos.Admin;
 
 namespace infertility_system
 {
@@ -24,6 +28,13 @@ namespace infertility_system
             builder.Services.AddDbContext<Data.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Configure the DbContext with SQL Server connection string
             builder.Services.AddScoped<Interfaces.ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
+
+            builder.Services.AddControllers();
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssemblyContaining<RegitsterDtoValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<ChangePasswordDtoValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<RegisterAdminDtoValidator>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
