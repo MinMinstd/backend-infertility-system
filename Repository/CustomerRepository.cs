@@ -1,4 +1,5 @@
 ﻿using infertility_system.Data;
+using infertility_system.Dtos.User;
 using infertility_system.Interfaces;
 using infertility_system.Models;
 using Microsoft.EntityFrameworkCore;
@@ -13,57 +14,31 @@ namespace infertility_system.Repository
             _context = context;
         }
 
-        public Task<Customer> CreateCustomerAsync(Customer customer)
+        public Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
         {
-            if (customer == null)
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+            if (user == null)
             {
-                throw new ArgumentNullException(nameof(customer), "Customer cannot be null.");
+                return Task.FromResult(false);
             }
-            _context.Customers.Add(customer);
-            _context.SaveChanges();
-            return Task.FromResult(customer);
-        }
-
-        public async Task<bool> DeleteCustomerAsync(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            if (user.Password != dto.CurrentPassword)
             {
-                return false;
+                return Task.FromResult(false);
             }
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<Customer?> GetCustomerByIdAsync(int id)
-        {
-            return await _context.Customers.FindAsync(id);
-        }
-
-        public async Task<IEnumerable<Customer>> GetCustomersAsync()
-        {
-            return await _context.Customers.ToListAsync();
-        }
-
-        public async Task<Customer?> UpdateCustomerAsync(int id, Customer customer)
-        {
-            var existingCustomer = await _context.Customers.FindAsync(id);
-            if (existingCustomer == null)
+            if(dto.NewPassword != dto.ConfirmPassword)
             {
-                return null;
+                return Task.FromResult(false);
             }
+            user.Password = dto.NewPassword;
+            _context.Users.Update(user);
+            return _context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
+        }
 
-            existingCustomer.FullName = customer.FullName;
-            existingCustomer.Email = customer.Email;
-            existingCustomer.Phone = customer.Phone;
-            existingCustomer.Address = customer.Address;
-            existingCustomer.Gender = customer.Gender;
-            existingCustomer.Birthday = customer.Birthday;
-
-            await _context.SaveChangesAsync();
-            return existingCustomer;
+        public async Task<IEnumerable<Customer>> GetCustomersAsync(int userId)
+        {
+            return await _context.Customers
+                .Where(c => c.UserId == userId)
+                .ToListAsync();
         }
     }
 }

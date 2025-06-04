@@ -18,31 +18,5 @@ namespace infertility_system.Mappers
                 Address = customer.Address
             };
         }
-
-        public static Customer ToCustomerFromCreateDto(this CreateCustomerRequestDto customer)
-        {
-            return new Customer
-            {
-                FullName = customer.FullName,
-                Email = customer.Email,
-                Phone = customer.Phone,
-                Gender = customer.Gender,
-                Birthday = customer.Birthday,
-                Address = customer.Address
-            };
-        }
-
-        public static Customer ToCustomerFromUpdateDto(this UpdateCustomerRequestDto customer)
-        {
-            return new Customer
-            {
-                FullName = customer.FullName,
-                Email = customer.Email,
-                Phone = customer.Phone,
-                Gender = customer.Gender,
-                Birthday = customer.Birthday,
-                Address = customer.Address
-            };
-        }
     }
 }

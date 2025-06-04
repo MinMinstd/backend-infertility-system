@@ -1,13 +1,12 @@
-﻿using infertility_system.Models;
+﻿using infertility_system.Dtos.User;
+using infertility_system.Models;
 
 namespace infertility_system.Interfaces
 {
     public interface ICustomerRepository
     {
-        Task<IEnumerable<Customer>> GetCustomersAsync();
-        Task<Customer?> GetCustomerByIdAsync(int id);
-        Task<Customer> CreateCustomerAsync(Customer customer);
-        Task<Customer?> UpdateCustomerAsync(int id, Customer customer);
-        Task<bool> DeleteCustomerAsync(int id);
+        Task<IEnumerable<Customer>> GetCustomersAsync(int userId);
+
+        Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto);
     }
 }

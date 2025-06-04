@@ -1,14 +1,17 @@
-﻿using infertility_system.Dtos.Customer;
+﻿using infertility_system.Data;
+using infertility_system.Dtos.Customer;
+using infertility_system.Dtos.User;
 using infertility_system.Interfaces;
 using infertility_system.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace infertility_system.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "ManagerDoctorOnly")]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepository;
@@ -17,59 +20,47 @@ namespace infertility_system.Controllers
             _customerRepository = customerRepository;
         }
 
-        // GET: api/customer
         [HttpGet]
-        public async Task<IActionResult> GetCustomers()
+        [Authorize(Roles = "Customer")]
+        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomers()
         {
-            var customers = await _customerRepository.GetCustomersAsync();
-            return Ok(customers.Select(c => c.ToCustomerDto()));
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                {
+                    return Unauthorized(new { Message = "Token không hợp lệ hoặc thiếu UserId!" });
+                }
+
+                var customers = await _customerRepository.GetCustomersAsync(userId);
+
+                if (customers == null || !customers.Any())
+                {
+                    return NotFound(new { Message = "Không tìm thấy dữ liệu khách hàng!" });
+                }
+
+                return Ok(customers.Select(c => c.ToCustomerDto()));
         }
 
-        // GET: api/customer/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomer(int id)
-        {
-            var customer = await _customerRepository.GetCustomerByIdAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            return Ok(customer.ToCustomerDto());
-        }
-
-        // POST: api/customer
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerRequestDto customerDto)
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
-            var customer = customerDto.ToCustomerFromCreateDto();
-            var newCustomer = await _customerRepository.CreateCustomerAsync(customer);
-            return (CreatedAtAction(nameof(GetCustomer), new { id = newCustomer.CustomerId }, newCustomer.ToCustomerDto()));
-        }
-
-        // PUT: api/customer/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(int id, [FromBody] UpdateCustomerRequestDto customerDto)
-        {
-            var customer = customerDto.ToCustomerFromUpdateDto();
-            var updatedCustomer = await _customerRepository.UpdateCustomerAsync(id, customer);
-            if (updatedCustomer == null)
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
             {
-                return NotFound();
+                return Unauthorized(new { Message = "Token không hợp lệ hoặc thiếu UserId!" });
             }
-            return Ok(updatedCustomer.ToCustomerDto());
-        }
-
-
-        // DELETE: api/customer/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
-        {
-            var deleted = await _customerRepository.DeleteCustomerAsync(id);
-            if (!deleted)
+            if (dto == null)
             {
-                return NotFound();
+                return BadRequest(new { Message = "Dữ liệu không hợp lệ!" });
             }
-            return NoContent();
+            var result = await _customerRepository.ChangePasswordAsync(userId, dto);
+            if (!result)
+            {
+                return BadRequest(new { Message = "Đổi mật khẩu không thành công!" });
+            }
+            return Ok(new { Message = "Đổi mật khẩu thành công!" });
         }
     }
+
 }

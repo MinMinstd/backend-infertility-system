@@ -78,6 +78,9 @@ namespace infertility_system
             {
                 options.AddPolicy("Admin", policy =>
                     policy.RequireClaim(ClaimTypes.Role, "Admin")); // Thêm chính sách yêu cầu vai trò Admin
+
+                options.AddPolicy("Customer", policy =>
+                    policy.RequireClaim(ClaimTypes.Role, "Customer"));
             });
 
             //new repository

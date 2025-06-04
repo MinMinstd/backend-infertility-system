@@ -19,7 +19,7 @@ namespace infertility_system.Controllers
             var token = await _authService.AuthenticateUserAsync(loginRequest);
             if (token == null)
             {
-                return Unauthorized(new { message = "Invalid email or password." });
+                return Unauthorized(new { message = "Invalid username or password." });
             }
             return Ok(new { token = token, message = "Login successful." });
         }

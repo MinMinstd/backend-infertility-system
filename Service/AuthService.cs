@@ -23,7 +23,8 @@ namespace infertility_system.Service
 
         public async Task<string?> AuthenticateUserAsync(LoginRequestDto loginRequest)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email || u.Phone == loginRequest.Phone);
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == loginRequest.Username || u.Phone == loginRequest.Username);
             if (user == null || user.Password != loginRequest.Password)
             {
                 return null; // User not found
