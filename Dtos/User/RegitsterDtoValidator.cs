@@ -18,9 +18,13 @@ namespace infertility_system.Dtos.User
                 .NotEmpty().WithMessage("Phone không được để trống")
                 .Matches(@"^0\d{9,10}$").WithMessage("Số điện thoại không hợp lệ");
 
-            RuleFor(u => u.Password)
-                .NotEmpty().WithMessage("Mật khẩu không được để trống")
-                .Length(3,50).WithMessage("Mật khẩu không hợp lệ");
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Mật khẩu không được bỏ trống")
+                .MinimumLength(12).WithMessage("Mật khẩu tối thiểu 12 ký tự")
+                .Matches("[A-Z]").WithMessage("Mật khẩu phải có chữ hoa")
+                .Matches("[a-z]").WithMessage("Mật khẩu phải có chữ thường")
+                .Matches("[0-9]").WithMessage("Mật khẩu phải có số")
+                .Matches("[^a-zA-Z0-9]").WithMessage("Mật khẩu phải có ký tự đặc biệt");
 
             RuleFor(u => u.Gender)
                 .NotEmpty().WithMessage("Giới tính không được để trống")
