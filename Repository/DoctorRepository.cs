@@ -1,0 +1,31 @@
+﻿using infertility_system.Data;
+using infertility_system.Interfaces;
+using infertility_system.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace infertility_system.Repository
+{
+    public class DoctorRepository : IDoctorRepository
+    {
+        private readonly AppDbContext _context;
+        public DoctorRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+        public async Task<List<Doctor>> GetAllDoctorsAsync()
+        {
+            return await _context.Doctors.Include(x => x.DoctorDegrees).ToListAsync();
+        }
+
+        public async Task<Doctor?> GetDoctorByIdAsync(int doctorId)
+        {
+            var doctorModel = await _context.Doctors.Include(x => x.DoctorDegrees)
+                .FirstOrDefaultAsync(x => x.DoctorId == doctorId);
+            if (doctorModel == null)
+            {
+                return null;
+            }
+            return doctorModel;
+        }
+    }
+}
