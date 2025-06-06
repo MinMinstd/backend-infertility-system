@@ -1,4 +1,5 @@
 ﻿using infertility_system.Dtos.Doctor;
+using infertility_system.Helpers;
 using infertility_system.Interfaces;
 using infertility_system.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -17,9 +18,9 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet("GetAllDoctors")]
-        public async Task<IActionResult> GetAllDoctors()
+        public async Task<IActionResult> GetAllDoctors([FromQuery] QueryDoctor query)
         {
-            var doctors = await _doctorRepository.GetAllDoctorsAsync();
+            var doctors = await _doctorRepository.GetAllDoctorsAsync(query);
             var doctorDto = doctors.Select(x => x.ToDtoForList());
             return Ok(doctorDto);
         }

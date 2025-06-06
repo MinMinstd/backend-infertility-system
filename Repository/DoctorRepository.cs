@@ -1,4 +1,5 @@
 ﻿using infertility_system.Data;
+using infertility_system.Helpers;
 using infertility_system.Interfaces;
 using infertility_system.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,15 @@ namespace infertility_system.Repository
         {
             _context = context;
         }
-        public async Task<List<Doctor>> GetAllDoctorsAsync()
+        public async Task<List<Doctor>> GetAllDoctorsAsync(QueryDoctor query)
         {
-            return await _context.Doctors.Include(x => x.DoctorDegrees).ToListAsync();
+            var doctors = _context.Doctors.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.FullName))
+            {
+                doctors = doctors.Where(x => x.FullName.Contains(query.FullName));
+            }
+
+            return await doctors.ToListAsync();
         }
 
         public async Task<Doctor?> GetDoctorByIdAsync(int doctorId)
