@@ -1,7 +1,8 @@
-﻿namespace infertility_system.Models
+﻿    namespace infertility_system.Models
 {
     public class Manager
     {
+        public int UserId { get; set; }
         public int ManagerId { get; set; }
         public string? FullName { get; set; }
         public string? Email { get; set; }
