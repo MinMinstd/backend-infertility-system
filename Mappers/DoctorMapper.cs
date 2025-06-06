@@ -13,9 +13,9 @@ namespace infertility_system.Mappers
             }
             return new DoctorForListDto
             {
+                DoctorId = doctorModel.DoctorId,
                 FullName = doctorModel.FullName,
                 Experience = doctorModel.Experience,
-                DoctorDegrees = doctorModel.DoctorDegrees?.Select(d => d.ToDto()).ToList()
             };
         }
 

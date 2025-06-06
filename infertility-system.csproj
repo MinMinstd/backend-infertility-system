@@ -20,9 +20,4 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\NewFolder\" />
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

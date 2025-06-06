@@ -97,6 +97,7 @@ namespace infertility_system
             //new repository
 
             builder.Services.AddScoped<Interfaces.IDoctorRepository, Repository.DoctorRepository>();
+            builder.Services.AddScoped<Interfaces.IServiceRepository, Repository.ServiceRepository>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
