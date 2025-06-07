@@ -94,9 +94,9 @@ namespace infertility_system.Data
                 .HasForeignKey(bp => bp.CustomerId);
 
             modelBuilder.Entity<Customer>()
-                .HasOne(c => c.MedicalRecord)
+                .HasMany(c => c.MedicalRecord)
                 .WithOne(mr => mr.Customer)
-                .HasForeignKey<MedicalRecord>(mr => mr.CustomerId);
+                .HasForeignKey(mr => mr.CustomerId);
 
             modelBuilder.Entity<Customer>()
                 .HasMany(c => c.Orders)
@@ -254,8 +254,8 @@ namespace infertility_system.Data
             // MedicalRecord
             modelBuilder.Entity<MedicalRecord>()
                 .HasOne(mr => mr.Customer)
-                .WithOne(c => c.MedicalRecord)
-                .HasForeignKey<MedicalRecord>(mr => mr.CustomerId);
+                .WithMany(c => c.MedicalRecord)
+                .HasForeignKey(mr => mr.CustomerId);
 
             modelBuilder.Entity<MedicalRecord>()
                 .HasOne(mr => mr.Doctor)
@@ -291,6 +291,13 @@ namespace infertility_system.Data
 
             // TreatmentRoadmap
             modelBuilder.Entity<TreatmentRoadmap>()
+                .HasKey(tr => tr.TreatmentRoadmapId);
+
+            modelBuilder.Entity<TreatmentRoadmap>()
+                .Property(tr => tr.TreatmentRoadmapId)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<TreatmentRoadmap>()
                 .HasMany(tr => tr.TreatmentResults)
                 .WithOne(tr => tr.TreatmentRoadmap)
                 .HasForeignKey(tr => tr.TreatmentRoadmapId);
@@ -301,15 +308,15 @@ namespace infertility_system.Data
                 .HasForeignKey(tr => tr.ServiceId);
 
             modelBuilder.Entity<TreatmentRoadmap>()
-                .HasOne(tr => tr.MedicalRecord)
-                .WithOne(mr => mr.TreatmentRoadmaps)
-                .HasForeignKey<MedicalRecord>(mr => mr.TreatmentRoadmapId);
-
-            modelBuilder.Entity<TreatmentRoadmap>()
                 .HasOne(tr => tr.Payment)
                 .WithOne(p => p.TreatmentRoadmap)
                 .HasForeignKey<Payment>(p => p.TreatmentRoadmapId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TreatmentRoadmap>()
+                .HasMany(tr => tr.MedicalRecordDetails)
+                .WithOne(p => p.TreatmentRoadmap)
+                .HasForeignKey(p => p.TreatmentRoadmapId);
 
             // MedicalRecordDetail
             modelBuilder.Entity<MedicalRecordDetail>()

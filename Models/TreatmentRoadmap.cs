@@ -1,7 +1,12 @@
-﻿namespace infertility_system.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace infertility_system.Models
 {
     public class TreatmentRoadmap
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TreatmentRoadmapId { get; set; }
         public DateOnly Date { get; set; }
         public string? Stage { get; set; }
@@ -13,8 +18,8 @@
         public int ServiceId { get; set; }
         public ServiceDB? Service { get; set; }
 
-        // TreatmentRoadmap 1-1 MedicalRecord
-        public MedicalRecord? MedicalRecord { get; set; }
+        // TreatmentRoadmap 1-N MedicalRecordDetail
+        public List<MedicalRecordDetail>? MedicalRecordDetails { get; set; }
 
         // TreatmentRoadmap 1-1 Payment
         public Payment? Payment { get; set; }

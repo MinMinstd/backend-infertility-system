@@ -3,13 +3,14 @@
     public class MedicalRecord
     {
         public int MedicalRecordId { get; set; }
-        public DateOnly Date { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public string? Stage { get; set; }
         public string? Diagnosis { get; set; }
         public string? Status { get; set; }
         public int Attempt { get; set; } = 1;
 
-        // MedicalRecord 1-1 Customer
+        // MedicalRecord N-1 Customer
         public int CustomerId { get; set; }
         public Customer? Customer { get; set; }
 
@@ -19,9 +20,5 @@
 
         // MedicalRecord 1-N MedicalRecordDetail
         public List<MedicalRecordDetail>? MedicalRecordDetails { get; set; }
-
-        // MedicalRecord 1-1 TreatmentRoadmap
-        public int TreatmentRoadmapId { get; set; }
-        public TreatmentRoadmap? TreatmentRoadmaps { get; set; }
     }
 }

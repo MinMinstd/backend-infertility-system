@@ -25,9 +25,12 @@ namespace infertility_system
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddDbContext<Data.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Configure the DbContext with SQL Server connection string
             builder.Services.AddScoped<Interfaces.ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
+            builder.Services.AddScoped<Interfaces.IDoctorRepository, Repository.DoctorRepository>();
+            builder.Services.AddScoped<Interfaces.IServiceRepository, Repository.ServiceRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddFluentValidationAutoValidation();
@@ -96,8 +99,7 @@ namespace infertility_system
 
             //new repository
 
-            builder.Services.AddScoped<Interfaces.IDoctorRepository, Repository.DoctorRepository>();
-            builder.Services.AddScoped<Interfaces.IServiceRepository, Repository.ServiceRepository>();
+            
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

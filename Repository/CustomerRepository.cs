@@ -34,11 +34,34 @@ namespace infertility_system.Repository
             return _context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
         }
 
+        public async Task<bool> CheckExists(int id)
+        {
+            return await _context.Customers.AnyAsync(x => x.CustomerId == id);
+        }
+
         public async Task<IEnumerable<Customer>> GetCustomersAsync(int userId)
         {
             return await _context.Customers
                 .Where(c => c.UserId == userId)
                 .ToListAsync();
+        }
+
+        public async Task<ICollection<Embryo>> GetEmbryos(int userId)
+        {
+            var embryos = await _context.Embryos.Where(x => x.Customer.UserId == userId).ToListAsync();
+            return embryos;
+        }
+
+        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecords(int userId)
+        {
+            var records = await _context.MedicalRecordDetails
+                .Include(tr => tr.TreatmentRoadmap)
+                    .ThenInclude(s => s.Service)
+                .Include(mr => mr.MedicalRecord)
+                    .ThenInclude(d => d.Doctor)
+                .Where(mr => mr.MedicalRecord.CustomerId == userId).ToListAsync();
+
+            return records;
         }
     }
 }
