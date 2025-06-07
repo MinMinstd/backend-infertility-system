@@ -13,11 +13,14 @@
         public MedicalRecord? MedicalRecord { get; set; }
 
         // MedicalRecordDetail N-1 ConsulationResult
-        public int ConsulationResultId { get; set; }
+        public int? ConsulationResultId { get; set; }
         public ConsulationResult? ConsulationResult { get; set; }
 
         // MedicalRecordDetail N-1 TreatmentResult
-        public int TreatmentResultId { get; set; }
+        public int? TreatmentResultId { get; set; }
         public TreatmentResult? TreatmentResult { get; set; }
+        // MedicalRecordDetail N-1 TreatmentRoadmap
+        public int? TreatmentRoadmapId { get; set; }
+        public TreatmentRoadmap? TreatmentRoadmap { get; set; }
     }
 }

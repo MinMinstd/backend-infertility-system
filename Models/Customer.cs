@@ -23,8 +23,8 @@
         // Customer 1-N BlogPost
         public List<BlogPost>? BlogPosts { get; set; }
 
-        // Customer 1-1 MedicalRecord
-        public MedicalRecord? MedicalRecord { get; set; }
+        // Customer 1-N MedicalRecord
+        public List<MedicalRecord>? MedicalRecord { get; set; }
 
         // Customer 1-N Order
         public List<Order>? Orders { get; set; }

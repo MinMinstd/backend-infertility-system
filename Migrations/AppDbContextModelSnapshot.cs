@@ -406,33 +406,29 @@ namespace infertility_system.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
-
                     b.Property<string>("Diagnosis")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Stage")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TreatmentRoadmapId")
-                        .HasColumnType("int");
-
                     b.HasKey("MedicalRecordId");
 
-                    b.HasIndex("CustomerId")
-                        .IsUnique();
+                    b.HasIndex("CustomerId");
 
                     b.HasIndex("DoctorId");
-
-                    b.HasIndex("TreatmentRoadmapId")
-                        .IsUnique();
 
                     b.ToTable("MedicalRecords");
                 });
@@ -445,7 +441,7 @@ namespace infertility_system.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MedicalRecordDetailId"));
 
-                    b.Property<int>("ConsulationResultId")
+                    b.Property<int?>("ConsulationResultId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("Date")
@@ -460,7 +456,10 @@ namespace infertility_system.Migrations
                     b.Property<string>("TestResult")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TreatmentResultId")
+                    b.Property<int?>("TreatmentResultId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TreatmentRoadmapId")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
@@ -473,6 +472,8 @@ namespace infertility_system.Migrations
                     b.HasIndex("MedicalRecordId");
 
                     b.HasIndex("TreatmentResultId");
+
+                    b.HasIndex("TreatmentRoadmapId");
 
                     b.ToTable("MedicalRecordDetails");
                 });
@@ -924,8 +925,8 @@ namespace infertility_system.Migrations
             modelBuilder.Entity("infertility_system.Models.MedicalRecord", b =>
                 {
                     b.HasOne("infertility_system.Models.Customer", "Customer")
-                        .WithOne("MedicalRecord")
-                        .HasForeignKey("infertility_system.Models.MedicalRecord", "CustomerId")
+                        .WithMany("MedicalRecord")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -935,26 +936,16 @@ namespace infertility_system.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("infertility_system.Models.TreatmentRoadmap", "TreatmentRoadmaps")
-                        .WithOne("MedicalRecord")
-                        .HasForeignKey("infertility_system.Models.MedicalRecord", "TreatmentRoadmapId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Customer");
 
                     b.Navigation("Doctor");
-
-                    b.Navigation("TreatmentRoadmaps");
                 });
 
             modelBuilder.Entity("infertility_system.Models.MedicalRecordDetail", b =>
                 {
                     b.HasOne("infertility_system.Models.ConsulationResult", "ConsulationResult")
                         .WithMany("MedicalRecordDetails")
-                        .HasForeignKey("ConsulationResultId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ConsulationResultId");
 
                     b.HasOne("infertility_system.Models.MedicalRecord", "MedicalRecord")
                         .WithMany("MedicalRecordDetails")
@@ -965,14 +956,19 @@ namespace infertility_system.Migrations
                     b.HasOne("infertility_system.Models.TreatmentResult", "TreatmentResult")
                         .WithMany("MedicalRecordDetails")
                         .HasForeignKey("TreatmentResultId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("infertility_system.Models.TreatmentRoadmap", "TreatmentRoadmap")
+                        .WithMany("MedicalRecordDetails")
+                        .HasForeignKey("TreatmentRoadmapId");
 
                     b.Navigation("ConsulationResult");
 
                     b.Navigation("MedicalRecord");
 
                     b.Navigation("TreatmentResult");
+
+                    b.Navigation("TreatmentRoadmap");
                 });
 
             modelBuilder.Entity("infertility_system.Models.Order", b =>
@@ -1222,7 +1218,7 @@ namespace infertility_system.Migrations
 
             modelBuilder.Entity("infertility_system.Models.TreatmentRoadmap", b =>
                 {
-                    b.Navigation("MedicalRecord");
+                    b.Navigation("MedicalRecordDetails");
 
                     b.Navigation("Payment");
 

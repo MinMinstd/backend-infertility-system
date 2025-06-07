@@ -1,5 +1,7 @@
-﻿using infertility_system.Data;
+﻿using AutoMapper;
+using infertility_system.Data;
 using infertility_system.Dtos.Customer;
+using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.User;
 using infertility_system.Interfaces;
 using infertility_system.Mappers;
@@ -15,9 +17,12 @@ namespace infertility_system.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerRepository _customerRepository;
-        public CustomerController(ICustomerRepository customerRepository)
+        private readonly IMapper _mapper;
+
+        public CustomerController(ICustomerRepository customerRepository, IMapper mapper)
         {
             _customerRepository = customerRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -60,6 +65,39 @@ namespace infertility_system.Controllers
                 return BadRequest(new { Message = "Đổi mật khẩu không thành công!" });
             }
             return Ok(new { Message = "Đổi mật khẩu thành công!" });
+        }
+
+        [HttpGet("medicalRecord")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetMedicalRecords()
+        {
+            var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if(!await _customerRepository.CheckExists(userIdClaims))
+                return NotFound();
+           
+            var records = await _customerRepository.GetMedicalRecords(userIdClaims);
+            var recordsDto = _mapper.Map<List<MedicalRecordDetailDto>>(records);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(recordsDto);
+        }
+
+        [HttpGet("embryos")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetEmbryos()
+        {
+            var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (!await _customerRepository.CheckExists(userIdClaims))
+                return NotFound();
+
+            var embryos = await _customerRepository.GetEmbryos(userIdClaims);
+            var embryosDto = _mapper.Map<List<EmbryoDto>>(embryos);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            return Ok(embryosDto);
         }
     }
 
