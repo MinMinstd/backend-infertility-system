@@ -25,7 +25,7 @@ namespace infertility_system.Service
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == loginRequest.Username || u.Phone == loginRequest.Username);
-            if (user == null || user.Password != loginRequest.Password)
+            if (user == null || !VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return null; // User not found
             }
@@ -41,12 +41,13 @@ namespace infertility_system.Service
             {
                 return null; // User already exists
             }
-
+            CreatePasswordHash(user.Password, out byte[] passwordHash, out byte[] passwordSalt);
             var newUser = new User
             {
                 Email = user.Email,
                 Phone = user.Phone,
-                Password = user.Password, // In a real application, ensure to hash the password
+                PasswordHash = passwordHash, // In a real application, ensure to hash the password
+                PasswordSalt = passwordSalt, // Store the salt for password verification
                 Role = "Customer" // Default role, can be changed based on requirements
             };
             _context.Users.Add(newUser);
@@ -68,6 +69,23 @@ namespace infertility_system.Service
             return newUser; // Return the newly created user
         }
 
+        private void CreatePasswordHash(string password, out byte[] PasswordHash, out byte[] PasswordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                PasswordSalt = hmac.Key;
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
+        }
+
+        private bool VerifyPasswordHash(string password, byte[] PasswordHash, byte[] PasswordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(PasswordSalt))
+            {
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(PasswordHash);
+            }
+        }
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
