@@ -1,5 +1,5 @@
 ﻿using infertility_system.Dtos.User;
-using infertility_system.Service;
+using infertility_system.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace infertility_system.Controllers
@@ -8,8 +8,8 @@ namespace infertility_system.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
-        public AuthController(AuthService authService)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }

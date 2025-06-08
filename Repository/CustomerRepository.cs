@@ -9,29 +9,16 @@ namespace infertility_system.Repository
     public class CustomerRepository : ICustomerRepository
     {
         private readonly AppDbContext _context;
-        public CustomerRepository(AppDbContext context)
+        private readonly IAuthService _authService;
+        public CustomerRepository(AppDbContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
 
-        public Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
+        public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
         {
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
-            if (user == null)
-            {
-                return Task.FromResult(false);
-            }
-            if (user.Password != dto.CurrentPassword)
-            {
-                return Task.FromResult(false);
-            }
-            if(dto.NewPassword != dto.ConfirmPassword)
-            {
-                return Task.FromResult(false);
-            }
-            user.Password = dto.NewPassword;
-            _context.Users.Update(user);
-            return _context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
+            return await _authService.ChangePasswordAsync(userId,dto) ;
         }
 
         public async Task<bool> CheckExists(int id)

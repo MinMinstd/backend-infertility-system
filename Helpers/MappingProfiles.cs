@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorDegree;
 using infertility_system.Dtos.MedicalRecord;
@@ -20,6 +21,7 @@ namespace infertility_system.Helpers
             CreateMap<Doctor, DoctorForListDto>();
             CreateMap<DoctorDegree, DoctorDegreeDto>();
             CreateMap<ServiceDB, ServiceToDtoForList>();
+            CreateMap<Customer, CustomerDto>();
         }
     }
 }
