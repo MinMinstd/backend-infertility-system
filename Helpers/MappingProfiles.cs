@@ -16,6 +16,9 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.MedicalRecord.Doctor.FullName));
             CreateMap<Embryo, EmbryoDto>();
+            CreateMap<CreateMedicalRecordDto, MedicalRecord>();
+            CreateMap<UpdateMedicalRecordDto, MedicalRecord>();
+            CreateMap<MedicalRecord, UpdateMedicalRecordDto>();
             CreateMap<Doctor, DoctorDto>();
             CreateMap<Doctor, DoctorForListDto>();
             CreateMap<DoctorDegree, DoctorDegreeDto>();
