@@ -2,7 +2,6 @@
 using infertility_system.Dtos.Doctor;
 using infertility_system.Helpers;
 using infertility_system.Interfaces;
-using infertility_system.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
