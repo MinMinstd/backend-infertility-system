@@ -1,7 +1,9 @@
+
 ﻿using System.Security.Claims;
 using AutoMapper;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.MedicalRecord;
+using infertility_system.Dtos.Doctor;
 using infertility_system.Helpers;
 using infertility_system.Interfaces;
 using infertility_system.Mappers;
@@ -18,7 +20,8 @@ namespace infertility_system.Controllers
         private readonly IDoctorRepository _doctorRepository;
         private readonly IMapper _mapper;
 
-        public DoctorController(IDoctorRepository doctorRepository, IMapper mapper)
+
+        public DoctorController(IDoctorRepository doctorRepository,IMapper mapper)
         {
             _doctorRepository = doctorRepository;
             _mapper = mapper;
@@ -28,7 +31,7 @@ namespace infertility_system.Controllers
         public async Task<IActionResult> GetAllDoctors([FromQuery] QueryDoctor query)
         {
             var doctors = await _doctorRepository.GetAllDoctorsAsync(query);
-            var doctorDto = doctors.Select(x => x.ToDtoForList());
+            var doctorDto = _mapper.Map<List<DoctorForListDto>>(doctors);
             return Ok(doctorDto);
         }
 
@@ -40,7 +43,7 @@ namespace infertility_system.Controllers
             {
                 return NotFound($"Doctor with ID {doctorId} not found.");
             }
-            var doctorDto = doctor.ToDto();
+            var doctorDto = _mapper.Map<DoctorDto>(doctor);
             return Ok(doctorDto);
         }
 
