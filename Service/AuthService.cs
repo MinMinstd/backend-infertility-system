@@ -1,7 +1,8 @@
 ﻿using infertility_system.Data;
+using infertility_system.Dtos.Admin;
 using infertility_system.Dtos.User;
+using infertility_system.Interfaces;
 using infertility_system.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,7 +11,7 @@ using System.Text;
 
 namespace infertility_system.Service
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
@@ -25,7 +26,7 @@ namespace infertility_system.Service
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == loginRequest.Username || u.Phone == loginRequest.Username);
-            if (user == null || user.Password != loginRequest.Password)
+            if (user == null || !VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return null; // User not found
             }
@@ -41,12 +42,13 @@ namespace infertility_system.Service
             {
                 return null; // User already exists
             }
-
+            CreatePasswordHash(user.Password, out byte[] passwordHash, out byte[] passwordSalt);
             var newUser = new User
             {
                 Email = user.Email,
                 Phone = user.Phone,
-                Password = user.Password, // In a real application, ensure to hash the password
+                PasswordHash = passwordHash, // In a real application, ensure to hash the password
+                PasswordSalt = passwordSalt, // Store the salt for password verification
                 Role = "Customer" // Default role, can be changed based on requirements
             };
             _context.Users.Add(newUser);
@@ -68,6 +70,23 @@ namespace infertility_system.Service
             return newUser; // Return the newly created user
         }
 
+        private void CreatePasswordHash(string password, out byte[] PasswordHash, out byte[] PasswordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                PasswordSalt = hmac.Key;
+                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
+        }
+
+        private bool VerifyPasswordHash(string password, byte[] PasswordHash, byte[] PasswordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(PasswordSalt))
+            {
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(PasswordHash);
+            }
+        }
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -89,6 +108,77 @@ namespace infertility_system.Service
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<String?> RegisterDoctorAndManagerAsync(RegisterRequestFromAdminDto userDto)
+        {
+            if (userDto.Role != "Manager" && userDto.Role != "Doctor")
+                return "Admin chỉ có thể tạo Manager hoặc Doctor!";
+
+            CreatePasswordHash(userDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            var newUser = new User
+            {
+                Email = userDto.Email,
+                Phone = userDto.Phone,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Role = userDto.Role
+            };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            if (userDto.Role == "Doctor")
+            {
+                var newDoctor = new Doctor
+                {
+                    UserId = newUser.UserId,
+                    FullName = userDto.FullName,
+                    Email = userDto.Email,
+                    Phone = userDto.Phone,
+                    Experience = userDto.Experience
+                };
+                _context.Doctors.Add(newDoctor);
+            }
+            else if (userDto.Role == "Manager")
+            {
+                var newManager = new Manager
+                {
+                    UserId = newUser.UserId,
+                    FullName = userDto.FullName,
+                    Email = userDto.Email,
+                    Phone = userDto.Phone,
+                    Address = userDto.Address
+                };
+                _context.Managers.Add(newManager);
+            }
+
+            await _context.SaveChangesAsync();
+            return "Tài khoản đã được tạo thành công!";
+        }
+
+        public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
+        {
+
+            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
+            if (user == null)
+            {
+                return await Task.FromResult(false);
+            }
+            if (!VerifyPasswordHash(dto.CurrentPassword,user.PasswordHash,user.PasswordSalt))
+            {
+                return  await Task.FromResult(false);
+            }
+            if (dto.NewPassword != dto.ConfirmPassword)
+            {
+                return await Task.FromResult(false);
+            }
+
+            CreatePasswordHash(dto.NewPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+            _context.Users.Update(user);
+            return await _context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
         }
     }
 }

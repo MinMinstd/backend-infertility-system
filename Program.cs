@@ -10,6 +10,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using infertility_system.Dtos.User;
 using infertility_system.Dtos.Admin;
+using infertility_system.Interfaces;
 
 namespace infertility_system
 {
@@ -28,9 +29,10 @@ namespace infertility_system
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddDbContext<Data.AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Configure the DbContext with SQL Server connection string
-            builder.Services.AddScoped<Interfaces.ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
-            builder.Services.AddScoped<Interfaces.IDoctorRepository, Repository.DoctorRepository>();
-            builder.Services.AddScoped<Interfaces.IServiceRepository, Repository.ServiceRepository>();
+            builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
+            builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
+            builder.Services.AddScoped<IServiceRepository, Repository.ServiceRepository>();
+            builder.Services.AddScoped<IAuthService,AuthService>();
 
             builder.Services.AddControllers();
             builder.Services.AddFluentValidationAutoValidation();
@@ -56,8 +58,6 @@ namespace infertility_system
                     Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]))
                 };
             });
-
-            builder.Services.AddScoped<AuthService>();
 
             builder.Services.AddAuthorization();
 

@@ -4,7 +4,6 @@ using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.User;
 using infertility_system.Interfaces;
-using infertility_system.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +42,7 @@ namespace infertility_system.Controllers
                     return NotFound(new { Message = "Không tìm thấy dữ liệu khách hàng!" });
                 }
 
-                return Ok(customers.Select(c => c.ToCustomerDto()));
+                return Ok(_mapper.Map<List<CustomerDto>>(customers));
         }
 
         [HttpPost]
