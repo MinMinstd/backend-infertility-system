@@ -8,6 +8,7 @@ using infertility_system.Helpers;
 using infertility_system.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using infertility_system.Models;
 
 namespace infertility_system.Controllers
 {
@@ -25,7 +26,7 @@ namespace infertility_system.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("GetAllDoctors")]
+        [HttpGet("GetListDoctors")]
         public async Task<IActionResult> GetAllDoctors([FromQuery] QueryDoctor query)
         {
             var doctors = await _doctorRepository.GetAllDoctorsAsync(query);
