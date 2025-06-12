@@ -10,6 +10,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using infertility_system.Dtos.User;
 using infertility_system.Dtos.Admin;
+using infertility_system.Interfaces;
+using infertility_system.Repository;
 
 namespace infertility_system
 {
@@ -31,6 +33,7 @@ namespace infertility_system
             builder.Services.AddScoped<Interfaces.ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
             builder.Services.AddScoped<Interfaces.IDoctorRepository, Repository.DoctorRepository>();
             builder.Services.AddScoped<Interfaces.IServiceRepository, Repository.ServiceRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
             builder.Services.AddControllers();
             builder.Services.AddFluentValidationAutoValidation();

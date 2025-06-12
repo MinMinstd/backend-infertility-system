@@ -10,15 +10,15 @@
         public string? Husband { get; set; }
 
         // Order N-1 Customer
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         public Customer? Customer { get; set; }
 
         // Order 1-1 Booking
-        public int BookingId { get; set; }
+        public int? BookingId { get; set; }
         public Booking? Booking { get; set; }
 
         // Order N-1 Manager
-        public int ManagerId { get; set; }
+        public int? ManagerId { get; set; }
         public Manager? Manager { get; set; }
 
         // Order 1-N OrderDetail
