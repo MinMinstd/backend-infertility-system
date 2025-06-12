@@ -9,8 +9,8 @@ namespace infertility_system.Interfaces
         public Task<Doctor?> GetDoctorByIdAsync(int doctorId);
         public Task<MedicalRecord> CreateMedicalRecordAsync(MedicalRecord medicalRecord);
         public Task<MedicalRecord> UpdateMedicalRecordAsync(int customerId, MedicalRecord medicalRecord);
-        public Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync();
-        public Task<bool> CheckCustomerInBooking(int customerId);
-        public Task<bool> CheckDoctorIdInMedicalRecord(int doctorId, int medicalRecordId);
+        public Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail);
+        public Task<bool> CheckCustomerInBookingAsync(int customerId);
+        public Task<bool> CheckDoctorIdInMedicalRecordAsync(int doctorId, int medicalRecordId);
     }
 }

@@ -14,12 +14,12 @@ namespace infertility_system.Repository
             _context = context;
         }
 
-        public async Task<bool> CheckCustomerInBooking(int customerId)
+        public async Task<bool> CheckCustomerInBookingAsync(int customerId)
         {
             return await _context.Bookings.AnyAsync(x => x.CustomerId == customerId);
         }
 
-        public async Task<bool> CheckDoctorIdInMedicalRecord(int doctorId, int medicalRecordId)
+        public async Task<bool> CheckDoctorIdInMedicalRecordAsync(int doctorId, int medicalRecordId)
         {
             var medical = await _context.MedicalRecords.FirstOrDefaultAsync(x => x.MedicalRecordId == medicalRecordId);
             if (medical == null)
@@ -34,9 +34,11 @@ namespace infertility_system.Repository
             return medicalRecord;
         }
 
-        public Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync()
+        public async Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail)
         {
-            throw new NotImplementedException();
+            await _context.MedicalRecordDetails.AddAsync(medicalRecordDetail);
+            await _context.SaveChangesAsync();
+            return medicalRecordDetail;
         }
 
         public async Task<List<Doctor>> GetAllDoctorsAsync(QueryDoctor query)
