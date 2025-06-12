@@ -1,6 +1,3 @@
-﻿using System.Formats.Tar;
-using AutoMapper;
-using infertility_system.Dtos.Booking;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorDegree;
 using infertility_system.Dtos.DoctorSchedule;
@@ -35,6 +32,7 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Husband, opt => opt.MapFrom(src => src.Husband));
             CreateMap<DoctorSchedule, DoctorScheduleDto>();
             CreateMap<MedicalRecordDetailDto, MedicalRecordDetail>();
+            CreateMap<Customer, CustomerDto>();
         }
     }
 }
