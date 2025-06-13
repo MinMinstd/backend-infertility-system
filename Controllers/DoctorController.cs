@@ -7,6 +7,7 @@ using infertility_system.Interfaces;
 using infertility_system.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using infertility_system.Models;
 
 namespace infertility_system.Controllers
 {
@@ -15,14 +16,20 @@ namespace infertility_system.Controllers
     public class DoctorController : ControllerBase
     {
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IMedicalRecordRepository _medicalRecordRepository;
+        private readonly IMedicalRecordDetailRepository _medicalRecordDetailRepository;
+        private readonly IBookingRepository _bookingRepository;
         private readonly IMapper _mapper;
-        public DoctorController(IDoctorRepository doctorRepository,IMapper mapper)
+        public DoctorController(IDoctorRepository doctorRepository,IMapper mapper, IMedicalRecordRepository medicalRecordRepository, IMedicalRecordDetailRepository medicalRecordDetailRepository, IBookingRepository bookingRepository)
         {
             _doctorRepository = doctorRepository;
             _mapper = mapper;
+            _medicalRecordRepository = medicalRecordRepository;
+            _medicalRecordDetailRepository = medicalRecordDetailRepository;
+            _bookingRepository = bookingRepository;
         }
 
-        [HttpGet("GetAllDoctors")]
+        [HttpGet("GetListDoctors")]
         public async Task<IActionResult> GetAllDoctors([FromQuery] QueryDoctor query)
         {
             var doctors = await _doctorRepository.GetAllDoctorsAsync(query);
@@ -46,7 +53,7 @@ namespace infertility_system.Controllers
         public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto
             createMedicalRecordDto, int customerId)
         {
-            if (!await _doctorRepository.CheckCustomerInBookingAsync(customerId))
+            if (!await _bookingRepository.CheckCustomerInBookingAsync(customerId))
                 return NotFound("Customer not found in booking");
 
             var doctorIdClaim = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
@@ -58,7 +65,7 @@ namespace infertility_system.Controllers
             medicalRecordDto.CustomerId = customerId;
             medicalRecordDto.DoctorId = doctorIdClaim;
 
-            var medicalRecord = await _doctorRepository.CreateMedicalRecordAsync(medicalRecordDto);
+            var medicalRecord = await _medicalRecordRepository.CreateMedicalRecordAsync(medicalRecordDto);
 
             return Ok(medicalRecord);
         }
@@ -68,19 +75,19 @@ namespace infertility_system.Controllers
             [FromBody] UpdateMedicalRecordDto updateDto)
         {
             //kiểm tra booking
-            if (!await _doctorRepository.CheckCustomerInBookingAsync(customerId))
+            if (!await _bookingRepository.CheckCustomerInBookingAsync(customerId))
                 return NotFound("Customer not found in booking");
 
             //kiểm tra doctor có trong medicalRecord
             var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if (!await _doctorRepository.CheckDoctorIdInMedicalRecordAsync(doctorIdClaims, medicalRecordId))
+            if (!await _medicalRecordRepository.CheckDoctorIdInMedicalRecordAsync(doctorIdClaims, medicalRecordId))
                 return Unauthorized("Bạn không có quyền cập nhật hồ sơ này");
 
             var recordMap = _mapper.Map<MedicalRecord>(updateDto);
             recordMap.CustomerId = customerId;
             recordMap.MedicalRecordId = medicalRecordId;
 
-            var update = await _doctorRepository.UpdateMedicalRecordAsync(medicalRecordId, recordMap);
+            var update = await _medicalRecordRepository.UpdateMedicalRecordAsync(medicalRecordId, recordMap);
             return Ok(_mapper.Map<UpdateMedicalRecordDto>(update));
         }
 
@@ -92,8 +99,10 @@ namespace infertility_system.Controllers
             //    return Unauthorized("Bạn không có quyền cập nhật hồ sơ này");
 
             var medicalRecordDetailDto = _mapper.Map<MedicalRecordDetail>(dto);
-            var medicalRecordDetail = await _doctorRepository.CreateMedicalRecordDetailAsync(medicalRecordDetailDto);
+            var medicalRecordDetail = await _medicalRecordDetailRepository.CreateMedicalRecordDetailAsync(medicalRecordDetailDto);
             return Ok(dto);
         }
+
+
     }
 }

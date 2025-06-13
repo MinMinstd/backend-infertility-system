@@ -13,18 +13,22 @@ namespace infertility_system.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepository;
+        private readonly IDoctorSchedulesRepository _doctorSchedulesRepository;
+        private readonly IDoctorRepository _doctorRepository;
         private readonly IMapper _mapper;
 
-        public BookingController(IBookingRepository bookingRepository, IMapper mapper)
+        public BookingController(IBookingRepository bookingRepository,IDoctorSchedulesRepository doctorSchedulesRepository, IDoctorRepository doctorRepository, IMapper mapper)
         {
             _bookingRepository = bookingRepository;
+            _doctorSchedulesRepository = doctorSchedulesRepository;
+            _doctorRepository = doctorRepository;
             _mapper = mapper;
         }
 
         [HttpGet("GetAllDoctors")]
         public async Task<IActionResult> GetAllDoctor()
         {
-            var doctors = await _bookingRepository.GetAllDoctorAsync();
+            var doctors = await _doctorRepository.GetAllDoctorsAsync(null);
             var doctorDto = _mapper.Map<List<DoctorForListDto>>(doctors);
             return Ok(doctorDto);
         }
@@ -32,7 +36,7 @@ namespace infertility_system.Controllers
         [HttpGet("GetListDoctorSchedule/{doctorId}")]
         public async Task<IActionResult> GetAllDoctorScheduleByDoctorId(int doctorId)
         {
-            var doctorSchedules = await _bookingRepository.GetDoctorScheduleAsync(doctorId);
+            var doctorSchedules = await _doctorSchedulesRepository.GetDoctorScheduleAsync(doctorId);
             var doctorScheduleDtos = _mapper.Map<List<DoctorScheduleDto>>(doctorSchedules);
             return Ok(doctorScheduleDtos);
         }

@@ -46,18 +46,12 @@ namespace infertility_system.Repository
             };
             _context.OrderDetails.Add(orderDetail);
             await _context.SaveChangesAsync();
-
             return true;
         }
 
-        public async Task<List<Doctor>> GetAllDoctorAsync()
+        public async Task<bool> CheckCustomerInBookingAsync(int customerId)
         {
-            return await _context.Doctors.ToListAsync();
-        }
-
-        public async Task<List<DoctorSchedule>> GetDoctorScheduleAsync(int doctorId)
-        {
-            return await _context.DoctorSchedules.Where(x => x.DoctorId == doctorId).ToListAsync();
+            return await _context.Bookings.AnyAsync(x => x.CustomerId == customerId);
         }
     }
 }
