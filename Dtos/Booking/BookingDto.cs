@@ -7,6 +7,8 @@
         public string? Date { get; set; }
         public string? Time { get; set; }
         public string? Note { get; set; }
+        public string? ServiceName { get; set; }
         public int DoctorId { get; set; }
+        public int DoctorScheduleId { get; set; }
     }
 }

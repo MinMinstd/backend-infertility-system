@@ -1,3 +1,6 @@
+using AutoMapper;
+using infertility_system.Dtos.Booking;
+using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorDegree;
 using infertility_system.Dtos.DoctorSchedule;

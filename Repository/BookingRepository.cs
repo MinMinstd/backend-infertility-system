@@ -21,6 +21,7 @@ namespace infertility_system.Repository
         public async Task<bool> BookingServiceAsync(BookingDto dto)
         {
             var booking = _mapper.Map<Booking>(dto);
+            booking.DoctorScheduleId = dto.DoctorScheduleId;
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
@@ -32,13 +33,16 @@ namespace infertility_system.Repository
             await _context.SaveChangesAsync();
 
             var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.DoctorId == dto.DoctorId);
+            var service = await _context.Services.FirstOrDefaultAsync(x => x.Name == dto.ServiceName);
             if(doctor == null)
                 return false;
 
             var orderDetail = new OrderDetail
             {
                 OrderId = order.OrderId,
-                DoctorName = doctor.FullName
+                DoctorName = doctor.FullName,
+                ServiceId = service.ServiceDBId,
+                ServiceName = service.Name
             };
             _context.OrderDetails.Add(orderDetail);
             await _context.SaveChangesAsync();
