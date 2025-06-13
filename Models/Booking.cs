@@ -9,19 +9,19 @@
         public string? Note { get; set; }
 
         // Booking N-1 Customer
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         public Customer? Customer { get; set; }
 
 
         // Booking N-1 DoctorSchedule
-        public int DoctorScheduleId { get; set; }
+        public int? DoctorScheduleId { get; set; }
         public DoctorSchedule? DoctorSchedule { get; set; }
 
         // Booking 1-1 Order
         public Order? Order { get; set; }
 
         // Booking N-1 ConsulationRegistration
-        public int ConsulationRegistrationId { get; set; }
+        public int? ConsulationRegistrationId { get; set; }
         public ConsulationRegistration? ConsulationRegistration { get; set; }
     
     }

@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorDegree;
+using infertility_system.Dtos.DoctorSchedule;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.Service;
 using infertility_system.Models;
@@ -12,10 +11,6 @@ namespace infertility_system.Helpers
     {
         public MappingProfiles()
         {
-            CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>()
-                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Service.Name))
-                .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
-                .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.MedicalRecord.Doctor.FullName));
             CreateMap<Embryo, EmbryoDto>();
             CreateMap<CreateMedicalRecordDto, MedicalRecord>();
             CreateMap<UpdateMedicalRecordDto, MedicalRecord>();
@@ -24,6 +19,19 @@ namespace infertility_system.Helpers
             CreateMap<Doctor, DoctorForListDto>();
             CreateMap<DoctorDegree, DoctorDegreeDto>();
             CreateMap<ServiceDB, ServiceToDtoForList>();
+
+            CreateMap<BookingDto, Booking>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.Parse(src.Date)))
+                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.Parse(src.Time)))
+                .ForMember(dest => dest.Note, opt => opt.MapFrom(src => src.Note));
+
+            CreateMap<BookingDto, Order>()
+                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.Parse(src.Date)))
+                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.Parse(src.Time)))
+                .ForMember(dest => dest.Wife, opt => opt.MapFrom(src => src.Wife))
+                .ForMember(dest => dest.Husband, opt => opt.MapFrom(src => src.Husband));
+            CreateMap<DoctorSchedule, DoctorScheduleDto>();
+            CreateMap<MedicalRecordDetailDto, MedicalRecordDetail>();
             CreateMap<Customer, CustomerDto>();
         }
     }
