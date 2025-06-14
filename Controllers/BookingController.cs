@@ -3,8 +3,8 @@ using infertility_system.Dtos.Booking;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorSchedule;
 using infertility_system.Interfaces;
-using infertility_system.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace infertility_system.Controllers
 {
@@ -30,17 +30,26 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet("GetListDoctorSchedule/{doctorId}")]
-        public async Task<IActionResult> GetAllDoctorScheduleByDoctorId(int doctorId)
+        public async Task<IActionResult> GetAllDoctorScheduleByDoctorId(int doctorId, [FromQuery] DateOnly date)
         {
-            var doctorSchedules = await _bookingRepository.GetDoctorScheduleAsync(doctorId);
+            var doctorSchedules = await _bookingRepository.GetDoctorScheduleAsync(doctorId, date);
             var doctorScheduleDtos = _mapper.Map<List<DoctorScheduleDto>>(doctorSchedules);
             return Ok(doctorScheduleDtos);
         }
 
-        [HttpPost("booking_service")]
-        public async Task<IActionResult> CreateBookingService([FromBody] BookingDto bookingDto)
+        [HttpPost("booking_consulant")]
+        public async Task<IActionResult> CreateBookingConsultant([FromBody] BookingConsulantDto bookingDto)
         {
-            var book = await _bookingRepository.BookingServiceAsync(bookingDto);
+            var userIdClaim = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var book = await _bookingRepository.BookingConsulantAsync(bookingDto, userIdClaim);
+            return book ? Ok("Success") : BadRequest("Fail");
+        }
+
+        [HttpPost("booking_service")]
+        public async Task<IActionResult> CreateBookingService([FromBody] BookingServiceDto bookingDto)
+        {
+            var userIdClaim = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var book = await _bookingRepository.BookingServiceAsync(bookingDto, userIdClaim);
             return book ? Ok("Success") : BadRequest("Fail");
         }
     }
