@@ -5,6 +5,7 @@ namespace infertility_system.Interfaces
 {
     public interface IServiceRepository
     {
-        public Task<List<ServiceDB>> GetAllServicesAsync(QueryService query);
+        Task<List<ServiceDB>> GetListServicesAsync(QueryService query);
+        Task<List<ServiceDB>> GetAllServicesAsync();
     }
 }

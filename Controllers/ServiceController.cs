@@ -18,14 +18,21 @@ namespace infertility_system.Controllers
             _mapper = mapper;
             _serviceRepository = serviceRepository;
         }
-        [HttpGet("GetAllServices")]
+        [HttpGet("GetListServices")]
         public async Task<IActionResult> GetAllServices([FromQuery] QueryService query)
         {
-            var services = await _serviceRepository.GetAllServicesAsync(query);
+            var services = await _serviceRepository.GetListServicesAsync(query);
             var servicesDto = _mapper.Map<List<ServiceToDtoForList>>(services);
             return Ok(servicesDto);
         }
 
-
+        [HttpGet("GetAllServices")]
+        public async Task<IActionResult> GetAllServices()
+        {
+            var services = await _serviceRepository.GetAllServicesAsync();
+            var servicesDto = _mapper.Map<List<ServiceToDtoForList>>(services);
+            return Ok(servicesDto);
+        }
     }
+
 }

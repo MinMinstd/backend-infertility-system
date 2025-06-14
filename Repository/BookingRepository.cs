@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using infertility_system.Data;
 using infertility_system.Dtos.Booking;
 using infertility_system.Interfaces;
@@ -27,10 +27,13 @@ namespace infertility_system.Repository
             _orderRepository = orderRepository;
             _doctorScheduleRepository = doctorScheduleRepository;
         }
+        
 
-        public async Task<List<Doctor>> GetAllDoctorAsync()
+        public async Task<bool> CheckCustomerInBookingAsync(int customerId)
         {
-            return await _context.Doctors.ToListAsync();
+            return await _context.Bookings.AnyAsync(x => x.CustomerId == customerId);
+
+            //return await _context.Doctors.ToListAsync();
         }
 
         public async Task<List<DoctorSchedule>> GetDoctorScheduleAsync(int doctorId, DateOnly date)
@@ -80,6 +83,11 @@ namespace infertility_system.Repository
             await _orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId);
 
             return true;
+        }
+
+        public Task<List<Doctor>> GetAllDoctorAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }
