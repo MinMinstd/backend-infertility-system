@@ -22,17 +22,8 @@ namespace infertility_system.Helpers
             CreateMap<Doctor, DoctorForListDto>();
             CreateMap<DoctorDegree, DoctorDegreeDto>();
             CreateMap<ServiceDB, ServiceToDtoForList>();
-
-            CreateMap<BookingDto, Booking>()
-                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.Parse(src.Date)))
-                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.Parse(src.Time)))
-                .ForMember(dest => dest.Note, opt => opt.MapFrom(src => src.Note));
-
-            CreateMap<BookingDto, Order>()
-                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateOnly.Parse(src.Date)))
-                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => TimeOnly.Parse(src.Time)))
-                .ForMember(dest => dest.Wife, opt => opt.MapFrom(src => src.Wife))
-                .ForMember(dest => dest.Husband, opt => opt.MapFrom(src => src.Husband));
+            CreateMap<BookingServiceDto, Booking>();
+            CreateMap<BookingConsulantDto, Booking>();
             CreateMap<DoctorSchedule, DoctorScheduleDto>();
             CreateMap<MedicalRecordDetailDto, MedicalRecordDetail>();
             CreateMap<Customer, CustomerDto>();
