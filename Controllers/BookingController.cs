@@ -13,14 +13,14 @@ namespace infertility_system.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepository;
-        private readonly IDoctorSchedulesRepository _doctorSchedulesRepository;
+        private readonly IDoctorScheduleRepository _doctorScheduleRepository;
         private readonly IDoctorRepository _doctorRepository;
         private readonly IMapper _mapper;
 
-        public BookingController(IBookingRepository bookingRepository,IDoctorSchedulesRepository doctorSchedulesRepository, IDoctorRepository doctorRepository, IMapper mapper)
+        public BookingController(IBookingRepository bookingRepository,IDoctorScheduleRepository doctorScheduleRepository, IDoctorRepository doctorRepository, IMapper mapper)
         {
             _bookingRepository = bookingRepository;
-            _doctorSchedulesRepository = doctorSchedulesRepository;
+            _doctorScheduleRepository = doctorScheduleRepository;
             _doctorRepository = doctorRepository;
             _mapper = mapper;
         }

@@ -27,39 +27,7 @@ namespace infertility_system.Repository
             _orderRepository = orderRepository;
             _doctorScheduleRepository = doctorScheduleRepository;
         }
-        public async Task<bool> BookingServiceAsync(BookingDto dto)
-        {
-            var booking = _mapper.Map<Booking>(dto);
-            booking.DoctorScheduleId = dto.DoctorScheduleId;
-            _context.Bookings.Add(booking);
-            await _context.SaveChangesAsync();
-
-            var order = _mapper.Map<Order>(dto);
-            order.BookingId = booking.BookingId;
-            order.Wife = dto.Wife;
-            order.Husband = dto.Husband;
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.DoctorId == dto.DoctorId);
-            var service = await _context.Services.FirstOrDefaultAsync(x => x.Name == dto.ServiceName);
-            if(doctor == null)
-                return false;
-
-            var orderDetail = new OrderDetail
-            {
-                OrderId = order.OrderId,
-                DoctorName = doctor.FullName,
-                ServiceId = service.ServiceDBId,
-                ServiceName = service.Name
-            };
-            _context.OrderDetails.Add(orderDetail);
-            await _context.SaveChangesAsync();
-            return true;
-
-            
-
-        }
+        
 
         public async Task<bool> CheckCustomerInBookingAsync(int customerId)
         {
@@ -115,6 +83,11 @@ namespace infertility_system.Repository
             await _orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId);
 
             return true;
+        }
+
+        public Task<List<Doctor>> GetAllDoctorAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }
