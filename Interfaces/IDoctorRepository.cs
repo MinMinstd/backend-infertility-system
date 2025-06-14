@@ -5,7 +5,8 @@ namespace infertility_system.Interfaces
 {
     public interface IDoctorRepository
     {
-        public Task<List<Doctor>> GetAllDoctorsAsync(QueryDoctor? query);
-        public Task<Doctor?> GetDoctorByIdAsync(int doctorId);
+        Task<List<Doctor>> GetListDoctorsAsync(QueryDoctor? query);
+        Task<List<Doctor>> GetAllDoctorsAsync();
+        Task<Doctor?> GetDoctorByIdAsync(int doctorId);
     }
 }
