@@ -36,6 +36,7 @@ namespace infertility_system
             builder.Services.AddScoped<Interfaces.IOrderRepository, Repository.OrderRepository>();
             builder.Services.AddScoped<Interfaces.IBookingRepository, Repository.BookingRepository>();
             builder.Services.AddScoped<Interfaces.IDoctorScheduleRepository, Repository.DoctorScheduleRepository>();
+            builder.Services.AddScoped<Interfaces.IFeedbackRepository, Repository.FeedbackRepository>(); // Register the feedback repository
 
             builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();

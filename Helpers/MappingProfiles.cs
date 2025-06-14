@@ -4,6 +4,7 @@ using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorDegree;
 using infertility_system.Dtos.DoctorSchedule;
+using infertility_system.Dtos.Feedback;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.Service;
 using infertility_system.Models;
@@ -27,6 +28,7 @@ namespace infertility_system.Helpers
             CreateMap<DoctorSchedule, DoctorScheduleDto>();
             CreateMap<MedicalRecordDetailDto, MedicalRecordDetail>();
             CreateMap<Customer, CustomerDto>();
+            CreateMap<Feedback, FeedbackResponseDto>();
         }
     }
 }

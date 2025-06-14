@@ -26,6 +26,6 @@ namespace infertility_system.Controllers
             return Ok(servicesDto);
         }
 
-        //
+
     }
 }

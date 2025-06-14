@@ -224,22 +224,11 @@ namespace infertility_system.Data
                 .WithMany(m => m.Feedbacks)
                 .HasForeignKey(f => f.ManagerId);
 
-            modelBuilder.Entity<Feedback>()
-                .HasOne(s => s.Service)
-                .WithMany(s => s.Feedbacks)
-                .HasForeignKey(s => s.ServiceDBId)
-                .OnDelete(DeleteBehavior.NoAction);
-
             // Service
             modelBuilder.Entity<ServiceDB>()
                 .HasOne(s => s.Manager)
                 .WithMany(m => m.Services)
                 .HasForeignKey(s => s.ManagerId);
-
-            modelBuilder.Entity<ServiceDB>()
-                .HasMany(s => s.Feedbacks)
-                .WithOne(f => f.Service)
-                .HasForeignKey(f => f.ServiceDBId);
 
             modelBuilder.Entity<ServiceDB>()
                 .HasMany(s => s.OrderDetails)

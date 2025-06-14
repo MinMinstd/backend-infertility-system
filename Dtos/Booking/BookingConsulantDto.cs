@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace infertility_system.Dtos.Booking
+﻿namespace infertility_system.Dtos.Booking
 {
     public class BookingConsulantDto
     {
