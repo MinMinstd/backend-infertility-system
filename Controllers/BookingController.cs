@@ -3,8 +3,8 @@ using infertility_system.Dtos.Booking;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorSchedule;
 using infertility_system.Interfaces;
-using infertility_system.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace infertility_system.Controllers
 {
@@ -13,14 +13,14 @@ namespace infertility_system.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepository;
-        private readonly IDoctorSchedulesRepository _doctorSchedulesRepository;
+        private readonly IDoctorScheduleRepository _doctorScheduleRepository;
         private readonly IDoctorRepository _doctorRepository;
         private readonly IMapper _mapper;
 
-        public BookingController(IBookingRepository bookingRepository,IDoctorSchedulesRepository doctorSchedulesRepository, IDoctorRepository doctorRepository, IMapper mapper)
+        public BookingController(IBookingRepository bookingRepository,IDoctorScheduleRepository doctorScheduleRepository, IDoctorRepository doctorRepository, IMapper mapper)
         {
             _bookingRepository = bookingRepository;
-            _doctorSchedulesRepository = doctorSchedulesRepository;
+            _doctorScheduleRepository = doctorScheduleRepository;
             _doctorRepository = doctorRepository;
             _mapper = mapper;
         }
@@ -34,17 +34,29 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet("GetListDoctorSchedule/{doctorId}")]
-        public async Task<IActionResult> GetAllDoctorScheduleByDoctorId(int doctorId)
+        public async Task<IActionResult> GetAllDoctorScheduleByDoctorId(int doctorId, [FromQuery] DateOnly date)
         {
-            var doctorSchedules = await _doctorSchedulesRepository.GetDoctorScheduleAsync(doctorId);
+
+            var doctorSchedules = await _bookingRepository.GetDoctorScheduleAsync(doctorId, date);
+
             var doctorScheduleDtos = _mapper.Map<List<DoctorScheduleDto>>(doctorSchedules);
             return Ok(doctorScheduleDtos);
         }
 
-        [HttpPost("CreateBookingService")]
-        public async Task<IActionResult> CreateBookingService([FromBody] BookingDto bookingDto)
+
+        [HttpPost("booking_consulant")]
+        public async Task<IActionResult> CreateBookingConsultant([FromBody] BookingConsulantDto bookingDto)
         {
-            var book = await _bookingRepository.BookingServiceAsync(bookingDto);
+            var userIdClaim = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var book = await _bookingRepository.BookingConsulantAsync(bookingDto, userIdClaim);
+            return book ? Ok("Success") : BadRequest("Fail");
+        }
+
+        [HttpPost("booking_service")]
+        public async Task<IActionResult> CreateBookingService([FromBody] BookingServiceDto bookingDto)
+        {
+            var userIdClaim = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var book = await _bookingRepository.BookingServiceAsync(bookingDto, userIdClaim);
             return book ? Ok("Success") : BadRequest("Fail");
         }
     }

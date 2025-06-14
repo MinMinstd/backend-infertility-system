@@ -2,6 +2,34 @@
 CREATE DATABASE InfertilitySystem
 USE InfertilitySystem
 
+CREATE TABLE [dbo].[Users] (
+    [UserId]       INT             IDENTITY (1, 1) NOT NULL,
+    [Email]        NVARCHAR (MAX)  NULL,
+    [Phone]        NVARCHAR (MAX)  NULL,
+    [PasswordHash] VARBINARY (MAX) NULL,
+    [PasswordSalt] VARBINARY (MAX) NULL,
+    [Role]         NVARCHAR (MAX)  NULL,
+    CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([UserId] ASC)
+);
+
+INSERT INTO [dbo].[Users] ([Email], [Phone], [PasswordHash], [PasswordSalt], [Role])
+VALUES 
+(N'duy@gmail.com', N'0903456789', 0xE1F51BE5B7A05D4CF0CB1C1E3C13621D19A774B9586DEC17E21DD02C2D95580964E07BF87964441D5AA06E37CC342A113B29FA1925D978DD6474C250BBC61D80,
+ 0xDDE2BD20EE630525633836761EA057A2375921FBFD865714CF38FB0A79983AE23543C224C0550FB5207518DD7F6BFC97F761307DCFE8EA1821709CFB64B8E399, N'Admin'),
+(N'doctor1@gmail.com', N'0903456789', 0xE1F51BE5B7A05D4CF0CB1C1E3C13621D19A774B9586DEC17E21DD02C2D95580964E07BF87964441D5AA06E37CC342A113B29FA1925D978DD6474C250BBC61D80, 
+	0xDDE2BD20EE630525633836761EA057A2375921FBFD865714CF38FB0A79983AE23543C224C0550FB5207518DD7F6BFC97F761307DCFE8EA1821709CFB64B8E399,N'Doctor'),
+(N'doctor2@gmail.com', N'0903544878', 0xE1F51BE5B7A05D4CF0CB1C1E3C13621D19A774B9586DEC17E21DD02C2D95580964E07BF87964441D5AA06E37CC342A113B29FA1925D978DD6474C250BBC61D80, 
+	0xDDE2BD20EE630525633836761EA057A2375921FBFD865714CF38FB0A79983AE23543C224C0550FB5207518DD7F6BFC97F761307DCFE8EA1821709CFB64B8E399,N'Doctor'),
+(N'doctor3@gmail.com', N'0903544878', 0xE1F51BE5B7A05D4CF0CB1C1E3C13621D19A774B9586DEC17E21DD02C2D95580964E07BF87964441D5AA06E37CC342A113B29FA1925D978DD6474C250BBC61D80, 
+	0xDDE2BD20EE630525633836761EA057A2375921FBFD865714CF38FB0A79983AE23543C224C0550FB5207518DD7F6BFC97F761307DCFE8EA1821709CFB64B8E399,N'Doctor'),
+(N'customer1@gmail.com', N'0903544878', 0xE1F51BE5B7A05D4CF0CB1C1E3C13621D19A774B9586DEC17E21DD02C2D95580964E07BF87964441D5AA06E37CC342A113B29FA1925D978DD6474C250BBC61D80, 
+	0xDDE2BD20EE630525633836761EA057A2375921FBFD865714CF38FB0A79983AE23543C224C0550FB5207518DD7F6BFC97F761307DCFE8EA1821709CFB64B8E399,N'Customer'),
+(N'customer2@gmail.com', N'0903544878', 0xE1F51BE5B7A05D4CF0CB1C1E3C13621D19A774B9586DEC17E21DD02C2D95580964E07BF87964441D5AA06E37CC342A113B29FA1925D978DD6474C250BBC61D80, 
+	0xDDE2BD20EE630525633836761EA057A2375921FBFD865714CF38FB0A79983AE23543C224C0550FB5207518DD7F6BFC97F761307DCFE8EA1821709CFB64B8E399,N'Customer'),
+(N'huy@gmail.com', N'0903456789', 0xE1F51BE5B7A05D4CF0CB1C1E3C13621D19A774B9586DEC17E21DD02C2D95580964E07BF87964441D5AA06E37CC342A113B29FA1925D978DD6474C250BBC61D80, 
+	0xDDE2BD20EE630525633836761EA057A2375921FBFD865714CF38FB0A79983AE23543C224C0550FB5207518DD7F6BFC97F761307DCFE8EA1821709CFB64B8E399,N'Manager');
+
+
 -- Customer table
 CREATE TABLE [dbo].[Customers] (
     [CustomerId] INT            IDENTITY (1, 1) NOT NULL,
@@ -14,13 +42,22 @@ CREATE TABLE [dbo].[Customers] (
     [Address]    NVARCHAR (MAX) NULL,
     CONSTRAINT [PK_Customers] PRIMARY KEY CLUSTERED ([CustomerId] ASC)
 );
-
+select * from Orders
+select * from OrderDetails
+select * from Customers
+select * from Bookings
+select * from MedicalRecords
+select * from MedicalRecordDetails
+select * from Doctors
+select * from Users
+select * from MedicalRecordDetails
+select * from DoctorSchedules
+select * from ConsulationRegistrations
+select * from Services
 INSERT INTO [dbo].[Customers] ([UserId], [FullName], [Email], [Phone], [Gender], [Birthday], [Address]) VALUES
-(1, N'Nguyen Van A', 'a@gmail.com', '0900000001', N'Nam', '1990-01-01', N'Hanoi'),
-(2, N'Tran Thi B', 'b@gmail.com', '0900000002', N'Nữ', '1992-02-02', N'HCMC'),
-(3, N'Le Van C', 'c@gmail.com', '0900000003', N'Nam', '1988-03-03', N'Danang'),
-(4, N'Pham Thi D', 'd@gmail.com', '0900000004', N'Nữ', '1995-04-04', N'Hue'),
-(5, N'Do Van E', 'e@gmail.com', '0900000005', N'Nam', '1993-05-05', N'Can Tho');
+(5, N'Vũ Trần Bình Minh', 'customer1@gmail.com', '0903544878', N'Nam', '1990-01-01', N'Hanoi'),
+(6, N'Tran Thi B', 'customer2@gmail.com', '0903544878', N'Nữ', '1992-02-02', N'HCMC'),
+
 
 -- Manager table
 CREATE TABLE [dbo].[Managers] (
@@ -34,11 +71,8 @@ CREATE TABLE [dbo].[Managers] (
 );
 
 INSERT INTO [dbo].[Managers] ([UserId], [FullName], [Email], [Phone], [Address]) VALUES
-(1, N'Manager 1', 'manager1@gmail.com', '0911111111', N'Address 1'),
-(2, N'Manager 2', 'manager2@gmail.com', '0911111112', N'Address 2'),
-(3, N'Manager 3', 'manager3@gmail.com', '0911111113', N'Address 3'),
-(4, N'Manager 4', 'manager4@gmail.com', '0911111114', N'Address 4'),
-(5, N'Manager 5', 'manager5@gmail.com', '0911111115', N'Address 5');
+(7, N'Manager 1', 'huy@gmail.com', '0903456789', N'Address 1');
+
 
 -- Doctor table
 CREATE TABLE [dbo].[Doctors] (
@@ -52,11 +86,10 @@ CREATE TABLE [dbo].[Doctors] (
 );
 
 INSERT INTO [dbo].[Doctors] ([UserId], [FullName], [Email], [Phone], [Experience]) VALUES
-(1, N'Doctor 1', 'doctor1@hospital.com', '0922222221', 6),
-(2, N'Doctor 2', 'doctor2@hospital.com', '0922222222', 7),
-(3, N'Doctor 3', 'doctor3@hospital.com', '0922222223', 8),
-(4, N'Doctor 4', 'doctor4@hospital.com', '0922222224', 9),
-(5, N'Doctor 5', 'doctor5@hospital.com', '0922222225', 10);
+(2, N'Doctor 1', 'doctor1@gmail.com', '0903456789', 6),
+(3, N'Doctor 2', 'doctor2@gmail.com', '0903544878', 7),
+(4, N'Doctor 3', 'doctor3@gmail.com', '0903544878', 8);
+
 
 -- Doctor_Degree table
 CREATE TABLE [dbo].[DoctorDegrees] (
@@ -71,9 +104,8 @@ CREATE TABLE [dbo].[DoctorDegrees] (
 INSERT INTO [DoctorDegrees] ([DegreeName], [GraduationYear], [DoctorId]) VALUES
 (N'Bác sĩ CK1', 2001, 1),
 (N'Bác sĩ CK2', 2002, 2),
-(N'Bác sĩ CK3', 2003, 3),
-(N'Bác sĩ CK4', 2004, 4),
-(N'Bác sĩ CK5', 2005, 5);
+(N'Bác sĩ CK3', 2003, 3);
+
 
 
 -- Doctor_schedule table
@@ -93,11 +125,25 @@ CREATE TABLE [dbo].[DoctorSchedules] (
 
 INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Status], [DoctorId], [ManagerId]) VALUES
 -- cũng có IDENTITY, có thể không ghi DoctorScheduleId
-( '2025-06-01', '08:00:00', '17:00:00', N'Available', 1, 1),
-( '2025-06-02', '08:00:00', '17:00:00', N'Available', 2, 2),
-( '2025-06-03', '08:00:00', '17:00:00', N'Available', 3, 3),
-( '2025-06-04', '08:00:00', '17:00:00', N'Available', 4, 4),
-( '2025-06-05', '08:00:00', '17:00:00', N'Available', 5, 5);
+( '2025-07-01', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
+( '2025-07-01', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
+( '2025-07-01', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
+( '2025-07-04', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
+( '2025-07-04', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
+( '2025-07-04', '14:00:00', '16:30:00', N'Available', 1, 1), --5 6
+( '2025-07-02', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
+( '2025-07-02', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
+( '2025-07-02', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
+( '2025-07-05', '08:00:00', '10:30:00', N'Available', 2, 1), --6
+( '2025-07-05', '11:00:00', '13:30:00', N'Available', 2, 1), --6
+( '2025-07-05', '14:00:00', '16:30:00', N'Available', 2, 1), --6
+( '2025-07-03', '08:00:00', '10:30:00', N'Available', 3, 1), --4
+( '2025-07-03', '11:00:00', '13:30:00', N'Available', 3, 1), --4
+( '2025-07-03', '14:00:00', '16:30:00', N'Available', 3, 1), --4
+( '2025-07-06', '08:00:00', '10:30:00', N'Available', 3, 1), --7
+( '2025-07-06', '11:00:00', '13:30:00', N'Available', 3, 1), --7
+( '2025-07-06', '14:00:00', '16:30:00', N'Available', 3, 1), --7
+
 
 -- Consultation_registration table
 CREATE TABLE [dbo].[ConsulationRegistrations] (
@@ -112,9 +158,7 @@ CREATE TABLE [dbo].[ConsulationRegistrations] (
 INSERT INTO [dbo].[ConsulationRegistrations] ([Date], [Status], [Type], [Note]) VALUES
 ('2025-06-01', N'Đã khám', N'Bình thường', N'Không vấn đề'),
 ('2025-06-02', N'Đã khám', N'Cần theo dõi', N'Khuyến cáo tái khám'),
-('2025-06-03', N'Đã khám', N'Bình thường', N'Ổn định'),
-('2025-06-04', N'Đang chờ', NULL, NULL),
-('2025-06-05', N'Đã khám', N'Cần điều trị', N'Bắt đầu lộ trình');
+
 
 
 
@@ -155,11 +199,8 @@ CREATE TABLE [dbo].[Bookings] (
 
 INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, ConsulationRegistrationId, Status, Date, Time, Note)
 VALUES 
-(1, 1, 1, N'IVF', '2025-06-01', '08:00', N'Lịch tư vấn IVF'),
-(2, 2, 2, N'IUI', '2025-06-02', '09:00', N'Lịch tư vấn IUI'),
-(3, 3, 3, N'IVF', '2025-06-03', '10:00', N'Kiểm tra kết quả'),
-(4, 4, 4, N'IUI', '2025-06-04', '11:00', N'Lịch khám theo dõi'),
-(5, 5, 5, N'IVF', '2025-06-05', '14:00', N'Bắt đầu điều trị');
+(1, 1, null, N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF'),
+(2, 7, null, N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI');
 
 
 -- Service table
@@ -175,8 +216,8 @@ CREATE TABLE [dbo].[Services] (
 
 INSERT INTO [Services] ([Name], [Description], [Price], [ManagerId])
 VALUES 
-(N'IVF', N'Gói điều trị IVF cơ bản', 30000000, 1),
-(N'IUI', N'Gói điều trị IUI tiêu chuẩn', 10000000, 2);
+(N'IVF', N'Gói điều trị IVF cơ bản', 50000000, 1),
+(N'IUI', N'Gói điều trị IUI tiêu chuẩn', 20000000, 1);
 
 select * from Services
 
@@ -201,13 +242,11 @@ INSERT INTO [dbo].[MedicalRecords]
 ([StartDate], [EndDate], [Stage], [Diagnosis], [Status], [Attempt], [CustomerId], [DoctorId])
 VALUES
 -- Khách hàng 1 - IVF, thành công
-('2025-06-01', '2025-06-20', N'Đã thử thai', N'Hiếm muộn do buồng trứng', N'Thành công', 1, 1, 1),
+('2025-07-01', '2025-08-01', N'Đã thử thai', N'Hiếm muộn do buồng trứng', N'Thành công', 1, 1, 1),
 
 -- Khách hàng 2 - IVF lần 2, đang điều trị
-('2025-05-15', '2025-06-10', N'Chuyển phôi', N'Hiếm muộn không rõ nguyên nhân', N'Đang điều trị', 2, 2, 2),
+('2025-07-02', '2025-08-02', N'Chuyển phôi', N'Hiếm muộn không rõ nguyên nhân', N'Đang điều trị', 1, 2, 2);
 
--- Khách hàng 3 - IUI, thành công
-('2025-06-01', '2025-06-18', N'Thử thai', N'Tinh trùng yếu', N'Thành công', 1, 3, 2);
 
 
 -- Treatment_roadmap table
@@ -355,13 +394,6 @@ INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [Medical
 ('2025-05-27', N'Ổn định', N'Không phản ứng phụ', N'Treatment', 2, NULL, NULL, 5),
 ('2025-06-10', N'HCG âm tính', N'Thất bại', N'Result', 2, NULL, 2, 6);
 
--- Hồ sơ bệnh nhân 3 - IUI
-INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-06-01', N'Kiểm tra ok', N'Bắt đầu IUI', N'Consultation', 3, 3, NULL, 7),
-('2025-06-05', N'Phản ứng tốt', N'Kích thích thành công', N'Treatment', 3, NULL, NULL, 8),
-('2025-06-07', N'Tinh trùng đạt chuẩn', N'Sẵn sàng bơm', N'Treatment', 3, NULL, NULL, 9),
-('2025-06-10', N'Bơm IUI xong', N'Chờ thử thai', N'Treatment', 3, NULL, NULL, 10),
-('2025-06-14', N'HCG dương tính', N'Thành công', N'Result', 3, NULL, 3, 11);
 
 
 
@@ -383,37 +415,42 @@ CREATE TABLE [dbo].[Orders] (
     CONSTRAINT [FK_Orders_Managers_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Managers] ([ManagerId])
 );
 
-
+select * from Bookings
 INSERT INTO [Orders] ([BookingId], [CustomerId], [ManagerId], [Date], [Time], [Status], [Wife], [Husband])
 VALUES 
-(1, 1, 1, '2025-06-01', '09:00', N'Đã đặt', N'Không ghi chú', N'Nguyen Van B'),
-(2, 2, 2, '2025-06-02', '10:00', N'Đã đặt', N'Yêu cầu bác sĩ nữ', N'Tran Van D'),
-(3, 3, 3, '2025-06-03', '11:00', N'Chờ xác nhận', NULL, N'Pham Van E'),
-(4, 4, 4, '2025-06-04', '14:00', N'Đã xác nhận', NULL, N'Do Van F'),
-(5, 5, 5, '2025-06-05', '15:00', N'Đã hoàn tất', NULL, N'Le Van G');
+(1, 1, 1, '2025-07-01', '08:00:00', N'Pending', N'Đoàn Ngọc Khánh', N'Nguyen Van B'),
+(2, 2, 1, '2025-07-02', '08:00:00', N'Pending', N'Vũ Trần Bình Minh', N'Tran Van D');
+
 
 
 -- Order_detail table
 CREATE TABLE [dbo].[OrderDetails] (
     [OrderDetailId]             INT             IDENTITY (1, 1) NOT NULL,
-    [Quantity]                  INT             NOT NULL,
-    [Price]                     DECIMAL (18, 2) NOT NULL,
-    [OrderId]                   INT             NOT NULL,
-    [ServiceId]                 INT             NOT NULL,
-    [ConsulationRegistrationId] INT             NOT NULL,
+    [DoctorName]                NVARCHAR (MAX)  NULL,
+    [ServiceName]               NVARCHAR (MAX)  NULL,
+    [Price]                     DECIMAL (18, 2) NULL,
+    [OrderId]                   INT             NULL,
+    [ServiceId]                 INT             NULL,
+    [ConsulationRegistrationId] INT             NULL,
     CONSTRAINT [PK_OrderDetails] PRIMARY KEY CLUSTERED ([OrderDetailId] ASC),
-    CONSTRAINT [FK_OrderDetails_ConsulationRegistrations_ConsulationRegistrationId] FOREIGN KEY ([ConsulationRegistrationId]) REFERENCES [dbo].[ConsulationRegistrations] ([ConsulationRegistrationId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_OrderDetails_ConsulationRegistrations_ConsulationRegistrationId] FOREIGN KEY ([ConsulationRegistrationId]) REFERENCES [dbo].[ConsulationRegistrations] ([ConsulationRegistrationId]),
     CONSTRAINT [FK_OrderDetails_Orders_OrderId] FOREIGN KEY ([OrderId]) REFERENCES [dbo].[Orders] ([OrderId]),
-    CONSTRAINT [FK_OrderDetails_Services_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [dbo].[Services] ([ServiceDBId]) ON DELETE CASCADE
+    CONSTRAINT [FK_OrderDetails_Services_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [dbo].[Services] ([ServiceDBId])
 );
 
-select * from [ConsulationRegistrations]
-select * from OrderDetails
-INSERT INTO [OrderDetails] ([OrderId], [ServiceId], [ConsulationRegistrationId], [Quantity], [Price])
+INSERT INTO [dbo].[OrderDetails] 
+(
+    [OrderId], 
+    [ServiceId], 
+    [ConsulationRegistrationId], 
+    [DoctorName], 
+    [ServiceName],
+    [Price]
+)
 VALUES 
-(1, 1, 1, 1, 30000000),
-(2, 2, 2, 2, 10000000),
-(3, 2, 3, 1, 10000000)
+(1, 1, null, N'Doctor 1', N'IVF', 30000000),
+(2, 2, null, N'Doctor 2', N'IVF', 10000000);
+
 
 
 
@@ -424,8 +461,8 @@ CREATE TABLE [dbo].[Feedbacks] (
     [Date]        DATE           NOT NULL,
     [Comments]    NVARCHAR (MAX) NULL,
     [Rating]      INT            NOT NULL,
+	[Status]	  NVARCHAR (MAX) NOT NULL,
     [CustomerId]  INT            NOT NULL,
-    [ServiceDBId] INT            NOT NULL,
     [ManagerId]   INT            NOT NULL,
     CONSTRAINT [PK_Feedbacks] PRIMARY KEY CLUSTERED ([FeedbackId] ASC),
     CONSTRAINT [FK_Feedbacks_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Customers] ([CustomerId]) ON DELETE CASCADE,
@@ -434,13 +471,11 @@ CREATE TABLE [dbo].[Feedbacks] (
 );
 
 
-INSERT INTO [Feedbacks] ([CustomerId], [ServiceDBId], [ManagerId], [Date], [Comments], [Rating])
+INSERT INTO [Feedbacks] ([CustomerId], [ManagerId], [Date], [Comments], [Rating], [Status])
 VALUES 
-(1, 1, 1, '2025-06-02', N'Dịch vụ tốt', 5),
-(2, 2, 2, '2025-06-03', N'Tư vấn nhiệt tình', 4),
-(3, 1, 2, '2025-06-04', N'Trải nghiệm ổn', 4),
-(4, 2, 1, '2025-06-05', N'Cần cải thiện thời gian chờ', 3),
-(5, 1, 1, '2025-06-06', N'Rất hài lòng', 5);
+(1, 1, '2025-08-08', N'Dịch vụ tốt', 5, N'Confirm'),
+(2, 1, '2025-08-10', N'Tư vấn nhiệt tình', 4, N'Confirm');
+
 
 
 -- Payment table
@@ -461,8 +496,7 @@ CREATE TABLE [dbo].[Payments] (
 INSERT INTO [Payments] ([TreatmentRoadmapId], [OrderId], [PriceByTreatement], [Method], [Date], [Status])
 VALUES 
 (1, 1, 30000000, N'Chuyển khoản', '2025-06-02', N'Đã thanh toán'),
-(2, 2, 10000000, N'Tiền mặt', '2025-06-03', N'Đã thanh toán'),
-(3, 3, 50000000, N'VNPay', '2025-06-04', N'Chưa thanh toán')
+(2, 2, 10000000, N'Tiền mặt', '2025-06-03', N'Đã thanh toán');
 
 
 
@@ -483,11 +517,8 @@ CREATE TABLE [dbo].[BlogPosts] (
 
 INSERT INTO [BlogPosts] ([CustomerId], [ManagerId], [Title], [Story], [TreatmentType], [Date], [Image])
 VALUES 
-(1, 1, N'Hành trình IVF', N'Kể lại quá trình IVF', N'IVF', '2025-06-01 10:00:00', N'ivf1.jpg'),
-(2, 2, N'Kinh nghiệm IUI', N'Chia sẻ sau điều trị', N'IUI', '2025-06-02 11:00:00', N'iui1.jpg'),
-(3, 3, N'Tư vấn điều trị', N'Bài viết chuyên gia', N'IVF', '2025-06-03 12:00:00', N'ivf2.jpg'),
-(4, 4, N'Giải đáp thắc mắc', N'Câu hỏi thường gặp', N'IUI', '2025-06-04 13:00:00', N'iui2.jpg'),
-(5, 5, N'Thành công sau IVF', N'Niềm vui làm mẹ', N'IVF', '2025-06-05 14:00:00', N'ivf3.jpg');
+(1, 1, N'Hành trình IVF', N'Kể lại quá trình IVF', N'IVF', '2025-06-01', N'ivf1.jpg'),
+(2, 1, N'Kinh nghiệm IUI', N'Chia sẻ sau điều trị', N'IUI', '2025-06-02', N'iui1.jpg');
 
 
 -- Embryo table
@@ -506,10 +537,7 @@ CREATE TABLE [dbo].[Embryos] (
 INSERT INTO [Embryos] ([CustomerId], [CreateAt], [Quality], [Type], [Amount])
 VALUES 
 (1, '2025-06-01', N'Tốt', 'D5', 5),
-(2, '2025-06-02', N'Trung bình', 'D3', 4),
-(3, '2025-06-03', N'Tốt', 'D5', 3),
-(4, '2025-06-04', N'Kém', 'D2', 2),
-(5, '2025-06-05', N'Tốt', 'D5', 6);
+(2, '2025-06-02', N'Trung bình', 'D3', 4);
 
 
 select s.Name, tr.Stage ,mrd.Note, mrd.TestResult, mrd.Type, mrd.Date as N'Ngày thực hiện', d.FullName as 'DoctorName' from Services s 
