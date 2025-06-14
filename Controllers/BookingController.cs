@@ -28,7 +28,7 @@ namespace infertility_system.Controllers
         [HttpGet("GetAllDoctors")]
         public async Task<IActionResult> GetAllDoctor()
         {
-            var doctors = await _doctorRepository.GetAllDoctorsAsync(null);
+            var doctors = await _doctorRepository.GetAllDoctorsAsync();
             var doctorDto = _mapper.Map<List<DoctorForListDto>>(doctors);
             return Ok(doctorDto);
         }
@@ -41,7 +41,7 @@ namespace infertility_system.Controllers
             return Ok(doctorScheduleDtos);
         }
 
-        [HttpPost("booking_service")]
+        [HttpPost("CreateBookingService")]
         public async Task<IActionResult> CreateBookingService([FromBody] BookingDto bookingDto)
         {
             var book = await _bookingRepository.BookingServiceAsync(bookingDto);

@@ -13,7 +13,7 @@ namespace infertility_system.Repository
         {
             _context = context;
         }
-        public async Task<List<Doctor>> GetAllDoctorsAsync(QueryDoctor? query)
+        public async Task<List<Doctor>> GetListDoctorsAsync(QueryDoctor? query)
         {
             var doctors = _context.Doctors.AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.FullName))
@@ -22,6 +22,11 @@ namespace infertility_system.Repository
             }
 
             return await doctors.ToListAsync();
+        }
+
+        public async Task<List<Doctor>> GetAllDoctorsAsync()
+        {
+            return await _context.Doctors.ToListAsync();
         }
 
         public async Task<Doctor?> GetDoctorByIdAsync(int doctorId)

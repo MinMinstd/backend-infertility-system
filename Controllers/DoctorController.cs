@@ -30,9 +30,17 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet("GetListDoctors")]
-        public async Task<IActionResult> GetAllDoctors([FromQuery] QueryDoctor query)
+        public async Task<IActionResult> GetListDoctors([FromQuery] QueryDoctor query)
         {
-            var doctors = await _doctorRepository.GetAllDoctorsAsync(query);
+            var doctors = await _doctorRepository.GetListDoctorsAsync(query);
+            var doctorDto = _mapper.Map<List<DoctorForListDto>>(doctors);
+            return Ok(doctorDto);
+        }
+
+        [HttpGet("GetAllDoctors")]
+        public async Task<IActionResult> GetAllDoctors()
+        {
+            var doctors = await _doctorRepository.GetAllDoctorsAsync();
             var doctorDto = _mapper.Map<List<DoctorForListDto>>(doctors);
             return Ok(doctorDto);
         }

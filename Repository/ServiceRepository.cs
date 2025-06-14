@@ -13,7 +13,7 @@ namespace infertility_system.Repository
         {
             _context = context;
         }
-        public async Task<List<ServiceDB>> GetAllServicesAsync(QueryService query)
+        public async Task<List<ServiceDB>> GetListServicesAsync(QueryService query)
         {
             var services = _context.Services.AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.Name))
@@ -21,6 +21,11 @@ namespace infertility_system.Repository
                 services = services.Where(x => x.Name.Contains(query.Name));
             }
             return await services.ToListAsync();
+        }
+
+        public async Task<List<ServiceDB>> GetAllServicesAsync()
+        {
+            return await _context.Services.ToListAsync();
         }
     }
 }
