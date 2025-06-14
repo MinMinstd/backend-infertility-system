@@ -10,8 +10,8 @@
         // Service 1-N OrderDetail
         public List<OrderDetail>? OrderDetails { get; set; }
 
-        // Service 1-N Feedback
-        public List<Feedback>? Feedbacks { get; set; }
+        //// Service 1-N Feedback
+        //public List<Feedback>? Feedbacks { get; set; }
 
         // Service 1-N TreatementRoadmap
         public List<TreatmentRoadmap>? TreatmentRoadmaps { get; set; }

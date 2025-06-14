@@ -33,7 +33,6 @@ namespace infertility_system.Controllers
             var servicesDto = _mapper.Map<List<ServiceToDtoForList>>(services);
             return Ok(servicesDto);
         }
-
     }
 
 }
