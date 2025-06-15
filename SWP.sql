@@ -142,7 +142,7 @@ INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Statu
 ( '2025-07-03', '14:00:00', '16:30:00', N'Available', 3, 1), --4
 ( '2025-07-06', '08:00:00', '10:30:00', N'Available', 3, 1), --7
 ( '2025-07-06', '11:00:00', '13:30:00', N'Available', 3, 1), --7
-( '2025-07-06', '14:00:00', '16:30:00', N'Available', 3, 1), --7
+( '2025-07-06', '14:00:00', '16:30:00', N'Available', 3, 1); --7
 
 
 -- Consultation_registration table
@@ -157,7 +157,7 @@ CREATE TABLE [dbo].[ConsulationRegistrations] (
 
 INSERT INTO [dbo].[ConsulationRegistrations] ([Date], [Status], [Type], [Note]) VALUES
 ('2025-06-01', N'Đã khám', N'Bình thường', N'Không vấn đề'),
-('2025-06-02', N'Đã khám', N'Cần theo dõi', N'Khuyến cáo tái khám'),
+('2025-06-02', N'Đã khám', N'Cần theo dõi', N'Khuyến cáo tái khám');
 
 
 
@@ -175,10 +175,7 @@ CREATE TABLE [dbo].[ConsulationResults] (
 
 INSERT INTO [dbo].[ConsulationResults] ([Date], [ResultValue], [Note], [ConsulationRegistrationId]) VALUES
 ('2025-06-01', N'Ổn định', N'Không cần can thiệp', 1),
-('2025-06-02', N'Theo dõi thêm', N'Xem lại sau 1 tuần', 2),
-('2025-06-03', N'Tốt', N'Có thể điều trị', 3),
-('2025-06-04', N'Đợi xét nghiệm', NULL, 4),
-('2025-06-05', N'Bắt đầu lộ trình', N'Theo IVF', 5);
+('2025-06-02', N'Theo dõi thêm', N'Xem lại sau 1 tuần', 2);
 
 
 -- Booking table
@@ -303,14 +300,11 @@ CREATE TABLE [dbo].[TypeTests] (
     CONSTRAINT [FK_TypeTests_TreatmentResults_TreatmentResultId] FOREIGN KEY ([TreatmentResultId]) REFERENCES [dbo].[TreatmentResults] ([TreatmentResultId]) ON DELETE CASCADE
 );
 
-
+select * from ConsulationResults
 INSERT INTO [TypeTests] ([ConsulationResultId], [TreatmentResultId], [Name], [Description])
 VALUES 
-(1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
-(2, 2, N'Siêu âm', N'Theo dõi nang trứng'),
-(3, 3, N'Xét nghiệm nội tiết', N'AMH, FSH, LH'),
-(4, 4, N'Kiểm tra nội soi', N'Tình trạng tử cung'),
-(5, 5, N'Xét nghiệm tinh trùng', N'Đánh giá chất lượng');
+(4, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
+(5, 2, N'Siêu âm', N'Theo dõi nang trứng');
 
 -- Prescription table
 CREATE TABLE [dbo].[Prescriptions] (
@@ -378,7 +372,7 @@ select * from MedicalRecordDetails
 -- INSERT hợp lệ cho MedicalRecordDetails
 -- Hồ sơ bệnh nhân 1 - IVF
 INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-06-03', N'Bình thường', N'Tư vấn khởi đầu IVF', N'Consultation', 1, 1, NULL, 1),
+('2025-06-03', N'Bình thường', N'Tư vấn khởi đầu IVF', N'Consultation', 1, 4, NULL, 1),
 ('2025-06-06', N'15 trứng được lấy', N'Không biến chứng', N'Treatment', 1, NULL, NULL, 2),
 ('2025-06-09', N'Tinh trùng đạt chuẩn', N'Sẵn sàng tạo phôi', N'Treatment', 1, NULL, NULL, 3),
 ('2025-06-12', N'Tạo 5 phôi tốt', N'Đánh giá phôi ok', N'Treatment', 1, NULL, NULL, 4),
@@ -387,7 +381,7 @@ INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [Medical
 
 -- Hồ sơ bệnh nhân 2 - IVF lần 2
 INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-05-15', N'Bắt đầu lại chu kỳ', N'IVF lần 2', N'Consultation', 2, 2, NULL, 1),
+('2025-05-15', N'Bắt đầu lại chu kỳ', N'IVF lần 2', N'Consultation', 2, 5, NULL, 1),
 ('2025-05-18', N'16 trứng được lấy', N'Sẵn sàng tạo phôi', N'Treatment', 2, NULL, NULL, 2),
 ('2025-05-21', N'Tạo được 4 phôi', N'Phôi trung bình', N'Treatment', 2, NULL, NULL, 3),
 ('2025-05-24', N'Chuyển 1 phôi', N'Chờ kết quả', N'Treatment', 2, NULL, NULL, 4),
