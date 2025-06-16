@@ -14,9 +14,5 @@
         // OrderDetail N-1 Service
         public int? ServiceId { get; set; }
         public ServiceDB? Service { get; set; }
-
-        // OrderDetail 1-1 ConsulationRegistration
-        public int? ConsulationRegistrationId { get; set; }
-        public ConsulationRegistration? ConsulationRegistration { get; set; }
     }
 }

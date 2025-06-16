@@ -16,5 +16,9 @@
 
         // ConsulationResult 1-N TypeTests
         public List<TypeTest>? TypeTests { get; set; }
+
+        // ConsulationResult 1-1 Booking
+        public int? BookingId { get; set; }
+        public Booking? Booking { get; set; }
     }
 }

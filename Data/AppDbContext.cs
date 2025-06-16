@@ -26,7 +26,7 @@ namespace infertility_system.Data
         public DbSet<Models.Payment> Payments { get; set; }
         public DbSet<Models.Prescription> Prescriptions { get; set; }
         public DbSet<Models.PrescriptionDetail> PrescriptionDetails { get; set; }
-        public DbSet<Models.ServiceDB> Services  { get; set; }
+        public DbSet<Models.ServiceDB> Services { get; set; }
         public DbSet<Models.TreatmentResult> TreatmentResults { get; set; }
         public DbSet<Models.TreatmentRoadmap> TreatmentRoadmaps { get; set; }
         public DbSet<Models.TypeTest> TypeTests { get; set; }
@@ -181,25 +181,19 @@ namespace infertility_system.Data
                 .HasForeignKey(b => b.DoctorScheduleId);
 
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.ConsulationRegistration)
-                .WithMany(cr => cr.Bookings)
-                .HasForeignKey(b => b.ConsulationRegistrationId);
+                .HasOne(b => b.ConsulationResult)
+                .WithOne(cr => cr.Booking)
+                .HasForeignKey<ConsulationResult>(cr => cr.BookingId);
 
             // ConsulationRegistration
-            modelBuilder.Entity<ConsulationRegistration>()
-                .HasMany(cr => cr.Bookings)
-                .WithOne(b => b.ConsulationRegistration)
-                .HasForeignKey(b => b.ConsulationRegistrationId);
+
 
             modelBuilder.Entity<ConsulationRegistration>()
                 .HasOne(cr => cr.ConsulationResult)
                 .WithOne(cr => cr.ConsulationRegistration)
                 .HasForeignKey<ConsulationResult>(cr => cr.ConsulationRegistrationId);
 
-            modelBuilder.Entity<ConsulationRegistration>()
-                .HasOne(cr => cr.OrderDetail)
-                .WithOne(od => od.ConsulationRegistration)
-                .HasForeignKey<OrderDetail>(od => od.ConsulationRegistrationId);
+
 
             // OrderDetail
             modelBuilder.Entity<OrderDetail>()
