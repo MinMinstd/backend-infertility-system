@@ -18,7 +18,7 @@ namespace infertility_system.Repository
 
         public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
         {
-            return await _authService.ChangePasswordAsync(userId,dto) ;
+            return await _authService.ChangePasswordAsync(userId, dto);
         }
 
         public async Task<bool> CheckExists(int id)
@@ -26,11 +26,9 @@ namespace infertility_system.Repository
             return await _context.Customers.AnyAsync(x => x.CustomerId == id);
         }
 
-        public async Task<IEnumerable<Customer>> GetCustomersAsync(int userId)
+        public async Task<Customer> GetCustomersAsync(int userId)
         {
-            return await _context.Customers
-                .Where(c => c.UserId == userId)
-                .ToListAsync();
+            return await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task<ICollection<Embryo>> GetEmbryos(int userId)

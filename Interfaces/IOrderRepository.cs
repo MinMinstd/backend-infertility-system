@@ -6,5 +6,6 @@ namespace infertility_system.Interfaces
     {
         Task<Order> CreateOrder(int bookingId, int customerId, string wife = null, string husband = null);
         Task CreateOrderDetail(int orderId, int doctorId, int? serviceId = null);
+        Task<int> CountOrdersByCustomerId(int customerId);
     }
 }

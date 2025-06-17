@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using infertility_system.Dtos.Feedback;
 using infertility_system.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -19,40 +20,33 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetFeedbacks()
         {
-            // Kiểm tra xem người dùng có phải là Manager không
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (userRole != "Manager")
-            {
-                return Unauthorized(new { message = "Only managers can view feedbacks." });
-            }
             var feedbacks = await _feedbackRepository.GetFeedbacksAsync();
             var feedbacksDto = _mapper.Map<List<FeedbackResponseDto>>(feedbacks);
             return Ok(feedbacksDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitFeedback([FromBody] Dtos.Feedback.FeedbackRequestDto feedbackRequest)
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> SubmitFeedback([FromBody] FeedbackRequestDto feedbackRequest)
         {
             int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var result = await _feedbackRepository.SubmitFeedbackAsync(userId, feedbackRequest);
+            var feedback = _mapper.Map<Models.Feedback>(feedbackRequest);
+            var result = await _feedbackRepository.SubmitFeedbackAsync(userId, feedback);
             return result
                 ? Ok(new { message = "Feedback submitted successfully." })
                 : BadRequest(new { message = "Failed to submit feedback. Please ensure you have placed an order." });
         }
 
         [HttpPut("{feedbackId}/status")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> UpdateFeedbackStatus(int feedbackId, [FromQuery] string status)
         {
-            // Kiểm tra xem người dùng có phải là Manager không
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
-            if (userRole != "Manager")
-            {
-                return Unauthorized(new { message = "Only managers can update feedback status." });
-            }
 
-            // Kiểm tra status có hợp lệ không
             if (status != "Ok" && status != "No")
             {
                 return BadRequest(new { message = "Status must be either 'Ok' or 'No'." });

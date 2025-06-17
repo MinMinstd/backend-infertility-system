@@ -5,6 +5,7 @@
         public int BookingId { get; set; }
         public DateOnly Date { get; set; }
         public required string Time { get; set; }
+        public string? Type { get; set; }
         public string? Status { get; set; }
         public string? Note { get; set; }
 
@@ -20,9 +21,7 @@
         // Booking 1-1 Order
         public Order? Order { get; set; }
 
-        // Booking N-1 ConsulationRegistration
-        public int? ConsulationRegistrationId { get; set; }
-        public ConsulationRegistration? ConsulationRegistration { get; set; }
-    
+        // Booking 1-1 ConsulationResult
+        public ConsulationResult? ConsulationResult { get; set; }
     }
 }
