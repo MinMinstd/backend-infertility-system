@@ -97,6 +97,17 @@ namespace infertility_system
                 });
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173") // Port của React Vite
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
+
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy =>
@@ -117,6 +128,8 @@ namespace infertility_system
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 
