@@ -1,5 +1,7 @@
 using AutoMapper;
 using infertility_system.Dtos.Booking;
+using infertility_system.Dtos.ConsulationRegistration;
+using infertility_system.Dtos.ConsulationResult;
 using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.DoctorDegree;
@@ -29,6 +31,9 @@ namespace infertility_system.Helpers
             CreateMap<MedicalRecordDetailDto, MedicalRecordDetail>();
             CreateMap<Customer, CustomerDto>();
             CreateMap<Feedback, FeedbackResponseDto>();
+            CreateMap<ConsulationResultRequest, ConsulationResult>();
+            CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
+            CreateMap<FeedbackRequestDto, Feedback>();
         }
     }
 }

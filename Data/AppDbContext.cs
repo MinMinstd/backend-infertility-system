@@ -189,9 +189,9 @@ namespace infertility_system.Data
 
 
             modelBuilder.Entity<ConsulationRegistration>()
-                .HasOne(cr => cr.ConsulationResult)
+                .HasMany(cr => cr.ConsulationResult)
                 .WithOne(cr => cr.ConsulationRegistration)
-                .HasForeignKey<ConsulationResult>(cr => cr.ConsulationRegistrationId);
+                .HasForeignKey(cr => cr.ConsulationRegistrationId);
 
 
 
@@ -253,8 +253,8 @@ namespace infertility_system.Data
             // ConsulationResult
             modelBuilder.Entity<ConsulationResult>()
                 .HasOne(cr => cr.ConsulationRegistration)
-                .WithOne(cr => cr.ConsulationResult)
-                .HasForeignKey<ConsulationResult>(cr => cr.ConsulationRegistrationId);
+                .WithMany(cr => cr.ConsulationResult)
+                .HasForeignKey(cr => cr.ConsulationRegistrationId);
 
             modelBuilder.Entity<ConsulationResult>()
                 .HasMany(cr => cr.MedicalRecordDetails)

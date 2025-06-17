@@ -14,6 +14,11 @@ namespace infertility_system.Repository
             _context = context;
         }
 
+        public async Task<int> CountOrdersByCustomerId(int customerId)
+        {
+            return await _context.Orders.CountAsync(o => o.CustomerId == customerId);
+        }
+
         public async Task<Order> CreateOrder(int bookingId, int customerId, string wife = null, string husband = null)
         {
             var order = new Order

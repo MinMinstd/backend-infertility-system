@@ -3,9 +3,7 @@ using infertility_system.Data;
 using infertility_system.Dtos.Booking;
 using infertility_system.Interfaces;
 using infertility_system.Models;
-using infertility_system.Service;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace infertility_system.Repository
 {
@@ -17,9 +15,9 @@ namespace infertility_system.Repository
         private readonly IDoctorScheduleRepository _doctorScheduleRepository;
 
         public BookingRepository(
-            AppDbContext context, 
-            IMapper mapper, 
-            IOrderRepository orderRepository, 
+            AppDbContext context,
+            IMapper mapper,
+            IOrderRepository orderRepository,
             IDoctorScheduleRepository doctorScheduleRepository)
         {
             _context = context;
@@ -27,7 +25,7 @@ namespace infertility_system.Repository
             _orderRepository = orderRepository;
             _doctorScheduleRepository = doctorScheduleRepository;
         }
-        
+
 
         public async Task<bool> CheckCustomerInBookingAsync(int customerId)
         {
@@ -49,6 +47,7 @@ namespace infertility_system.Repository
             var booking = _mapper.Map<Booking>(dto);
             booking.Status = "Pending";
             booking.CustomerId = customer.CustomerId;
+            booking.Type = "Consultant";
 
             await _doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
 
@@ -71,6 +70,7 @@ namespace infertility_system.Repository
             var booking = _mapper.Map<Booking>(dto);
             booking.Status = "Pending";
             booking.CustomerId = customer.CustomerId;
+            booking.Type = "Service";
 
             await _doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
 
@@ -89,6 +89,13 @@ namespace infertility_system.Repository
         {
             throw new NotImplementedException();
         }
+
+        public async Task UpdateBookingStatusAsync(int bookingId)
+        {
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            booking.Status = "Completed";
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
-

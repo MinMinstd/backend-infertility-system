@@ -1,5 +1,4 @@
 ﻿using infertility_system.Data;
-using infertility_system.Dtos.Feedback;
 using infertility_system.Interfaces;
 using infertility_system.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +8,15 @@ namespace infertility_system.Repository
     public class FeedbackRepository : IFeedbackRepository
     {
         private readonly AppDbContext _context;
-        public FeedbackRepository(AppDbContext context)
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IOrderRepository _orderRepository;
+        private readonly IManagerRepository _managerRepository;
+        public FeedbackRepository(AppDbContext context, ICustomerRepository customerRepository, IOrderRepository orderRepository, IManagerRepository managerRepository)
         {
             _context = context;
+            _customerRepository = customerRepository;
+            _orderRepository = orderRepository;
+            _managerRepository = managerRepository;
         }
 
         public async Task<List<Feedback>> GetFeedbacksAsync()
@@ -19,29 +24,20 @@ namespace infertility_system.Repository
             return await _context.Feedbacks.ToListAsync();
         }
 
-        public async Task<bool> SubmitFeedbackAsync(int userId, FeedbackRequestDto dto)
+        public async Task<bool> SubmitFeedbackAsync(int userId, Feedback feedback)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
-            if (customer == null) return false;
+            var manager = await _managerRepository.GetManagerAsync();
 
-            int count = await _context.Orders.CountAsync(o => o.CustomerId == customer.CustomerId);
+            var customer = await _customerRepository.GetCustomersAsync(userId);
+
+            int count = await _orderRepository.CountOrdersByCustomerId(customer.CustomerId);
 
             if (count > 0)
             {
-                var feedback = new Feedback
-                {
-                    CustomerId = customer.CustomerId,
-                    Rating = dto.Rating,
-                    Comments = dto.Comments,
-                    Date = DateOnly.FromDateTime(DateTime.Now),
-                    Status = "Pending"
-                };
-
-                var manager = await _context.Managers.FirstOrDefaultAsync();
-                if (manager != null)
-                {
-                    feedback.ManagerId = manager.ManagerId;
-                }
+                feedback.CustomerId = customer.CustomerId;
+                feedback.Date = DateOnly.FromDateTime(DateTime.Now);
+                feedback.Status = "Pending";
+                feedback.ManagerId = manager.ManagerId;
 
                 _context.Feedbacks.Add(feedback);
                 await _context.SaveChangesAsync();

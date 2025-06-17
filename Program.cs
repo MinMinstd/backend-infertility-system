@@ -1,4 +1,9 @@
 ﻿
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using infertility_system.Dtos.Admin;
+using infertility_system.Dtos.User;
+using infertility_system.Interfaces;
 using infertility_system.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -6,11 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using infertility_system.Dtos.User;
-using infertility_system.Dtos.Admin;
-using infertility_system.Interfaces;
 
 
 namespace infertility_system
@@ -37,11 +37,14 @@ namespace infertility_system
             builder.Services.AddScoped<Interfaces.IBookingRepository, Repository.BookingRepository>();
             builder.Services.AddScoped<Interfaces.IDoctorScheduleRepository, Repository.DoctorScheduleRepository>();
             builder.Services.AddScoped<Interfaces.IFeedbackRepository, Repository.FeedbackRepository>(); // Register the feedback repository
+            builder.Services.AddScoped<Interfaces.IConsulationRegistrationRepository, Repository.ConsulationRegistrationRepository>(); // Register the consulation registration repository
+            builder.Services.AddScoped<Interfaces.IConsulationResultRepository, Repository.ConsulationResultRepository>(); // Register the authentication service
+            builder.Services.AddScoped<Interfaces.IManagerRepository, Repository.ManagerRepository>(); // Register the authentication service
 
             builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
             builder.Services.AddScoped<IServiceRepository, Repository.ServiceRepository>();
-            builder.Services.AddScoped<IAuthService,AuthService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddControllers();
             builder.Services.AddFluentValidationAutoValidation();
@@ -82,7 +85,7 @@ namespace infertility_system
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {           
+                {
                     {
                         new OpenApiSecurityScheme
                         {
@@ -108,7 +111,7 @@ namespace infertility_system
 
             //new repository
 
-            
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -121,7 +124,7 @@ namespace infertility_system
             app.UseHttpsRedirection();
 
             app.UseAuthentication();  // 🔹 Đầu tiên, xác thực người dùng
-            
+
             app.UseAuthorization();   // 🔹 Sau đó, kiểm tra quyền hạn
 
             app.MapControllers();

@@ -6,9 +6,9 @@
         public DateOnly Date { get; set; }
         public string? ResultValue { get; set; }
         public string? Note { get; set; }
-        public int ConsulationRegistrationId { get; set; }
 
-        // ConsulationResult 1-1 ConsulationRegistration
+        // ConsulationResult N-1 ConsulationRegistration
+        public int? ConsulationRegistrationId { get; set; }
         public ConsulationRegistration? ConsulationRegistration { get; set; }
 
         // ConsulationResult 1-N MedicalRecordDetails
