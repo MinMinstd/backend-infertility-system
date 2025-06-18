@@ -30,23 +30,5 @@ namespace infertility_system.Repository
         {
             return await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
         }
-
-        public async Task<ICollection<Embryo>> GetEmbryos(int userId)
-        {
-            var embryos = await _context.Embryos.Where(x => x.Customer.UserId == userId).ToListAsync();
-            return embryos;
-        }
-
-        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecords(int userId)
-        {
-            var records = await _context.MedicalRecordDetails
-                .Include(tr => tr.TreatmentRoadmap)
-                    .ThenInclude(s => s.Service)
-                .Include(mr => mr.MedicalRecord)
-                    .ThenInclude(d => d.Doctor)
-                .Where(mr => mr.MedicalRecord.CustomerId == userId).ToListAsync();
-
-            return records;
-        }
     }
 }

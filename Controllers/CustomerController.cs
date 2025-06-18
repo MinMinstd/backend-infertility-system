@@ -13,13 +13,17 @@ namespace infertility_system.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
+        private readonly IMedicalRecordDetailRepository _medicalRecordDetailRepository;
+        private readonly IEmbryoRepository _embryoRepository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerRepository customerRepository, IMapper mapper)
+        public CustomerController(ICustomerRepository customerRepository, IMapper mapper, IMedicalRecordDetailRepository medicalRecordDetailRepository, IEmbryoRepository embryoRepository)
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
+            _medicalRecordDetailRepository = medicalRecordDetailRepository;
+            _embryoRepository = embryoRepository;
         }
 
         [HttpGet]
@@ -72,7 +76,7 @@ namespace infertility_system.Controllers
             if (!await _customerRepository.CheckExists(userIdClaims))
                 return NotFound();
 
-            var records = await _customerRepository.GetMedicalRecords(userIdClaims);
+            var records = await _medicalRecordDetailRepository.GetMedicalRecordsDetailAsync(userIdClaims);
             var recordsDto = _mapper.Map<List<MedicalRecordDetailDto>>(records);
 
             if (!ModelState.IsValid)
@@ -89,7 +93,7 @@ namespace infertility_system.Controllers
             if (!await _customerRepository.CheckExists(userIdClaims))
                 return NotFound();
 
-            var embryos = await _customerRepository.GetEmbryos(userIdClaims);
+            var embryos = await _embryoRepository.GetListEmbryosAsync(userIdClaims);
             var embryosDto = _mapper.Map<List<EmbryoDto>>(embryos);
 
             if (!ModelState.IsValid)

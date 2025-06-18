@@ -18,5 +18,17 @@ namespace infertility_system.Repository
             await _context.SaveChangesAsync();
             return medicalRecordDetail;
         }
+
+        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecordsDetailAsync(int userId)
+        {
+            var records = await _context.MedicalRecordDetails
+                .Include(tr => tr.TreatmentRoadmap)
+                    .ThenInclude(s => s.Service)
+                .Include(mr => mr.MedicalRecord)
+                    .ThenInclude(d => d.Doctor)
+                .Where(mr => mr.MedicalRecord.CustomerId == userId).ToListAsync();
+
+            return records;
+        }
     }
 }

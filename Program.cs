@@ -40,6 +40,8 @@ namespace infertility_system
             builder.Services.AddScoped<Interfaces.IConsulationRegistrationRepository, Repository.ConsulationRegistrationRepository>(); // Register the consulation registration repository
             builder.Services.AddScoped<Interfaces.IConsulationResultRepository, Repository.ConsulationResultRepository>(); // Register the authentication service
             builder.Services.AddScoped<Interfaces.IManagerRepository, Repository.ManagerRepository>(); // Register the authentication service
+            builder.Services.AddScoped<Interfaces.IOrderDetailRepository, Repository.OrderDetailRepository>(); // Register the order detail repository
+            builder.Services.AddScoped<Interfaces.IEmbryoRepository, Repository.EmbryoRepository>(); // Register the embryo repository
 
             builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
