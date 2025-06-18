@@ -50,13 +50,13 @@ select * from MedicalRecords
 select * from MedicalRecordDetails
 select * from Doctors
 select * from Users
-select * from MedicalRecordDetails
 select * from DoctorSchedules
 select * from ConsulationRegistrations
 select * from Services
+select * from DoctorDegrees
 INSERT INTO [dbo].[Customers] ([UserId], [FullName], [Email], [Phone], [Gender], [Birthday], [Address]) VALUES
 (5, N'Vũ Trần Bình Minh', 'customer1@gmail.com', '0903544878', N'Nam', '1990-01-01', N'Hanoi'),
-(6, N'Tran Thi B', 'customer2@gmail.com', '0903544878', N'Nữ', '1992-02-02', N'HCMC'),
+(6, N'Tran Thi B', 'customer2@gmail.com', '0903544878', N'Nữ', '1992-02-02', N'HCMC');
 
 
 -- Manager table
@@ -73,22 +73,39 @@ CREATE TABLE [dbo].[Managers] (
 INSERT INTO [dbo].[Managers] ([UserId], [FullName], [Email], [Phone], [Address]) VALUES
 (7, N'Manager 1', 'huy@gmail.com', '0903456789', N'Address 1');
 
+-- Service table
+CREATE TABLE [dbo].[Services] (
+    [ServiceDBId] INT             IDENTITY (1, 1) NOT NULL,
+    [Name]        NVARCHAR (MAX)  NULL,
+    [Description] NVARCHAR (MAX)  NULL,
+    [Price]       DECIMAL (18, 2) NOT NULL,
+    [ManagerId]   INT             NOT NULL,
+    CONSTRAINT [PK_Services] PRIMARY KEY CLUSTERED ([ServiceDBId] ASC),
+    CONSTRAINT [FK_Services_Managers_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Managers] ([ManagerId]) ON DELETE CASCADE
+);
+
+INSERT INTO [Services] ([Name], [Description], [Price], [ManagerId])
+VALUES 
+(N'IVF', N'Gói điều trị IVF cơ bản', 50000000, 1),
+(N'IUI', N'Gói điều trị IUI tiêu chuẩn', 20000000, 1);
 
 -- Doctor table
 CREATE TABLE [dbo].[Doctors] (
-    [DoctorId]   INT            IDENTITY (1, 1) NOT NULL,
-    [UserId]     INT            NOT NULL,
-    [FullName]   NVARCHAR (MAX) NULL,
-    [Email]      NVARCHAR (MAX) NULL,
-    [Phone]      NVARCHAR (MAX) NULL,
-    [Experience] INT            NOT NULL,
-    CONSTRAINT [PK_Doctors] PRIMARY KEY CLUSTERED ([DoctorId] ASC)
+    [DoctorId]    INT            IDENTITY (1, 1) NOT NULL,
+    [UserId]      INT            NOT NULL,
+    [FullName]    NVARCHAR (MAX) NULL,
+    [Email]       NVARCHAR (MAX) NULL,
+    [Phone]       NVARCHAR (MAX) NULL,
+    [Experience]  INT            NOT NULL,
+    [ServiceDBId] INT            NOT NULL,
+    CONSTRAINT [PK_Doctors] PRIMARY KEY CLUSTERED ([DoctorId] ASC),
+    CONSTRAINT [FK_Doctors_Services_ServiceDBId] FOREIGN KEY ([ServiceDBId]) REFERENCES [dbo].[Services] ([ServiceDBId]) ON DELETE CASCADE
 );
 
-INSERT INTO [dbo].[Doctors] ([UserId], [FullName], [Email], [Phone], [Experience]) VALUES
-(2, N'Doctor 1', 'doctor1@gmail.com', '0903456789', 6),
-(3, N'Doctor 2', 'doctor2@gmail.com', '0903544878', 7),
-(4, N'Doctor 3', 'doctor3@gmail.com', '0903544878', 8);
+INSERT INTO [dbo].[Doctors] ([UserId], [FullName], [Email], [Phone], [Experience], [ServiceDBId]) VALUES
+(2, N'Doctor 1', 'doctor1@gmail.com', '0903456789', 6, 1),
+(3, N'Doctor 2', 'doctor2@gmail.com', '0903544878', 7, 1),
+(4, N'Doctor 3', 'doctor3@gmail.com', '0903544878', 8, 2);
 
 
 -- Doctor_Degree table
@@ -102,9 +119,9 @@ CREATE TABLE [dbo].[DoctorDegrees] (
 );
 
 INSERT INTO [DoctorDegrees] ([DegreeName], [GraduationYear], [DoctorId]) VALUES
-(N'Bác sĩ CK1', 2001, 1),
-(N'Bác sĩ CK2', 2002, 2),
-(N'Bác sĩ CK3', 2003, 3);
+(N'IUI', 2001, 1),
+(N'IVF', 2002, 2),
+(N'IVF', 2003, 3);
 
 
 
@@ -146,75 +163,56 @@ INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Statu
 
 
 -- Consultation_registration table
-CREATE TABLE [dbo].[ConsulationRegistrations] (
-    [ConsulationRegistrationId] INT            IDENTITY (1, 1) NOT NULL,
-    [Date]                      DATE           NOT NULL,
-    [Status]                    NVARCHAR (MAX) NULL,
-    [Type]                      NVARCHAR (MAX) NULL,
-    [Note]                      NVARCHAR (MAX) NULL,
-    CONSTRAINT [PK_ConsulationRegistrations] PRIMARY KEY CLUSTERED ([ConsulationRegistrationId] ASC)
-);
+--CREATE TABLE [dbo].[ConsulationRegistrations] (
+--    [ConsulationRegistrationId] INT            IDENTITY (1, 1) NOT NULL,
+--    [Type]                      NVARCHAR (MAX) NULL,
+--    [Note]                      NVARCHAR (MAX) NULL,
+--    CONSTRAINT [PK_ConsulationRegistrations] PRIMARY KEY CLUSTERED ([ConsulationRegistrationId] ASC)
+--);
 
-INSERT INTO [dbo].[ConsulationRegistrations] ([Date], [Status], [Type], [Note]) VALUES
-('2025-06-01', N'Đã khám', N'Bình thường', N'Không vấn đề'),
-('2025-06-02', N'Đã khám', N'Cần theo dõi', N'Khuyến cáo tái khám');
-
-
-
-
--- Consultation_result table
-CREATE TABLE [dbo].[ConsulationResults] (
-    [ConsulationResultId]       INT            IDENTITY (1, 1) NOT NULL,
-    [Date]                      DATE           NOT NULL,
-    [ResultValue]               NVARCHAR (MAX) NULL,
-    [Note]                      NVARCHAR (MAX) NULL,
-    [ConsulationRegistrationId] INT            NOT NULL,
-    CONSTRAINT [PK_ConsulationResults] PRIMARY KEY CLUSTERED ([ConsulationResultId] ASC),
-    CONSTRAINT [FK_ConsulationResults_ConsulationRegistrations_ConsulationRegistrationId] FOREIGN KEY ([ConsulationRegistrationId]) REFERENCES [dbo].[ConsulationRegistrations] ([ConsulationRegistrationId]) ON DELETE CASCADE
-);
-
-INSERT INTO [dbo].[ConsulationResults] ([Date], [ResultValue], [Note], [ConsulationRegistrationId]) VALUES
-('2025-06-01', N'Ổn định', N'Không cần can thiệp', 1),
-('2025-06-02', N'Theo dõi thêm', N'Xem lại sau 1 tuần', 2);
+--INSERT INTO [dbo].[ConsulationRegistrations] ([Type], [Note])
+--VALUES 
+--(N'Thường', N'Không vấn đề'),
+--(N'VIP', N'Được ưu tiên xét nghiệm sớm');
 
 
 -- Booking table
 CREATE TABLE [dbo].[Bookings] (
-    [BookingId]                 INT            IDENTITY (1, 1) NOT NULL,
-    [Date]                      DATE           NOT NULL,
-    [Time]                      TIME (7)       NOT NULL,
-    [Status]                    NVARCHAR (MAX) NULL,
-    [Note]                      NVARCHAR (MAX) NULL,
-    [CustomerId]                INT            NOT NULL,
-    [DoctorScheduleId]          INT            NOT NULL,
-    [ConsulationRegistrationId] INT            NOT NULL,
+    [BookingId]        INT            IDENTITY (1, 1) NOT NULL,
+    [Date]             DATE           NOT NULL,
+    [Time]             NVARCHAR (MAX) NOT NULL,
+    [Type]             NVARCHAR (MAX) NULL,
+    [Status]           NVARCHAR (MAX) NULL,
+    [Note]             NVARCHAR (MAX) NULL,
+    [CustomerId]       INT            NULL,
+    [DoctorScheduleId] INT            NULL,
     CONSTRAINT [PK_Bookings] PRIMARY KEY CLUSTERED ([BookingId] ASC),
-    CONSTRAINT [FK_Bookings_ConsulationRegistrations_ConsulationRegistrationId] FOREIGN KEY ([ConsulationRegistrationId]) REFERENCES [dbo].[ConsulationRegistrations] ([ConsulationRegistrationId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_Bookings_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Customers] ([CustomerId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_Bookings_DoctorSchedules_DoctorScheduleId] FOREIGN KEY ([DoctorScheduleId]) REFERENCES [dbo].[DoctorSchedules] ([DoctorScheduleId]) ON DELETE CASCADE
+    CONSTRAINT [FK_Bookings_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Customers] ([CustomerId]),
+    CONSTRAINT [FK_Bookings_DoctorSchedules_DoctorScheduleId] FOREIGN KEY ([DoctorScheduleId]) REFERENCES [dbo].[DoctorSchedules] ([DoctorScheduleId])
 );
 
-INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, ConsulationRegistrationId, Status, Date, Time, Note)
+INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, Status, Date, Time, Note)
 VALUES 
-(1, 1, null, N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF'),
-(2, 7, null, N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI');
+(1, 1,  N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF'),
+(2, 7,  N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI');
 
 
--- Service table
-CREATE TABLE [dbo].[Services] (
-    [ServiceDBId] INT             IDENTITY (1, 1) NOT NULL,
-    [Name]        NVARCHAR (MAX)  NULL,
-    [Description] NVARCHAR (MAX)  NULL,
-    [Price]       DECIMAL (18, 2) NOT NULL,
-    [ManagerId]   INT             NOT NULL,
-    CONSTRAINT [PK_Services] PRIMARY KEY CLUSTERED ([ServiceDBId] ASC),
-    CONSTRAINT [FK_Services_Managers_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Managers] ([ManagerId]) ON DELETE CASCADE
+-- Consultation_result table
+CREATE TABLE [dbo].[ConsulationResults] (
+    [ConsulationResultId] INT            IDENTITY (1, 1) NOT NULL,
+    [Date]                DATE           NOT NULL,
+    [ResultValue]         NVARCHAR (MAX) NULL,
+    [Note]                NVARCHAR (MAX) NULL,
+    [BookingId]           INT            NULL,
+    CONSTRAINT [PK_ConsulationResults] PRIMARY KEY CLUSTERED ([ConsulationResultId] ASC),
+    CONSTRAINT [FK_ConsulationResults_Bookings_BookingId] FOREIGN KEY ([BookingId]) REFERENCES [dbo].[Bookings] ([BookingId])
 );
 
-INSERT INTO [Services] ([Name], [Description], [Price], [ManagerId])
-VALUES 
-(N'IVF', N'Gói điều trị IVF cơ bản', 50000000, 1),
-(N'IUI', N'Gói điều trị IUI tiêu chuẩn', 20000000, 1);
+INSERT INTO [dbo].[ConsulationResults] ([Date], [ResultValue], [Note], [BookingId]) VALUES
+('2025-06-01', N'Ổn định', N'Không cần can thiệp', 1),
+('2025-06-02', N'Theo dõi thêm', N'Xem lại sau 1 tuần', 2);
+
+
 
 select * from Services
 
@@ -303,8 +301,8 @@ CREATE TABLE [dbo].[TypeTests] (
 select * from ConsulationResults
 INSERT INTO [TypeTests] ([ConsulationResultId], [TreatmentResultId], [Name], [Description])
 VALUES 
-(4, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
-(5, 2, N'Siêu âm', N'Theo dõi nang trứng');
+(1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
+(2, 2, N'Siêu âm', N'Theo dõi nang trứng');
 
 -- Prescription table
 CREATE TABLE [dbo].[Prescriptions] (
@@ -372,7 +370,7 @@ select * from MedicalRecordDetails
 -- INSERT hợp lệ cho MedicalRecordDetails
 -- Hồ sơ bệnh nhân 1 - IVF
 INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-06-03', N'Bình thường', N'Tư vấn khởi đầu IVF', N'Consultation', 1, 4, NULL, 1),
+('2025-06-03', N'Bình thường', N'Tư vấn khởi đầu IVF', N'Consultation', 1, 1, NULL, 1),
 ('2025-06-06', N'15 trứng được lấy', N'Không biến chứng', N'Treatment', 1, NULL, NULL, 2),
 ('2025-06-09', N'Tinh trùng đạt chuẩn', N'Sẵn sàng tạo phôi', N'Treatment', 1, NULL, NULL, 3),
 ('2025-06-12', N'Tạo 5 phôi tốt', N'Đánh giá phôi ok', N'Treatment', 1, NULL, NULL, 4),
@@ -381,7 +379,7 @@ INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [Medical
 
 -- Hồ sơ bệnh nhân 2 - IVF lần 2
 INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-05-15', N'Bắt đầu lại chu kỳ', N'IVF lần 2', N'Consultation', 2, 5, NULL, 1),
+('2025-05-15', N'Bắt đầu lại chu kỳ', N'IVF lần 2', N'Consultation', 2, 2, NULL, 1),
 ('2025-05-18', N'16 trứng được lấy', N'Sẵn sàng tạo phôi', N'Treatment', 2, NULL, NULL, 2),
 ('2025-05-21', N'Tạo được 4 phôi', N'Phôi trung bình', N'Treatment', 2, NULL, NULL, 3),
 ('2025-05-24', N'Chuyển 1 phôi', N'Chờ kết quả', N'Treatment', 2, NULL, NULL, 4),
@@ -419,15 +417,13 @@ VALUES
 
 -- Order_detail table
 CREATE TABLE [dbo].[OrderDetails] (
-    [OrderDetailId]             INT             IDENTITY (1, 1) NOT NULL,
-    [DoctorName]                NVARCHAR (MAX)  NULL,
-    [ServiceName]               NVARCHAR (MAX)  NULL,
-    [Price]                     DECIMAL (18, 2) NULL,
-    [OrderId]                   INT             NULL,
-    [ServiceId]                 INT             NULL,
-    [ConsulationRegistrationId] INT             NULL,
+    [OrderDetailId] INT             IDENTITY (1, 1) NOT NULL,
+    [DoctorName]    NVARCHAR (MAX)  NULL,
+    [ServiceName]   NVARCHAR (MAX)  NULL,
+    [Price]         DECIMAL (18, 2) NULL,
+    [OrderId]       INT             NULL,
+    [ServiceId]     INT             NULL,
     CONSTRAINT [PK_OrderDetails] PRIMARY KEY CLUSTERED ([OrderDetailId] ASC),
-    CONSTRAINT [FK_OrderDetails_ConsulationRegistrations_ConsulationRegistrationId] FOREIGN KEY ([ConsulationRegistrationId]) REFERENCES [dbo].[ConsulationRegistrations] ([ConsulationRegistrationId]),
     CONSTRAINT [FK_OrderDetails_Orders_OrderId] FOREIGN KEY ([OrderId]) REFERENCES [dbo].[Orders] ([OrderId]),
     CONSTRAINT [FK_OrderDetails_Services_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [dbo].[Services] ([ServiceDBId])
 );
@@ -436,14 +432,13 @@ INSERT INTO [dbo].[OrderDetails]
 (
     [OrderId], 
     [ServiceId], 
-    [ConsulationRegistrationId], 
     [DoctorName], 
     [ServiceName],
     [Price]
 )
 VALUES 
-(1, 1, null, N'Doctor 1', N'IVF', 30000000),
-(2, 2, null, N'Doctor 2', N'IVF', 10000000);
+(1, 1, N'Doctor 1', N'IVF', 30000000),
+(2, 2, N'Doctor 2', N'IVF', 10000000);
 
 
 

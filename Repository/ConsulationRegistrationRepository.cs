@@ -12,9 +12,9 @@ namespace infertility_system.Repository
         {
             _context = context;
         }
-        public async Task<List<ConsulationRegistration>> GetAllRegistrationsAsync()
-        {
-            return await _context.ConsulationRegistrations.ToListAsync();
-        }
+        //public async Task<List<ConsulationRegistration>> GetAllRegistrationsAsync()
+        //{
+        //    return await _context.ConsulationRegistrations.ToListAsync();
+        //}
     }
 }

@@ -19,12 +19,12 @@ namespace infertility_system.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var registrations = await _repository.GetAllRegistrationsAsync();
-            var registrationsDto = _mapper.Map<List<ConsulationRegistrationRespond>>(registrations);
-            return Ok(registrationsDto);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    var registrations = await _repository.GetAllRegistrationsAsync();
+        //    var registrationsDto = _mapper.Map<List<ConsulationRegistrationRespond>>(registrations);
+        //    return Ok(registrationsDto);
+        //}
     }
 }

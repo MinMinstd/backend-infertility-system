@@ -1,4 +1,5 @@
-﻿using infertility_system.Data;
+﻿using AutoMapper;
+using infertility_system.Data;
 using infertility_system.Interfaces;
 using infertility_system.Models;
 using Microsoft.EntityFrameworkCore;
@@ -8,15 +9,17 @@ namespace infertility_system.Repository
     public class MedicalRecordDetailRepository : IMedicalRecordDetailRepository
     {
         private readonly AppDbContext _context;
-        public MedicalRecordDetailRepository(AppDbContext context)
+        private readonly IMapper _mapper;
+
+        public MedicalRecordDetailRepository(AppDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
-        public async Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail)
+
+        public Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail)
         {
-            await _context.MedicalRecordDetails.AddAsync(medicalRecordDetail);
-            await _context.SaveChangesAsync();
-            return medicalRecordDetail;
+            throw new NotImplementedException();
         }
     }
 }

@@ -10,7 +10,6 @@ namespace infertility_system.Data
         }
         public DbSet<Models.BlogPost> BlogPosts { get; set; }
         public DbSet<Models.Booking> Bookings { get; set; }
-        public DbSet<Models.ConsulationRegistration> ConsulationRegistrations { get; set; }
         public DbSet<Models.ConsulationResult> ConsulationResults { get; set; }
         public DbSet<Models.Customer> Customers { get; set; }
         public DbSet<Models.Doctor> Doctors { get; set; }
@@ -66,6 +65,7 @@ namespace infertility_system.Data
                 .HasMany(m => m.DoctorSchedules)
                 .WithOne(ds => ds.Manager)
                 .HasForeignKey(ds => ds.ManagerId);
+
             modelBuilder.Entity<Manager>()
                 .HasMany(m => m.BlogPosts)
                 .WithOne(bp => bp.Manager)
@@ -125,21 +125,29 @@ namespace infertility_system.Data
                 .WithOne(mr => mr.Doctor)
                 .HasForeignKey(mr => mr.DoctorId);
 
+            modelBuilder.Entity<Doctor>()
+                .HasOne(d => d.ServiceDB)
+                .WithMany(s => s.Doctors)
+                .HasForeignKey(d => d.ServiceDBId);
+
             // DoctorSchedule
             modelBuilder.Entity<DoctorSchedule>()
                 .HasOne(ds => ds.Doctor)
                 .WithMany(d => d.DoctorSchedules)
-                .HasForeignKey(ds => ds.DoctorId);
+                .HasForeignKey(ds => ds.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DoctorSchedule>()
                 .HasOne(ds => ds.Manager)
                 .WithMany(m => m.DoctorSchedules)
-                .HasForeignKey(ds => ds.ManagerId);
+                .HasForeignKey(ds => ds.ManagerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DoctorSchedule>()
                 .HasMany(ds => ds.Bookings)
                 .WithOne(b => b.DoctorSchedule)
-                .HasForeignKey(b => b.DoctorScheduleId);
+                .HasForeignKey(b => b.DoctorScheduleId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Order
             modelBuilder.Entity<Order>()
@@ -181,17 +189,17 @@ namespace infertility_system.Data
                 .HasForeignKey(b => b.DoctorScheduleId);
 
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.ConsulationResult)
+                .HasMany(b => b.ConsulationResult)
                 .WithOne(cr => cr.Booking)
-                .HasForeignKey<ConsulationResult>(cr => cr.BookingId);
+                .HasForeignKey(cr => cr.BookingId);
 
-            // ConsulationRegistration
+            //// ConsulationRegistration
 
 
-            modelBuilder.Entity<ConsulationRegistration>()
-                .HasMany(cr => cr.ConsulationResult)
-                .WithOne(cr => cr.ConsulationRegistration)
-                .HasForeignKey(cr => cr.ConsulationRegistrationId);
+            //modelBuilder.Entity<ConsulationRegistration>()
+            //    .HasMany(cr => cr.ConsulationResult)
+            //    .WithOne(cr => cr.ConsulationRegistration)
+            //    .HasForeignKey(cr => cr.ConsulationRegistrationId);
 
 
 
@@ -234,6 +242,11 @@ namespace infertility_system.Data
                 .WithOne(tr => tr.Service)
                 .HasForeignKey(tr => tr.ServiceId);
 
+            modelBuilder.Entity<ServiceDB>()
+                .HasMany(s => s.Doctors)
+                .WithOne(d => d.ServiceDB)
+                .HasForeignKey(d => d.ServiceDBId);
+
             // MedicalRecord
             modelBuilder.Entity<MedicalRecord>()
                 .HasOne(mr => mr.Customer)
@@ -251,10 +264,10 @@ namespace infertility_system.Data
                 .HasForeignKey(mrd => mrd.MedicalRecordId);
 
             // ConsulationResult
-            modelBuilder.Entity<ConsulationResult>()
-                .HasOne(cr => cr.ConsulationRegistration)
-                .WithMany(cr => cr.ConsulationResult)
-                .HasForeignKey(cr => cr.ConsulationRegistrationId);
+            //modelBuilder.Entity<ConsulationResult>()
+            //    .HasOne(cr => cr.ConsulationRegistration)
+            //    .WithMany(cr => cr.ConsulationResult)
+            //    .HasForeignKey(cr => cr.ConsulationRegistrationId);
 
             modelBuilder.Entity<ConsulationResult>()
                 .HasMany(cr => cr.MedicalRecordDetails)
