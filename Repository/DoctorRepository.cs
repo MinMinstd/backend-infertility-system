@@ -9,6 +9,7 @@ namespace infertility_system.Repository
     public class DoctorRepository : IDoctorRepository
     {
         private readonly AppDbContext _context;
+
         public DoctorRepository(AppDbContext context)
         {
             _context = context;

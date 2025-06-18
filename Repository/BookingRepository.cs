@@ -27,14 +27,6 @@ namespace infertility_system.Repository
             _doctorScheduleRepository = doctorScheduleRepository;
         }
 
-
-        public async Task<bool> CheckCustomerInBookingAsync(int customerId)
-        {
-            return await _context.Bookings.AnyAsync(x => x.CustomerId == customerId);
-
-            //return await _context.Doctors.ToListAsync();
-        }
-
         public async Task<List<DoctorSchedule>> GetDoctorScheduleAsync(int doctorId, DateOnly date)
         {
             return await _doctorScheduleRepository.GetSchedulesByDoctorAndDate(doctorId, date);

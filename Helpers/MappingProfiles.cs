@@ -32,7 +32,7 @@ namespace infertility_system.Helpers
             CreateMap<Customer, CustomerDto>();
             CreateMap<Feedback, FeedbackResponseDto>();
             CreateMap<ConsulationResultRequest, ConsulationResult>();
-            CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
+            //CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
             CreateMap<FeedbackRequestDto, Feedback>();
         }
     }

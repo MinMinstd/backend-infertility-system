@@ -19,5 +19,7 @@
         // Service N-1 Manager
         public int ManagerId { get; set; }
         public Manager? Manager { get; set; }
+
+        public List<Doctor>? Doctors { get; set; }
     }
 }

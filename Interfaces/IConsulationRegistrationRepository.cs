@@ -4,6 +4,6 @@ namespace infertility_system.Interfaces
 {
     public interface IConsulationRegistrationRepository
     {
-        Task<List<ConsulationRegistration>> GetAllRegistrationsAsync();
+        //Task<List<ConsulationRegistration>> GetAllRegistrationsAsync();
     }
 }

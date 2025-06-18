@@ -5,7 +5,6 @@ namespace infertility_system.Interfaces
 {
     public interface IBookingRepository
     {
-        Task<bool> CheckCustomerInBookingAsync(int customerId);
         Task<bool> BookingServiceAsync(BookingServiceDto dto, int userId);
         Task<bool> BookingConsulantAsync(BookingConsulantDto dto, int userId);
         Task<List<DoctorSchedule>> GetDoctorScheduleAsync(int doctorId, DateOnly date);

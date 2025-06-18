@@ -21,7 +21,7 @@
         // Booking 1-1 Order
         public Order? Order { get; set; }
 
-        // Booking 1-1 ConsulationResult
-        public ConsulationResult? ConsulationResult { get; set; }
+        // Booking 1-N ConsulationResult
+        public List<ConsulationResult>? ConsulationResult { get; set; }
     }
 }

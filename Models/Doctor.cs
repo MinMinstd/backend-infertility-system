@@ -17,5 +17,9 @@
 
         // Doctor 1-N MedicalRecord
         public List<MedicalRecord>? MedicalRecords { get; set; }
+
+        //Service N-1 Doctor
+        public int ServiceDBId { get; set; }
+        public ServiceDB? ServiceDB { get; set; }
     }
 }
