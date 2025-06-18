@@ -36,10 +36,9 @@ namespace infertility_system.Repository
             return await _context.Bookings.AnyAsync(x => x.DoctorSchedule.DoctorId == doctorId);
         }
 
-        public async Task<bool> CreateMedicalRecordAsync(CreateMedicalRecordDto dto, int doctorIdClaim, int customerId)
 
 
-        public async Task<MedicalRecord> CreateMedicalRecordAsync(MedicalRecord medicalRecord)
+        public async Task<bool> CreateMedicalRecordAsync(MedicalRecord medicalRecord, int doctorIdClaim)
         {
             var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
             if(doctor == null) return false;
@@ -47,40 +46,31 @@ namespace infertility_system.Repository
             var doctorValid = await CheckDoctorInBookingAsync(doctor.DoctorId);
             if (!doctorValid) return false;
 
-            var isValid = await CheckCustomerInBookingAsync(customerId);
+            var isValid = await CheckCustomerInBookingAsync(medicalRecord.CustomerId);
             if(!isValid) return false;
 
-            var medicalRecord = _mapper.Map<MedicalRecord>(dto);
-            medicalRecord.CustomerId = customerId;
             medicalRecord.DoctorId = doctor.DoctorId;
-            medicalRecord.StartDate = dto.StartDate;
-            medicalRecord.EndDate = dto.EndDate;
-            medicalRecord.Stage = dto.Stage;
-            medicalRecord.Diagnosis = dto.Diagnosis;
-            medicalRecord.Status = dto.Status;
-            medicalRecord.Attempt = dto.Attempt;
 
             _context.MedicalRecords.Add(medicalRecord);
             await _context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> UpdateMedicalRecordAsync(UpdateMedicalRecordDto dto, 
-                            int medicalRecordId, int doctorIdClaims)
+        public async Task<bool> UpdateMedicalRecordAsync(MedicalRecord updateRecord, int doctorIdClaims)
         {
             var medicalRecord = await _context.MedicalRecords.
-                FirstOrDefaultAsync(x => x.MedicalRecordId == medicalRecordId);
+                FirstOrDefaultAsync(x => x.MedicalRecordId == updateRecord.MedicalRecordId);
 
             if (medicalRecord == null) return false;
 
             var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaims);
-            var isValid = await CheckDoctorIdInMedicalRecordAsync(doctor.DoctorId, medicalRecordId);
+            var isValid = await CheckDoctorIdInMedicalRecordAsync(doctor.DoctorId, updateRecord.MedicalRecordId);
             if(!isValid) return false;
 
-            medicalRecord.Stage = dto.Stage;
-            medicalRecord.Diagnosis = dto.Diagnosis;
-            medicalRecord.Status = dto.Status;
-            medicalRecord.Attempt = dto.Attempt;
+            medicalRecord.Stage = updateRecord.Stage;
+            medicalRecord.Diagnosis = updateRecord.Diagnosis;
+            medicalRecord.Status = updateRecord.Status;
+            medicalRecord.Attempt = updateRecord.Attempt;
 
             await _context.SaveChangesAsync();
             return true;

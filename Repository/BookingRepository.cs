@@ -19,12 +19,14 @@ namespace infertility_system.Repository
             AppDbContext context,
             IMapper mapper,
             IOrderRepository orderRepository,
-            IDoctorScheduleRepository doctorScheduleRepository)
+            IDoctorScheduleRepository doctorScheduleRepository,
+            ICustomerRepository customerRepository)
         {
             _context = context;
             _mapper = mapper;
             _orderRepository = orderRepository;
             _doctorScheduleRepository = doctorScheduleRepository;
+            _customerRepository = customerRepository;
         }
 
         public async Task<List<DoctorSchedule>> GetDoctorScheduleAsync(int doctorId, DateOnly date)
