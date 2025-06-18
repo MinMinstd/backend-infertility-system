@@ -37,6 +37,7 @@ namespace infertility_system.Repository
         }
 
 
+
         public async Task<bool> CreateMedicalRecordAsync(MedicalRecord medicalRecord, int doctorIdClaim)
         {
             var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
