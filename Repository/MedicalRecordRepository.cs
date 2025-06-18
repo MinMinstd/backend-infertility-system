@@ -21,6 +21,8 @@ namespace infertility_system.Repository
             return medical.DoctorId == doctorId;
         }
 
+
+
         public async Task<MedicalRecord> CreateMedicalRecordAsync(MedicalRecord medicalRecord)
         {
             await _context.MedicalRecords.AddAsync(medicalRecord);

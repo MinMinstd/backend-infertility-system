@@ -8,10 +8,16 @@ namespace infertility_system.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly AppDbContext _context;
+        private readonly IManagerRepository _managerRepository;
+        private readonly IDoctorRepository _doctorRepository;
+        private readonly IOrderDetailRepository _orderDetailRepository;
 
-        public OrderRepository(AppDbContext context)
+        public OrderRepository(AppDbContext context, IManagerRepository managerRepository, IDoctorRepository doctorRepository, IOrderDetailRepository orderDetailRepository)
         {
             _context = context;
+            _managerRepository = managerRepository;
+            _doctorRepository = doctorRepository;
+            _orderDetailRepository = orderDetailRepository;
         }
 
         public async Task<int> CountOrdersByCustomerId(int customerId)
@@ -32,7 +38,7 @@ namespace infertility_system.Repository
                 Husband = husband
             };
 
-            var manager = await _context.Managers.FirstOrDefaultAsync();
+            var manager = await _managerRepository.GetManagerAsync();
             if (manager != null)
             {
                 order.ManagerId = manager.ManagerId;
@@ -45,19 +51,21 @@ namespace infertility_system.Repository
 
         public async Task CreateOrderDetail(int orderId, int doctorId, int? serviceId = null)
         {
-            var doctorName = await _context.Doctors
-                .Where(d => d.DoctorId == doctorId)
-                .Select(d => d.FullName)
-                .FirstOrDefaultAsync();
+            //var doctorName = await _context.Doctors
+            //    .Where(d => d.DoctorId == doctorId)
+            //    .Select(d => d.FullName)
+            //    .FirstOrDefaultAsync();
+            var doctor = await _doctorRepository.GetDoctorByIdAsync(doctorId);
 
             var orderDetail = new OrderDetail
             {
                 OrderId = orderId,
-                DoctorName = doctorName,
+                DoctorName = doctor.FullName,
                 ServiceId = serviceId
             };
-            _context.OrderDetails.Add(orderDetail);
-            await _context.SaveChangesAsync();
+            //_context.OrderDetails.Add(orderDetail);
+            //await _context.SaveChangesAsync();
+            var createdOrderDetail = await _orderDetailRepository.CreateOrderDetail(orderDetail);
         }
     }
 }
