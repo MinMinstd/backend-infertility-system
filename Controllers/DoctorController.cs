@@ -58,15 +58,19 @@ namespace infertility_system.Controllers
             return Ok(doctorDto);
         }
 
-        [Authorize(Roles = "Doctor")]
+        //[Authorize(Roles = "Doctor")]
         [HttpPost("CreateMedicalRecord/{customerId}")]
         public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto
             createMedicalRecordDto, int customerId)
         {
             var doctorIdClaim = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var medicalRecord = await _medicalRecordRepository.
-                CreateMedicalRecordAsync(createMedicalRecordDto, doctorIdClaim, customerId);
-            return medicalRecord ? Ok("Successfully") : BadRequest("Fail");
+
+            var medicalRecord = _mapper.Map<MedicalRecord>(createMedicalRecordDto);
+            medicalRecord.CustomerId = customerId;
+
+            var result = await _medicalRecordRepository.
+                CreateMedicalRecordAsync(medicalRecord, doctorIdClaim);
+            return result ? Ok("Successfully") : BadRequest("Fail");
         }
 
         [HttpPut("UpdateMedicalRecord/{medicalRecordId}")]
@@ -74,9 +78,13 @@ namespace infertility_system.Controllers
             [FromBody] UpdateMedicalRecordDto updateDto)
         {
             var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var update = await _medicalRecordRepository.
-                                UpdateMedicalRecordAsync(updateDto, medicalRecordId, doctorIdClaims);
-            return update ? Ok("Successfully") : BadRequest("Fail");
+
+            var medicalRecord = _mapper.Map<MedicalRecord>(updateDto);
+            medicalRecord.MedicalRecordId = medicalRecordId;
+
+            var result = await _medicalRecordRepository.
+                                UpdateMedicalRecordAsync(medicalRecord, doctorIdClaims);
+            return result ? Ok("Successfully") : BadRequest("Fail");
         }
 
         [HttpPost("CreateMedicalRecordDetail")]
