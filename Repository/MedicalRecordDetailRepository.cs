@@ -21,5 +21,17 @@ namespace infertility_system.Repository
         {
             throw new NotImplementedException();
         }
+
+        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecordsDetailAsync(int userId)
+        {
+            var records = await _context.MedicalRecordDetails
+                .Include(tr => tr.TreatmentRoadmap)
+                    .ThenInclude(s => s.Service)
+                .Include(mr => mr.MedicalRecord)
+                    .ThenInclude(d => d.Doctor)
+                .Where(mr => mr.MedicalRecord.CustomerId == userId).ToListAsync();
+
+            return records;
+        }
     }
 }

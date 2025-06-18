@@ -36,6 +36,12 @@ namespace infertility_system.Repository
             return await _context.Bookings.AnyAsync(x => x.DoctorSchedule.DoctorId == doctorId);
         }
 
+
+        public async Task<MedicalRecord> CreateMedicalRecordAsync(MedicalRecord medicalRecord)
+        {
+            return await _context.Bookings.AnyAsync(x => x.DoctorSchedule.DoctorId == doctorId);
+        }
+
         public async Task<bool> CreateMedicalRecordAsync(CreateMedicalRecordDto dto, int doctorIdClaim, int customerId)
         {
             var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);

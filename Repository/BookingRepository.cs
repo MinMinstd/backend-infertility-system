@@ -13,6 +13,7 @@ namespace infertility_system.Repository
         private readonly IMapper _mapper;
         private readonly IOrderRepository _orderRepository;
         private readonly IDoctorScheduleRepository _doctorScheduleRepository;
+        private readonly ICustomerRepository _customerRepository;
 
         public BookingRepository(
             AppDbContext context,
@@ -33,7 +34,7 @@ namespace infertility_system.Repository
 
         public async Task<bool> BookingConsulantAsync(BookingConsulantDto dto, int userId)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
+            var customer = await _customerRepository.GetCustomersAsync(userId);
             if (customer == null) return false;
 
             var booking = _mapper.Map<Booking>(dto);
@@ -56,7 +57,7 @@ namespace infertility_system.Repository
 
         public async Task<bool> BookingServiceAsync(BookingServiceDto dto, int userId)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
+            var customer = await _customerRepository.GetCustomersAsync(userId);
             if (customer == null) return false;
 
             var booking = _mapper.Map<Booking>(dto);
