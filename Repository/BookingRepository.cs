@@ -92,5 +92,14 @@ namespace infertility_system.Repository
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Booking>> GetListBooking()
+        {
+            return await _context.Bookings
+                .Include(b => b.Customer)
+                .Include(b => b.DoctorSchedule)
+                .ThenInclude(ds => ds.Doctor)
+                .ToListAsync();
+        }
     }
 }
