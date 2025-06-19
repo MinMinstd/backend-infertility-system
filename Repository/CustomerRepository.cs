@@ -26,9 +26,33 @@ namespace infertility_system.Repository
             return await _context.Customers.AnyAsync(x => x.UserId == userId);
         }
 
+        public Task<bool> CheckExistsByUserId(int id)
+        {
+            return _context.Customers.AnyAsync(x => x.UserId == id);
+        }
+
         public async Task<Customer> GetCustomersAsync(int userId)
         {
             return await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
+        }
+
+        public async Task<Customer> UpdateCutomerAsync(int userId, Customer customer)
+        {
+            var existingCustomer = await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
+            if (existingCustomer == null)
+            {
+                return null;
+            }
+
+            existingCustomer.FullName = customer.FullName;
+            existingCustomer.Email = customer.Email;
+            existingCustomer.Phone = customer.Phone;
+            existingCustomer.Gender = customer.Gender;
+            existingCustomer.Address = customer.Address;
+            existingCustomer.Birthday = customer.Birthday;
+
+            await _context.SaveChangesAsync();
+            return existingCustomer;
         }
     }
 }

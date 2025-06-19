@@ -17,19 +17,26 @@ namespace infertility_system.Controllers
         private readonly IMedicalRecordDetailRepository _medicalRecordDetailRepository;
         private readonly IEmbryoRepository _embryoRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerRepository customerRepository, IMapper mapper, IMedicalRecordDetailRepository medicalRecordDetailRepository, IEmbryoRepository embryoRepository)
+        public CustomerController(
+            ICustomerRepository customerRepository, 
+            IMapper mapper,
+            IMedicalRecordDetailRepository medicalRecordDetailRepository,
+            IEmbryoRepository embryoRepository,
+            IUserRepository userRepository)
         {
             _customerRepository = customerRepository;
             _mapper = mapper;
             _medicalRecordDetailRepository = medicalRecordDetailRepository;
             _embryoRepository = embryoRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Customer")]
-        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomers()
+        
+        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomer()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -38,14 +45,14 @@ namespace infertility_system.Controllers
                 return Unauthorized(new { Message = "Token không hợp lệ hoặc thiếu UserId!" });
             }
 
-            var customers = await _customerRepository.GetCustomersAsync(userId);
+            var customer = await _customerRepository.GetCustomersAsync(userId);
 
-            if (customers == null)
+            if (customer == null)
             {
-                return NotFound(new { Message = "Không tìm thấy dữ liệu khách hàng!" });
+                return NotFound(new { Message = "Không tìm thấy dữ liệu khách hàng!", Id = userIdClaim });
             }
 
-            return Ok(_mapper.Map<List<CustomerDto>>(customers));
+            return Ok(_mapper.Map<CustomerDto>(customer));
         }
 
         [HttpPost]
@@ -107,6 +114,31 @@ namespace infertility_system.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             return Ok(embryosDto);
+        }
+
+        [HttpPut("UpdateCustomerProfile")]
+        
+        public async Task<IActionResult> UpdateCustomerProfile(CustomerProfileDto customerProfileDto)
+        {
+            var UserIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (!await _customerRepository.CheckExistsByUserId(UserIdClaims))
+                return NotFound(new { Message = "Không tìm thấy dữ liệu khách hàng!" });
+           
+            var user = _mapper.Map<User>(customerProfileDto);
+            var updatedUser = await _userRepository.UpdateUser(UserIdClaims, user);
+            if (updatedUser == null)
+            {
+                return BadRequest(new { Message = "Cập nhật thông tin người dùng không thành công!" });
+            }
+
+            var customer = _mapper.Map<Customer>(customerProfileDto);
+            var updatedCustomer = await _customerRepository.UpdateCutomerAsync(UserIdClaims, customer);
+            if (updatedCustomer == null)
+            {
+                return BadRequest(new { Message = "Cập nhật thông tin khách hàng không thành công!" });
+            }
+            return Ok(new { Message = "Cập nhật thông tin thành công!", Customer = _mapper.Map<CustomerDto>(updatedCustomer) });
+
         }
     }
 

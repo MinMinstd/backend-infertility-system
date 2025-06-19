@@ -34,9 +34,17 @@ namespace infertility_system.Helpers
             CreateMap<ConsulationResultRequest, ConsulationResult>();
             //CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
             CreateMap<FeedbackRequestDto, Feedback>();
+
             CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();
             CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>();
             CreateMap<MedicalRecord, MedicalRecordDto>();
+
+            CreateMap<CustomerProfileDto, Customer>();
+            CreateMap<CustomerProfileDto, User>();
+            CreateMap<Booking, BookingForListDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName));
+
         }
     }
 }

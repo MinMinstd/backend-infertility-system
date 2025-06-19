@@ -46,6 +46,8 @@ namespace infertility_system
 
             builder.Services.AddScoped<Interfaces.IOrderDetailRepository, Repository.OrderDetailRepository>(); // Register the order detail repository
             builder.Services.AddScoped<Interfaces.IEmbryoRepository, Repository.EmbryoRepository>(); // Register the embryo repository
+            builder.Services.AddScoped<Interfaces.IUserRepository, Repository.UserRepository>(); // Register the user repository
+            builder.Services.AddScoped<Interfaces.IMedicalRecordDetailRepository, Repository.MedicalRecordDetailRepository>(); // Register the medical record detail repository
 
 
             builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
