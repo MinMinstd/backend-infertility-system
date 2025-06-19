@@ -36,7 +36,7 @@ namespace infertility_system.Controllers
 
         [HttpGet]
         
-        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomer()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -45,14 +45,14 @@ namespace infertility_system.Controllers
                 return Unauthorized(new { Message = "Token không hợp lệ hoặc thiếu UserId!" });
             }
 
-            var customers = await _customerRepository.GetCustomersAsync(userId);
+            var customer = await _customerRepository.GetCustomersAsync(userId);
 
-            if (customers == null)
+            if (customer == null)
             {
                 return NotFound(new { Message = "Không tìm thấy dữ liệu khách hàng!", Id = userIdClaim });
             }
 
-            return Ok(_mapper.Map<List<CustomerDto>>(customers));
+            return Ok(_mapper.Map<CustomerDto>(customer));
         }
 
         [HttpPost]
