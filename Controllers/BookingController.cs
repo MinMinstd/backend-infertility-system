@@ -17,7 +17,7 @@ namespace infertility_system.Controllers
         private readonly IDoctorRepository _doctorRepository;
         private readonly IMapper _mapper;
 
-        public BookingController(IBookingRepository bookingRepository,IDoctorScheduleRepository doctorScheduleRepository, IDoctorRepository doctorRepository, IMapper mapper)
+        public BookingController(IBookingRepository bookingRepository, IDoctorScheduleRepository doctorScheduleRepository, IDoctorRepository doctorRepository, IMapper mapper)
         {
             _bookingRepository = bookingRepository;
             _doctorScheduleRepository = doctorScheduleRepository;
@@ -58,6 +58,14 @@ namespace infertility_system.Controllers
             var userIdClaim = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var book = await _bookingRepository.BookingServiceAsync(bookingDto, userIdClaim);
             return book ? Ok("Success") : BadRequest("Fail");
+        }
+
+        [HttpGet("GetListBooking")]
+        public async Task<IActionResult> GetListBooking()
+        {
+            var bookings = await _bookingRepository.GetListBooking();
+
+            return Ok(_mapper.Map<List<BookingForListDto>>(bookings));
         }
     }
 }
