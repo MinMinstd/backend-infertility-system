@@ -21,9 +21,9 @@ namespace infertility_system.Repository
             return await _authService.ChangePasswordAsync(userId, dto);
         }
 
-        public async Task<bool> CheckExists(int id)
+        public async Task<bool> CheckCustomerExistsAsync(int userId)
         {
-            return await _context.Customers.AnyAsync(x => x.CustomerId == id);
+            return await _context.Customers.AnyAsync(x => x.UserId == userId);
         }
 
         public Task<bool> CheckExistsByUserId(int id)

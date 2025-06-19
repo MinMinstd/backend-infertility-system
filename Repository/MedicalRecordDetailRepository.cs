@@ -10,11 +10,13 @@ namespace infertility_system.Repository
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICustomerRepository _customerRepository;
 
-        public MedicalRecordDetailRepository(AppDbContext context, IMapper mapper)
+        public MedicalRecordDetailRepository(AppDbContext context, IMapper mapper, ICustomerRepository customerRepository)
         {
             _context = context;
             _mapper = mapper;
+            _customerRepository = customerRepository;
         }
 
         public Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail)
@@ -22,16 +24,33 @@ namespace infertility_system.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecordsDetailAsync(int userId)
+        public async Task<ICollection<MedicalRecord>> GetMedicalRecordAsync(int userId)
         {
-            var records = await _context.MedicalRecordDetails
-                .Include(tr => tr.TreatmentRoadmap)
-                    .ThenInclude(s => s.Service)
-                .Include(mr => mr.MedicalRecord)
-                    .ThenInclude(d => d.Doctor)
-                .Where(mr => mr.MedicalRecord.CustomerId == userId).ToListAsync();
+            var isValid = await _customerRepository.CheckCustomerExistsAsync(userId);
+            if (!isValid) return null;
+
+            var customer = await _customerRepository.GetCustomersAsync(userId);
+
+            var medicalRecords = await _context.MedicalRecords
+                        .Where(mr => mr.CustomerId == customer.CustomerId)
+                        .ToListAsync();
+            return medicalRecords;
+        }
+
+        public async Task<ICollection<MedicalRecord>> GetMedicalRecordWithDetailsAsync(int userId)
+        {
+            var isValid = await _customerRepository.CheckCustomerExistsAsync(userId);
+            if (!isValid) return null;
+
+            var customer = await _customerRepository.GetCustomersAsync(userId);
+
+            var records = await _context.MedicalRecords
+                .Where(x => x.CustomerId == customer.CustomerId)
+                .Include(x => x.MedicalRecordDetails)
+                .ToListAsync();
 
             return records;
         }
+
     }
 }
