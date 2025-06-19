@@ -10,5 +10,6 @@ namespace infertility_system.Interfaces
         Task<List<DoctorSchedule>> GetDoctorScheduleAsync(int doctorId, DateOnly date);
         Task<List<Doctor>> GetAllDoctorAsync();
         Task UpdateBookingStatusAsync(int bookingId);
+        Task<List<Booking>> GetListBooking();
     }
 }
