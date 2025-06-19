@@ -8,5 +8,7 @@ namespace infertility_system.Interfaces
         Task<Customer> GetCustomersAsync(int userId);
         Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto);
         Task<bool> CheckExists(int id);
+        Task<bool> CheckExistsByUserId(int id); // This method seems to be duplicated, consider removing one
+        Task<Customer> UpdateCutomerAsync(int userId, Customer customer);
     }
 }
