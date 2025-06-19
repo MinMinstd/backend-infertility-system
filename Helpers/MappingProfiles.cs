@@ -28,12 +28,15 @@ namespace infertility_system.Helpers
             CreateMap<BookingServiceDto, Booking>();
             CreateMap<BookingConsulantDto, Booking>();
             CreateMap<DoctorSchedule, DoctorScheduleDto>();
-            CreateMap<MedicalRecordDetailDto, MedicalRecordDetail>();
+
             CreateMap<Customer, CustomerDto>();
             CreateMap<Feedback, FeedbackResponseDto>();
             CreateMap<ConsulationResultRequest, ConsulationResult>();
             //CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
             CreateMap<FeedbackRequestDto, Feedback>();
+            CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();
+            CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>();
+            CreateMap<MedicalRecord, MedicalRecordDto>();
         }
     }
 }

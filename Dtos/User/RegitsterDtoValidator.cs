@@ -32,7 +32,7 @@ namespace infertility_system.Dtos.User
 
             RuleFor(u => u.Birthday)
                 .NotEmpty().WithMessage("Ngày sinh không được để trống")
-                .Must(date => date.Date <= DateTime.Today)
+                .Must(date => date <= DateOnly.FromDateTime(DateTime.Today))
                 .WithMessage("Ngày sinh không hợp lệ");
 
             RuleFor(u => u.Address)

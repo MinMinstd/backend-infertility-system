@@ -7,6 +7,6 @@ namespace infertility_system.Interfaces
     {
         Task<Customer> GetCustomersAsync(int userId);
         Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto);
-        Task<bool> CheckExists(int id);
+        Task<bool> CheckCustomerExistsAsync(int userId);
     }
 }
