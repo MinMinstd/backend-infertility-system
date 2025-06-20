@@ -40,5 +40,12 @@ namespace infertility_system.Repository
             }
             return doctorModel;
         }
+
+        public async Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId)
+        {
+            return await _context.Doctors
+                .Where(x => x.ServiceDBId == serviceId)
+                .ToListAsync();
+        }
     }
 }
