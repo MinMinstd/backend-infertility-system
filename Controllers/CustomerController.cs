@@ -55,9 +55,9 @@ namespace infertility_system.Controllers
             return Ok(_mapper.Map<CustomerDto>(customer));
         }
 
-        [HttpPost]
+        [HttpPut("ChangePassword")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
