@@ -99,7 +99,7 @@ namespace infertility_system.Controllers
             var dto = _mapper.Map<List<MedicalRecordDto>>(medicalRecords);
             return Ok(dto);
         }
-
+        
         [HttpGet("embryos")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetEmbryos()
