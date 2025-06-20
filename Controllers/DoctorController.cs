@@ -1,13 +1,11 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Helpers;
 using infertility_system.Interfaces;
 using infertility_system.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace infertility_system.Controllers
@@ -21,7 +19,7 @@ namespace infertility_system.Controllers
         private readonly IMedicalRecordDetailRepository _medicalRecordDetailRepository;
         private readonly IBookingRepository _bookingRepository;
         private readonly IMapper _mapper;
-        public DoctorController(IDoctorRepository doctorRepository,IMapper mapper, IMedicalRecordRepository medicalRecordRepository, IMedicalRecordDetailRepository medicalRecordDetailRepository, IBookingRepository bookingRepository)
+        public DoctorController(IDoctorRepository doctorRepository, IMapper mapper, IMedicalRecordRepository medicalRecordRepository, IMedicalRecordDetailRepository medicalRecordDetailRepository, IBookingRepository bookingRepository)
         {
             _doctorRepository = doctorRepository;
             _mapper = mapper;
@@ -99,6 +97,16 @@ namespace infertility_system.Controllers
             return Ok(dto);
         }
 
-
+        [HttpGet("GetDoctorsByServiceId/{serviceId}")]
+        public async Task<IActionResult> GetDoctorsByServiceId(int serviceId)
+        {
+            var doctors = await _doctorRepository.GetDoctorsByServiceIdAsync(serviceId);
+            if (doctors == null || !doctors.Any())
+            {
+                return NotFound($"No doctors found for service ID {serviceId}.");
+            }
+            var doctorDto = _mapper.Map<List<DoctorBookingRespondDto>>(doctors);
+            return Ok(doctorDto);
+        }
     }
 }

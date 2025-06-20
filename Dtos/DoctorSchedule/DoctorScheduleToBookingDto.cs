@@ -1,6 +1,6 @@
 ﻿namespace infertility_system.Dtos.DoctorSchedule
 {
-    public class DoctorScheduleDto
+    public class DoctorScheduleToBookingDto
     {
         public int DoctorScheduleId { get; set; }
         public TimeOnly StartTime { get; set; }

@@ -23,7 +23,7 @@ namespace infertility_system.Repository
             return await services.ToListAsync();
         }
 
-        public async Task<List<ServiceDB>> GetAllServicesAsync()
+        public async Task<List<ServiceDB>> GetAllServiceToBooking()
         {
             return await _context.Services.ToListAsync();
         }

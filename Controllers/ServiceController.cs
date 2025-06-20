@@ -2,7 +2,6 @@
 using infertility_system.Dtos.Service;
 using infertility_system.Helpers;
 using infertility_system.Interfaces;
-using infertility_system.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace infertility_system.Controllers
@@ -26,11 +25,11 @@ namespace infertility_system.Controllers
             return Ok(servicesDto);
         }
 
-        [HttpGet("GetAllServices")]
-        public async Task<IActionResult> GetAllServices()
+        [HttpGet("GetAllServicesToBooking")]
+        public async Task<IActionResult> GetAllServicesToBooking()
         {
-            var services = await _serviceRepository.GetAllServicesAsync();
-            var servicesDto = _mapper.Map<List<ServiceToDtoForList>>(services);
+            var services = await _serviceRepository.GetAllServiceToBooking();
+            var servicesDto = _mapper.Map<List<ServiceToBookingDto>>(services);
             return Ok(servicesDto);
         }
     }
