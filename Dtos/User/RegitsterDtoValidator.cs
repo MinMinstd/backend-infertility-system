@@ -20,7 +20,7 @@ namespace infertility_system.Dtos.User
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Mật khẩu không được bỏ trống")
-                .MinimumLength(12).WithMessage("Mật khẩu tối thiểu 12 ký tự")
+                .MinimumLength(9).WithMessage("Mật khẩu tối thiểu 12 ký tự")
                 .Matches("[A-Z]").WithMessage("Mật khẩu phải có chữ hoa")
                 .Matches("[a-z]").WithMessage("Mật khẩu phải có chữ thường")
                 .Matches("[0-9]").WithMessage("Mật khẩu phải có số")
@@ -28,7 +28,7 @@ namespace infertility_system.Dtos.User
 
             RuleFor(u => u.Gender)
                 .NotEmpty().WithMessage("Giới tính không được để trống")
-                .Length(1).WithMessage("Giới tính không hợp lệ");
+                .Matches("Nam|Nữ").WithMessage("Giới tính phải là Nam hoặc Nữ");
 
             RuleFor(u => u.Birthday)
                 .NotEmpty().WithMessage("Ngày sinh không được để trống")
