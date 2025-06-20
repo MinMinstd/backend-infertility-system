@@ -76,21 +76,28 @@ namespace infertility_system.Controllers
             return Ok(new { Message = "Đổi mật khẩu thành công!" });
         }
 
-        [HttpGet("medicalRecord")]
+        [HttpGet("medicalRecordWithDetail")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> GetMedicalRecords()
+        public async Task<IActionResult> GetMedicalRecordsWithDetail()
         {
             var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if (!await _customerRepository.CheckExistsByUserId(userIdClaims))
-                return NotFound();
 
-            var records = await _medicalRecordDetailRepository.GetMedicalRecordsDetailAsync(userIdClaims);
-            var recordsDto = _mapper.Map<List<MedicalRecordDetailDto>>(records);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var medicalRecords = await _medicalRecordDetailRepository.GetMedicalRecordWithDetailsAsync(userIdClaims);
+            var recordsDto = _mapper.Map<List<MedicalRecordWithDetailDto>>(medicalRecords);
 
             return Ok(recordsDto);
+        }
+
+        [HttpGet("medicalRecord")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetMedicalRecord()
+        {
+            var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecords = await _medicalRecordDetailRepository.GetMedicalRecordAsync(userIdClaims);
+
+            var dto = _mapper.Map<List<MedicalRecordDto>>(medicalRecords);
+            return Ok(dto);
         }
 
         [HttpGet("embryos")]
@@ -98,7 +105,7 @@ namespace infertility_system.Controllers
         public async Task<IActionResult> GetEmbryos()
         {
             var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if (!await _customerRepository.CheckExists(userIdClaims))
+            if (!await _customerRepository.CheckCustomerExistsAsync(userIdClaims))
                 return NotFound();
 
             var embryos = await _embryoRepository.GetListEmbryosAsync(userIdClaims);

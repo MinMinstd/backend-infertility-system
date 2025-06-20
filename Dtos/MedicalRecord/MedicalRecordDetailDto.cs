@@ -2,7 +2,7 @@
 {
     public class MedicalRecordDetailDto
     {
-        public string Stage {  get; set; }
+        public DateOnly Date {  get; set; }
         public string Note { get; set; }
         public string TestResult { get; set; }
         public string Type { get; set; }
