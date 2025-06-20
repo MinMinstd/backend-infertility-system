@@ -25,7 +25,7 @@ namespace infertility_system.Repository
             return await _context.Orders.CountAsync(o => o.CustomerId == customerId);
         }
 
-        public async Task<Order> CreateOrder(int bookingId, int customerId, string wife = null, string husband = null)
+        public async Task<Order> CreateOrder(int bookingId, int customerId, string wife, string husband)
         {
             var order = new Order
             {
@@ -49,7 +49,7 @@ namespace infertility_system.Repository
             return order;
         }
 
-        public async Task CreateOrderDetail(int orderId, int doctorId, int? serviceId = null)
+        public async Task CreateOrderDetail(int orderId, int doctorId, int serviceId)
         {
             //var doctorName = await _context.Doctors
             //    .Where(d => d.DoctorId == doctorId)
@@ -61,7 +61,11 @@ namespace infertility_system.Repository
             {
                 OrderId = orderId,
                 DoctorName = doctor.FullName,
-                ServiceId = serviceId
+                ServiceId = serviceId,
+                ServiceName = _context.Services
+                    .Where(s => s.ServiceDBId == serviceId)
+                    .Select(s => s.Name)
+                    .FirstOrDefault(),
             };
             //_context.OrderDetails.Add(orderDetail);
             //await _context.SaveChangesAsync();

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using infertility_system.Dtos.Booking;
 using infertility_system.Dtos.Doctor;
-using infertility_system.Dtos.DoctorSchedule;
 using infertility_system.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -32,17 +31,6 @@ namespace infertility_system.Controllers
             var doctorDto = _mapper.Map<List<DoctorForListDto>>(doctors);
             return Ok(doctorDto);
         }
-
-        [HttpGet("GetListDoctorSchedule/{doctorId}")]
-        public async Task<IActionResult> GetAllDoctorScheduleByDoctorId(int doctorId, [FromQuery] DateOnly date)
-        {
-
-            var doctorSchedules = await _bookingRepository.GetDoctorScheduleAsync(doctorId, date);
-
-            var doctorScheduleDtos = _mapper.Map<List<DoctorScheduleDto>>(doctorSchedules);
-            return Ok(doctorScheduleDtos);
-        }
-
 
         [HttpPost("booking_consulant")]
         public async Task<IActionResult> CreateBookingConsultant([FromBody] BookingConsulantDto bookingDto)
