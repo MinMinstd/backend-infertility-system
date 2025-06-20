@@ -32,8 +32,11 @@ namespace infertility_system.Helpers
             CreateMap<ConsulationResultRequest, ConsulationResult>();
             //CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
             CreateMap<FeedbackRequestDto, Feedback>();
+
+
             CreateMap<ServiceDB, ServiceToBookingDto>();
             CreateMap<Doctor, DoctorBookingRespondDto>();
+
 
             CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();
             CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>();
