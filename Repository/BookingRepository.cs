@@ -36,21 +36,21 @@ namespace infertility_system.Repository
 
         public async Task<bool> BookingConsulantAsync(BookingConsulantDto dto, int userId)
         {
-            //var customer = await _customerRepository.GetCustomersAsync(userId);
-            //if (customer == null) return false;
+            var customer = await _customerRepository.GetCustomersAsync(userId);
+            if (customer == null) return false;
 
-            //var booking = _mapper.Map<Booking>(dto);
-            //booking.Status = "Pending";
-            //booking.CustomerId = customer.CustomerId;
-            //booking.Type = "Consultant";
+            var booking = _mapper.Map<Booking>(dto);
+            booking.Status = "Pending";
+            booking.CustomerId = customer.CustomerId;
+            booking.Type = "Consultant";
 
-            //await _doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
+            await _doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
 
-            //_context.Bookings.Add(booking);
-            //await _context.SaveChangesAsync();
+            _context.Bookings.Add(booking);
+            await _context.SaveChangesAsync();
 
-            //var order = await _orderRepository.CreateOrder(booking.BookingId, customer.CustomerId);
-            //await _orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId);
+            var order = await _orderRepository.CreateOrder(booking.BookingId, customer.CustomerId, null, null);
+            await _orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId);
 
             return true;
         }
