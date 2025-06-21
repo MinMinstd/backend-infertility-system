@@ -38,6 +38,7 @@ namespace infertility_system.Repository
                 feedback.Date = DateOnly.FromDateTime(DateTime.Now);
                 feedback.Status = "Pending";
                 feedback.ManagerId = manager.ManagerId;
+                feedback.FullName = customer.FullName;
 
                 _context.Feedbacks.Add(feedback);
                 await _context.SaveChangesAsync();

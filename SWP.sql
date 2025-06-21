@@ -433,7 +433,6 @@ CREATE TABLE [dbo].[OrderDetails] (
     [OrderDetailId] INT             IDENTITY (1, 1) NOT NULL,
     [DoctorName]    NVARCHAR (MAX)  NULL,
     [ServiceName]   NVARCHAR (MAX)  NULL,
-    [Price]         DECIMAL (18, 2) NULL,
     [OrderId]       INT             NULL,
     [ServiceId]     INT             NULL,
     CONSTRAINT [PK_OrderDetails] PRIMARY KEY CLUSTERED ([OrderDetailId] ASC),
@@ -446,12 +445,11 @@ INSERT INTO [dbo].[OrderDetails]
     [OrderId], 
     [ServiceId], 
     [DoctorName], 
-    [ServiceName],
-    [Price]
+    [ServiceName]
 )
 VALUES 
-(1, 1, N'Doctor 1', N'IVF', 30000000),
-(2, 2, N'Doctor 2', N'IVF', 10000000);
+(1, 1, N'Doctor 1', N'IVF'),
+(2, 2, N'Doctor 2', N'IVF');
 
 
 
@@ -461,6 +459,7 @@ VALUES
 CREATE TABLE [dbo].[Feedbacks] (
     [FeedbackId]  INT            IDENTITY (1, 1) NOT NULL,
     [Date]        DATE           NOT NULL,
+    [FullName]    NVARCHAR (MAX) NOT NULL,
     [Comments]    NVARCHAR (MAX) NULL,
     [Rating]      INT            NOT NULL,
 	[Status]	  NVARCHAR (MAX) NOT NULL,
@@ -473,10 +472,10 @@ CREATE TABLE [dbo].[Feedbacks] (
 );
 
 
-INSERT INTO [Feedbacks] ([CustomerId], [ManagerId], [Date], [Comments], [Rating], [Status])
+INSERT INTO [Feedbacks] ([CustomerId], [ManagerId], [Date], [FullName], [Comments], [Rating], [Status])
 VALUES 
-(1, 1, '2025-08-08', N'Dịch vụ tốt', 5, N'Confirm'),
-(2, 1, '2025-08-10', N'Tư vấn nhiệt tình', 4, N'Confirm');
+(1, 1, '2025-08-08', N'Vũ Trần Bình Minh', N'Dịch vụ tốt', 5, N'Confirm'),
+(2, 1, '2025-08-10', 'Tran Thi B', N'Tư vấn nhiệt tình', 4, N'Confirm');
 
 
 
