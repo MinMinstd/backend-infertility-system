@@ -21,6 +21,9 @@ namespace infertility_system
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<Dtos.Email.EmailConfiguration>();
+            builder.Services.AddSingleton(emailConfig); // Register the email configuration as a singleton
+
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -53,6 +56,7 @@ namespace infertility_system
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
             builder.Services.AddScoped<IServiceRepository, Repository.ServiceRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             builder.Services.AddControllers();
             builder.Services.AddFluentValidationAutoValidation();
