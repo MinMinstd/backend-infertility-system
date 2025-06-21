@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.MedicalRecord;
+using infertility_system.Dtos.Typetests;
 using infertility_system.Dtos.User;
 using infertility_system.Interfaces;
 using infertility_system.Models;
@@ -99,7 +100,35 @@ namespace infertility_system.Controllers
             var dto = _mapper.Map<List<MedicalRecordDto>>(medicalRecords);
             return Ok(dto);
         }
-        
+
+        [HttpGet("medicalRecordDetailWithTreatment")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetMedicalDetailWithTreatmentRoadMap()
+        {
+            var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecordDetails = await _medicalRecordDetailRepository.
+                        GetMedicalRecordDetailWithTreatmentRoadmapAsync(userIdClaims);
+
+            var result = _mapper.Map<List<MedicalRecordDetailWithTreatmentDto>>(medicalRecordDetails);
+            
+            return Ok(result);
+        }
+
+        [HttpGet("medicalRecordDetailWithTypeTest")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetMedicalRecordDetailWithTypeTest()
+        {
+            var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecordDetails = await _medicalRecordDetailRepository.
+                        GetMedicalRecordDetailTypetestBaseTreatmentCompleteAsync(userIdClaims);
+
+            var result = _mapper.Map<List<MedicalRecordDetailWithTypeTestDto>>(medicalRecordDetails);
+
+            return Ok(result);
+        }
+
         [HttpGet("embryos")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetEmbryos()
@@ -117,7 +146,6 @@ namespace infertility_system.Controllers
         }
 
         [HttpPut("UpdateCustomerProfile")]
-        
         public async Task<IActionResult> UpdateCustomerProfile(CustomerProfileDto customerProfileDto)
         {
             var UserIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);

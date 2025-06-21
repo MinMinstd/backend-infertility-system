@@ -47,13 +47,21 @@ select * from OrderDetails
 select * from Customers
 select * from Bookings
 select * from MedicalRecords
+select * from TreatmentRoadmaps
 select * from MedicalRecordDetails
+select * from TreatmentResults
+select * from TypeTests
 select * from Doctors
 select * from Users
 select * from DoctorSchedules
-select * from ConsulationRegistrations
 select * from Services
 select * from DoctorDegrees
+
+SELECT d.MedicalRecordDetailId, d.MedicalRecordId, d.TreatmentRoadmapId, t.Stage
+FROM MedicalRecordDetails d
+LEFT JOIN TreatmentRoadmaps t ON d.TreatmentRoadmapId = t.TreatmentRoadmapId
+WHERE d.MedicalRecordId = 1;
+
 INSERT INTO [dbo].[Customers] ([UserId], [FullName], [Email], [Phone], [Gender], [Birthday], [Address]) VALUES
 (5, N'Vũ Trần Bình Minh', 'customer1@gmail.com', '0903544878', N'Nam', '1990-01-01', N'Hanoi'),
 (6, N'Tran Thi B', 'customer2@gmail.com', '0903544878', N'Nữ', '1992-02-02', N'HCMC');
@@ -142,13 +150,13 @@ CREATE TABLE [dbo].[DoctorSchedules] (
 
 INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Status], [DoctorId], [ManagerId]) VALUES
 -- cũng có IDENTITY, có thể không ghi DoctorScheduleId
-( '2025-07-01', '08:00:00', '10:30:00', N'Unavailable', 1, 1), --2 1
+( '2025-07-01', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
 ( '2025-07-01', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
 ( '2025-07-01', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
 ( '2025-07-04', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
 ( '2025-07-04', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
 ( '2025-07-04', '14:00:00', '16:30:00', N'Available', 1, 1), --5 6
-( '2025-07-02', '08:00:00', '10:30:00', N'Unavailable', 2, 1), --3 7
+( '2025-07-02', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
 ( '2025-07-02', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
 ( '2025-07-02', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
 ( '2025-07-05', '08:00:00', '10:30:00', N'Available', 2, 1), --6
@@ -302,7 +310,11 @@ select * from ConsulationResults
 INSERT INTO [TypeTests] ([ConsulationResultId], [TreatmentResultId], [Name], [Description])
 VALUES 
 (1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
-(2, 2, N'Siêu âm', N'Theo dõi nang trứng');
+(2, 2, N'Siêu âm', N'Theo dõi nang trứng'),
+(3, 3, N'Xét nghiệm nước tiểu', N'Kiểm tra chức năng thận'),
+(4, 4, N'Nội soi tử cung', N'Đánh giá nội mạc tử cung'),
+(5, 5, N'Xét nghiệm di truyền', N'Phân tích NST phôi');
+
 
 -- Prescription table
 CREATE TABLE [dbo].[Prescriptions] (
@@ -354,7 +366,8 @@ CREATE TABLE [dbo].[MedicalRecordDetails] (
     [Date]                  DATE           NOT NULL,
     [TestResult]            NVARCHAR (MAX) NULL,
     [Note]                  NVARCHAR (MAX) NULL,
-    [Type]                  NVARCHAR (MAX) NULL,
+    [TypeName]                  NVARCHAR (MAX) NULL,
+    [Status]                NVARCHAR (MAX) NULL,
     [MedicalRecordId]       INT            NOT NULL,
     [ConsulationResultId]   INT            NULL,
     [TreatmentResultId]     INT            NULL,
@@ -369,22 +382,22 @@ select * from TreatmentRoadmaps
 select * from MedicalRecordDetails
 -- INSERT hợp lệ cho MedicalRecordDetails
 -- Hồ sơ bệnh nhân 1 - IVF
-INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-06-03', N'Bình thường', N'Tư vấn khởi đầu IVF', N'Consultation', 1, 1, NULL, 1),
-('2025-06-06', N'15 trứng được lấy', N'Không biến chứng', N'Treatment', 1, NULL, NULL, 2),
-('2025-06-09', N'Tinh trùng đạt chuẩn', N'Sẵn sàng tạo phôi', N'Treatment', 1, NULL, NULL, 3),
-('2025-06-12', N'Tạo 5 phôi tốt', N'Đánh giá phôi ok', N'Treatment', 1, NULL, NULL, 4),
-('2025-06-15', N'Chuyển 2 phôi', N'Tiến hành thành công', N'Treatment', 1, NULL, NULL, 5),
-('2025-06-16', N'HCG dương tính', N'Thành công', N'Result', 1, NULL, 1, 6);
+INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [TypeName], [Status], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
+('2025-06-03', N'Bình thường', N'Tư vấn khởi đầu IVF', N'Consultation', N'Complete', 1, 1, 1, 1),
+('2025-06-06', N'15 trứng được lấy', N'Không biến chứng', N'Treatment', N'Complete', 1, NULL, 2, 2),
+('2025-06-09', N'Tinh trùng đạt chuẩn', N'Sẵn sàng tạo phôi', N'Treatment', N'Complete', 1, NULL, 1, 3),
+('2025-06-12', N'Tạo 5 phôi tốt', N'Đánh giá phôi ok', N'Treatment', N'Complete', 1, NULL, 1, 4),
+('2025-06-15', N'Chuyển 2 phôi', N'Tiến hành thành công', N'Treatment', N'Complete', 1, NULL, 2, 5),
+('2025-06-16', N'HCG dương tính', N'Thành công', N'Result', N'Complete', 1, NULL, 1, 6);
 
 -- Hồ sơ bệnh nhân 2 - IVF lần 2
-INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [Type], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-05-15', N'Bắt đầu lại chu kỳ', N'IVF lần 2', N'Consultation', 2, 2, NULL, 1),
-('2025-05-18', N'16 trứng được lấy', N'Sẵn sàng tạo phôi', N'Treatment', 2, NULL, NULL, 2),
-('2025-05-21', N'Tạo được 4 phôi', N'Phôi trung bình', N'Treatment', 2, NULL, NULL, 3),
-('2025-05-24', N'Chuyển 1 phôi', N'Chờ kết quả', N'Treatment', 2, NULL, NULL, 4),
-('2025-05-27', N'Ổn định', N'Không phản ứng phụ', N'Treatment', 2, NULL, NULL, 5),
-('2025-06-10', N'HCG âm tính', N'Thất bại', N'Result', 2, NULL, 2, 6);
+INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [TypeName], [Status], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
+('2025-05-15', N'Bắt đầu lại chu kỳ', N'IVF lần 2', N'Consultation', N'Complete', 2, 2, 1, 1),
+('2025-05-18', N'16 trứng được lấy', N'Sẵn sàng tạo phôi', N'Treatment', N'Complete', 2, NULL, 1, 2),
+('2025-05-21', N'Tạo được 4 phôi', N'Phôi trung bình', N'Treatment', N'Complete', 2, NULL, 1, 3),
+('2025-05-24', N'Chuyển 1 phôi', N'Chờ kết quả', N'Treatment', N'Complete', 2, NULL, 2, 4),
+('2025-05-27', N'Ổn định', N'Không phản ứng phụ', N'Treatment', N'Complete', 2, NULL, 1, 5),
+('2025-06-10', N'HCG âm tính', N'Thất bại', N'Result', N'Complete', 2, NULL, 2, 6);
 
 
 
