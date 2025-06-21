@@ -6,7 +6,8 @@
         public DateOnly Date { get; set; }
         public string? TestResult { get; set; }
         public string? Note { get; set; } 
-        public string? Type { get; set; }
+        public string? TypeName { get; set; }
+        public string? Status { get; set; }
 
         // MedicalRecordDetail N-1 MedicalRecord
         public int MedicalRecordId { get; set; }
