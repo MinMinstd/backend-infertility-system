@@ -23,7 +23,6 @@ namespace infertility_system.Controllers
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetFeedbacks()
         {
-            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
             var feedbacks = await _feedbackRepository.GetFeedbacksAsync();
             var feedbacksDto = _mapper.Map<List<FeedbackResponseDto>>(feedbacks);
             return Ok(feedbacksDto);

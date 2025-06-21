@@ -12,8 +12,8 @@ using infertility_system.Data;
 namespace infertility_system.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250620004314_Init")]
-    partial class Init
+    [Migration("20250621031215_Update")]
+    partial class Update
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,7 +109,6 @@ namespace infertility_system.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Time")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
@@ -325,6 +324,9 @@ namespace infertility_system.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ManagerId")
                         .HasColumnType("int");
 
@@ -515,9 +517,6 @@ namespace infertility_system.Migrations
 
                     b.Property<int?>("OrderId")
                         .HasColumnType("int");
-
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
