@@ -8,6 +8,7 @@ namespace infertility_system.Interfaces
         Task<List<Doctor>> GetListDoctorsAsync(QueryDoctor? query);
         Task<List<Doctor>> GetAllDoctorsAsync();
         Task<Doctor?> GetDoctorByIdAsync(int doctorId);
-        Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId);
+        Task<List<Doctor>> GetDoctorsByServiceIdForBookingService(int serviceId);
+        Task<List<Doctor>> GetDoctorsByServiceIdForBookingConsulation(int serviceId);
     }
 }
