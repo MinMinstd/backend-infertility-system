@@ -35,7 +35,8 @@ namespace infertility_system.Helpers
 
 
             CreateMap<ServiceDB, ServiceToBookingDto>();
-            CreateMap<Doctor, DoctorBookingRespondDto>();
+            CreateMap<Doctor, DoctorBookingServiceRespondDto>();
+            CreateMap<Doctor, DoctorBookingConsulationRespondDto>();
 
 
             CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();

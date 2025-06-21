@@ -97,15 +97,27 @@ namespace infertility_system.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("GetDoctorsByServiceId/{serviceId}")]
+        [HttpGet("GetDoctorsByServiceIdForBookingService/{serviceId}")]
         public async Task<IActionResult> GetDoctorsByServiceId(int serviceId)
         {
-            var doctors = await _doctorRepository.GetDoctorsByServiceIdAsync(serviceId);
+            var doctors = await _doctorRepository.GetDoctorsByServiceIdForBookingService(serviceId);
             if (doctors == null || !doctors.Any())
             {
                 return NotFound($"No doctors found for service ID {serviceId}.");
             }
-            var doctorDto = _mapper.Map<List<DoctorBookingRespondDto>>(doctors);
+            var doctorDto = _mapper.Map<List<DoctorBookingServiceRespondDto>>(doctors);
+            return Ok(doctorDto);
+        }
+
+        [HttpGet("GetDoctorsByServiceIdForBookingConsulation/{serviceId}")]
+        public async Task<IActionResult> GetDoctorsByServiceIdForBookingConsulation(int serviceId)
+        {
+            var doctors = await _doctorRepository.GetDoctorsByServiceIdForBookingConsulation(serviceId);
+            if (doctors == null || !doctors.Any())
+            {
+                return NotFound($"No doctors found for service ID {serviceId}.");
+            }
+            var doctorDto = _mapper.Map<List<DoctorBookingConsulationRespondDto>>(doctors);
             return Ok(doctorDto);
         }
     }
