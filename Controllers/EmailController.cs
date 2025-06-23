@@ -11,7 +11,7 @@ namespace infertility_system.Controllers
         private readonly IEmailService _emailService;
         public EmailController(IEmailService emailService)
             {
-                _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
+                _emailService = emailService;
             }
     
             [HttpPost("SendEmail")]
