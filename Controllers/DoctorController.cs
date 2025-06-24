@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Helpers;
@@ -127,6 +128,26 @@ namespace infertility_system.Controllers
             var result = await _medicalRecordRepository.
                                 UpdateMedicalRecordAsync(medicalRecord, doctorIdClaims);
             return result ? Ok("Successfully") : BadRequest("Fail");
+        }
+
+        [HttpGet("GetFullInforCustomer")]
+        public async Task<IActionResult> GetFullInforCustomer()
+        {
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var customers = await _doctorRepository.GetListCustomerFullInforAsync(doctorIdClaims);
+            var result = _mapper.Map<List<CustomerInDoctorDto>>(customers);
+            return Ok(result);
+        }
+
+        [HttpGet("GetMedicalRecordWithDetail/{customerId}")]
+        public async Task<IActionResult> GetMedicalRecordWithDetail(int customerId)
+        {
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecords = await _doctorRepository.GetMedicalRecordWithDetailAsync(doctorIdClaims, customerId);
+            var result = _mapper.Map<List<MedicalRecordWithDetailDto>>(medicalRecords);
+            return Ok(result);
         }
     }
 }

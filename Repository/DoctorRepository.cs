@@ -48,6 +48,41 @@ namespace infertility_system.Repository
                 .ToListAsync();
         }
 
+
+        public async Task<List<Customer>> GetListCustomerFullInforAsync(int doctorIdClaim)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
+
+            var doctorSchedule = await _context.DoctorSchedules.FirstOrDefaultAsync(x => x.DoctorId == doctor.DoctorId);
+            if (doctorSchedule == null) return null;
+
+            var bookings = await _context.Bookings
+                    .Where(x => x.DoctorScheduleId == doctorSchedule.DoctorScheduleId)
+                    .ToListAsync();
+
+            var customerIds = bookings.Select(x => x.CustomerId).Distinct().ToList();
+
+            var customers = await _context.Customers
+                    .Where(x => customerIds.Contains(x.CustomerId))
+                    .Include(x => x.MedicalRecord)
+                    .ThenInclude(m => m.Doctor)
+                    .ThenInclude(d => d.ServiceDB)
+                    .ToListAsync();
+            return customers;
+        }
+
+        public async Task<List<MedicalRecord>> GetMedicalRecordWithDetailAsync(int doctorIdClaim, int customerId)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
+            if (doctor == null) return null;
+
+            var medicalRecords = await _context.MedicalRecords
+                        .Where(m => m.DoctorId == doctor.DoctorId && m.CustomerId == customerId)
+                        .Include(m => m.MedicalRecordDetails)
+                        .ToListAsync();
+
+            return medicalRecords;
+
         public async Task<List<Doctor>> GetDoctorsByServiceIdForBookingConsulation(int serviceId)
         {
             return await _context.Doctors

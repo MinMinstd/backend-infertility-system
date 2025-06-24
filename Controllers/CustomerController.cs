@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.MedicalRecord;
+using infertility_system.Dtos.Typetests;
 using infertility_system.Dtos.User;
 using infertility_system.Interfaces;
 using infertility_system.Models;
