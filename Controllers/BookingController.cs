@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using infertility_system.Dtos.Booking;
-using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.Email;
 using infertility_system.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -27,14 +26,6 @@ namespace infertility_system.Controllers
             _emailService = emailService;
         }
 
-        [HttpGet("GetAllDoctors")]
-        public async Task<IActionResult> GetAllDoctor()
-        {
-            var doctors = await _doctorRepository.GetAllDoctorsAsync();
-            var doctorDto = _mapper.Map<List<DoctorForListDto>>(doctors);
-            return Ok(doctorDto);
-        }
-
         [HttpPost("booking_consulant")]
         public async Task<IActionResult> CreateBookingConsultant([FromBody] BookingConsulantDto bookingDto)
         {
@@ -47,7 +38,7 @@ namespace infertility_system.Controllers
                 (
                     new List<String> { userEmail },
                     "Thông báo đặt lịch tư vấn",
-                    "<p>Bạn đã đặt lịch tư vấn ngày <strong>"+bookingDto.Date+"</strong> lúc <strong>"+bookingDto.Time+"</strong>.</p>"
+                    "<p>Bạn đã đặt lịch tư vấn ngày <strong>" + bookingDto.Date + "</strong> lúc <strong>" + bookingDto.Time + "</strong>.</p>"
                 );
 
                 await _emailService.SendEmail(emailMessage);
@@ -68,9 +59,9 @@ namespace infertility_system.Controllers
             {
                 var emailMessage = new EmailMessage
                 (
-                    new List<String>{userEmail},
+                    new List<String> { userEmail },
                     "Thông báo đặt lịch khám",
-                    "<p>Bạn đã đặt lịch khám ngày <strong>"+bookingDto.Date+"</strong> lúc <strong>"+bookingDto.Time+"</strong>.</p>"
+                    "<p>Bạn đã đặt lịch khám ngày <strong>" + bookingDto.Date + "</strong> lúc <strong>" + bookingDto.Time + "</strong>.</p>"
                 );
 
                 await _emailService.SendEmail(emailMessage);

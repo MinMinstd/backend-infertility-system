@@ -7,5 +7,6 @@ namespace infertility_system.Interfaces
         Task<DoctorSchedule?> GetScheduleByDateTime(DateOnly date, TimeOnly startTime, TimeOnly endTime);
         Task<bool> UpdateScheduleStatus(int scheduleId, string status);
         Task<List<DoctorSchedule>> GetSchedulesByDoctorAndDate(int doctorId, DateOnly date);
+        Task<List<DoctorSchedule>> GetScheduleByDoctorId(int doctorId);
     }
-} 
+}

@@ -62,5 +62,13 @@ namespace infertility_system.Controllers
             var doctorScheduleDtos = _mapper.Map<List<DoctorScheduleToBookingDto>>(doctorSchedules);
             return Ok(doctorScheduleDtos);
         }
+
+        [HttpGet("GetScheduleByDoctorId/{doctorId}")]
+        public async Task<IActionResult> GetScheduleByDoctorId(int doctorId)
+        {
+            var doctorSchedule = await _doctorScheduleRepository.GetScheduleByDoctorId(doctorId);
+            var doctorScheduleDto = _mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedule);
+            return Ok(doctorScheduleDto);
+        }
     }
 }

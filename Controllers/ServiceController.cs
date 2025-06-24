@@ -32,6 +32,14 @@ namespace infertility_system.Controllers
             var servicesDto = _mapper.Map<List<ServiceToBookingDto>>(services);
             return Ok(servicesDto);
         }
+
+        [HttpGet("GetServicesForManagement")]
+        public async Task<IActionResult> GetServicesForManagement()
+        {
+            var services = await _serviceRepository.GetServicesForManagement();
+            var servicesDto = _mapper.Map<List<ServiceToDtoForList>>(services);
+            return Ok(servicesDto);
+        }
     }
 
 }

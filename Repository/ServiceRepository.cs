@@ -27,5 +27,10 @@ namespace infertility_system.Repository
         {
             return await _context.Services.ToListAsync();
         }
+
+        public async Task<List<ServiceDB>> GetServicesForManagement()
+        {
+            return await _context.Services.ToListAsync();
+        }
     }
 }

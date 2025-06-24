@@ -17,8 +17,8 @@ namespace infertility_system.Repository
         public async Task<DoctorSchedule?> GetScheduleByDateTime(DateOnly date, TimeOnly startTime, TimeOnly endTime)
         {
             return await _context.DoctorSchedules
-                .FirstOrDefaultAsync(x => x.StartTime == startTime && 
-                                        x.EndTime == endTime && 
+                .FirstOrDefaultAsync(x => x.StartTime == startTime &&
+                                        x.EndTime == endTime &&
                                         x.WorkDate == date);
         }
 
@@ -38,5 +38,12 @@ namespace infertility_system.Repository
                 .Where(x => x.DoctorId == doctorId && x.WorkDate == date && x.Status == "Available")
                 .ToListAsync();
         }
+
+        public async Task<List<DoctorSchedule>> GetScheduleByDoctorId(int doctorId)
+        {
+            return await _context.DoctorSchedules
+                .Where(x => x.DoctorId == doctorId)
+                .ToListAsync();
+        }
     }
-} 
+}
