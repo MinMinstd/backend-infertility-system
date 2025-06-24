@@ -9,6 +9,7 @@ using infertility_system.Dtos.Feedback;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.Service;
 using infertility_system.Dtos.Typetests;
+using infertility_system.Dtos.User;
 using infertility_system.Models;
 
 namespace infertility_system.Helpers
@@ -33,6 +34,7 @@ namespace infertility_system.Helpers
             CreateMap<ConsulationResultRequest, ConsulationResult>();
             //CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
             CreateMap<FeedbackRequestDto, Feedback>();
+            CreateMap<User, UserRespondDto>();
 
 
             CreateMap<ServiceDB, ServiceToBookingDto>();
@@ -55,7 +57,7 @@ namespace infertility_system.Helpers
             CreateMap<Booking, BookingForListDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName));
-            
+
         }
     }
 }
