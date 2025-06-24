@@ -9,6 +9,7 @@ using infertility_system.Dtos.Feedback;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.Service;
 using infertility_system.Dtos.Typetests;
+using infertility_system.Dtos.User;
 using infertility_system.Models;
 
 namespace infertility_system.Helpers
@@ -33,15 +34,26 @@ namespace infertility_system.Helpers
             CreateMap<ConsulationResultRequest, ConsulationResult>();
             //CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
             CreateMap<FeedbackRequestDto, Feedback>();
-
+            CreateMap<User, UserRespondDto>();
+            CreateMap<Doctor, DoctorForManagementDto>()
+            .ForMember(dest => dest.DegreeName,
+                       opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().DegreeName))
+            .ForMember(dest => dest.DoctorId,
+                       opt => opt.MapFrom(src => src.DoctorId));
+            CreateMap<DoctorSchedule, DoctorScheduleRespondDto>();
 
             CreateMap<ServiceDB, ServiceToBookingDto>();
+
             CreateMap<Doctor, DoctorBookingRespondDto>();
             CreateMap<Customer, CustomerInDoctorDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().Status))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().StartDate))
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().Doctor.ServiceDB.Name))
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Birthday)));
+
+            CreateMap<Doctor, DoctorBookingServiceRespondDto>();
+            CreateMap<Doctor, DoctorBookingConsulationRespondDto>();
+
 
 
             CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();
@@ -59,7 +71,7 @@ namespace infertility_system.Helpers
             CreateMap<Booking, BookingForListDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName));
-            
+
         }
 
         private static int CalculateAge(DateOnly birthday)

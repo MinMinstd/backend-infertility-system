@@ -42,7 +42,7 @@ namespace infertility_system.Repository
             var booking = _mapper.Map<Booking>(dto);
             booking.Status = "Pending";
             booking.CustomerId = customer.CustomerId;
-            booking.Type = "Consultant";
+            booking.Type = "Consulation";
 
             await _doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
 

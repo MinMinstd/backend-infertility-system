@@ -12,6 +12,12 @@ namespace infertility_system.Repository
         {
             _context = context;
         }
+
+        public async Task<User> GetUserAfterLogin(int userId)
+        {
+            return await _context.Users.FindAsync(userId);
+        }
+
         public async Task<User> UpdateUser(int id, User user)
         {
             var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.UserId == id);
