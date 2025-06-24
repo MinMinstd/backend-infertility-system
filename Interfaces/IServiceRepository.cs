@@ -7,5 +7,6 @@ namespace infertility_system.Interfaces
     {
         Task<List<ServiceDB>> GetListServicesAsync(QueryService query);
         Task<List<ServiceDB>> GetAllServiceToBooking();
+        Task<List<ServiceDB>> GetServicesForManagement();
     }
 }

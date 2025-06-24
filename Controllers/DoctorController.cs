@@ -56,47 +56,6 @@ namespace infertility_system.Controllers
             return Ok(doctorDto);
         }
 
-        //[Authorize(Roles = "Doctor")]
-        [HttpPost("CreateMedicalRecord/{customerId}")]
-        public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto
-            createMedicalRecordDto, int customerId)
-        {
-            var doctorIdClaim = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-            var medicalRecord = _mapper.Map<MedicalRecord>(createMedicalRecordDto);
-            medicalRecord.CustomerId = customerId;
-
-            var result = await _medicalRecordRepository.
-                CreateMedicalRecordAsync(medicalRecord, doctorIdClaim);
-            return result ? Ok("Successfully") : BadRequest("Fail");
-        }
-
-        [HttpPut("UpdateMedicalRecord/{medicalRecordId}")]
-        public async Task<IActionResult> UpdateMedicalRecord(int medicalRecordId,
-            [FromBody] UpdateMedicalRecordDto updateDto)
-        {
-            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-            var medicalRecord = _mapper.Map<MedicalRecord>(updateDto);
-            medicalRecord.MedicalRecordId = medicalRecordId;
-
-            var result = await _medicalRecordRepository.
-                                UpdateMedicalRecordAsync(medicalRecord, doctorIdClaims);
-            return result ? Ok("Successfully") : BadRequest("Fail");
-        }
-
-        [HttpPost("CreateMedicalRecordDetail")]
-        public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] MedicalRecordDetailDto dto)
-        {
-            //var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            //if(!await _doctorRepository.CheckDoctorIdInMedicalRecordAsync(doctorIdClaims, dto.MedicalRecordId))
-            //    return Unauthorized("Bạn không có quyền cập nhật hồ sơ này");
-
-            var medicalRecordDetailDto = _mapper.Map<MedicalRecordDetail>(dto);
-            var medicalRecordDetail = await _medicalRecordDetailRepository.CreateMedicalRecordDetailAsync(medicalRecordDetailDto);
-            return Ok(dto);
-        }
-
         [HttpGet("GetDoctorsByServiceIdForBookingService/{serviceId}")]
         public async Task<IActionResult> GetDoctorsByServiceId(int serviceId)
         {
@@ -119,6 +78,55 @@ namespace infertility_system.Controllers
             }
             var doctorDto = _mapper.Map<List<DoctorBookingConsulationRespondDto>>(doctors);
             return Ok(doctorDto);
+        }
+
+        [HttpGet("GetDoctorsForManagement")]
+        public async Task<IActionResult> GetDoctosForManagement()
+        {
+            var doctors = await _doctorRepository.GetDoctosForManagement();
+            var doctorDto = _mapper.Map<List<DoctorForManagementDto>>(doctors);
+            return Ok(doctorDto);
+        }
+
+        //[Authorize(Roles = "Doctor")]
+        [HttpPost("CreateMedicalRecord/{customerId}")]
+        public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto
+            createMedicalRecordDto, int customerId)
+        {
+            var doctorIdClaim = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecord = _mapper.Map<MedicalRecord>(createMedicalRecordDto);
+            medicalRecord.CustomerId = customerId;
+
+            var result = await _medicalRecordRepository.
+                CreateMedicalRecordAsync(medicalRecord, doctorIdClaim);
+            return result ? Ok("Successfully") : BadRequest("Fail");
+        }
+
+        [HttpPost("CreateMedicalRecordDetail")]
+        public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] MedicalRecordDetailDto dto)
+        {
+            //var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            //if(!await _doctorRepository.CheckDoctorIdInMedicalRecordAsync(doctorIdClaims, dto.MedicalRecordId))
+            //    return Unauthorized("Bạn không có quyền cập nhật hồ sơ này");
+
+            var medicalRecordDetailDto = _mapper.Map<MedicalRecordDetail>(dto);
+            var medicalRecordDetail = await _medicalRecordDetailRepository.CreateMedicalRecordDetailAsync(medicalRecordDetailDto);
+            return Ok(dto);
+        }
+
+        [HttpPut("UpdateMedicalRecord/{medicalRecordId}")]
+        public async Task<IActionResult> UpdateMedicalRecord(int medicalRecordId,
+            [FromBody] UpdateMedicalRecordDto updateDto)
+        {
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecord = _mapper.Map<MedicalRecord>(updateDto);
+            medicalRecord.MedicalRecordId = medicalRecordId;
+
+            var result = await _medicalRecordRepository.
+                                UpdateMedicalRecordAsync(medicalRecord, doctorIdClaims);
+            return result ? Ok("Successfully") : BadRequest("Fail");
         }
     }
 }
