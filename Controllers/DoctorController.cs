@@ -57,6 +57,38 @@ namespace infertility_system.Controllers
             return Ok(doctorDto);
         }
 
+        [HttpGet("GetDoctorsByServiceIdForBookingService/{serviceId}")]
+        public async Task<IActionResult> GetDoctorsByServiceId(int serviceId)
+        {
+            var doctors = await _doctorRepository.GetDoctorsByServiceIdForBookingService(serviceId);
+            if (doctors == null || !doctors.Any())
+            {
+                return NotFound($"No doctors found for service ID {serviceId}.");
+            }
+            var doctorDto = _mapper.Map<List<DoctorBookingServiceRespondDto>>(doctors);
+            return Ok(doctorDto);
+        }
+
+        [HttpGet("GetDoctorsByServiceIdForBookingConsulation/{serviceId}")]
+        public async Task<IActionResult> GetDoctorsByServiceIdForBookingConsulation(int serviceId)
+        {
+            var doctors = await _doctorRepository.GetDoctorsByServiceIdForBookingConsulation(serviceId);
+            if (doctors == null || !doctors.Any())
+            {
+                return NotFound($"No doctors found for service ID {serviceId}.");
+            }
+            var doctorDto = _mapper.Map<List<DoctorBookingConsulationRespondDto>>(doctors);
+            return Ok(doctorDto);
+        }
+
+        [HttpGet("GetDoctorsForManagement")]
+        public async Task<IActionResult> GetDoctosForManagement()
+        {
+            var doctors = await _doctorRepository.GetDoctosForManagement();
+            var doctorDto = _mapper.Map<List<DoctorForManagementDto>>(doctors);
+            return Ok(doctorDto);
+        }
+
         //[Authorize(Roles = "Doctor")]
         [HttpPost("CreateMedicalRecord/{customerId}")]
         public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDto
@@ -72,20 +104,6 @@ namespace infertility_system.Controllers
             return result ? Ok("Successfully") : BadRequest("Fail");
         }
 
-        [HttpPut("UpdateMedicalRecord/{medicalRecordId}")]
-        public async Task<IActionResult> UpdateMedicalRecord(int medicalRecordId,
-            [FromBody] UpdateMedicalRecordDto updateDto)
-        {
-            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-            var medicalRecord = _mapper.Map<MedicalRecord>(updateDto);
-            medicalRecord.MedicalRecordId = medicalRecordId;
-
-            var result = await _medicalRecordRepository.
-                                UpdateMedicalRecordAsync(medicalRecord, doctorIdClaims);
-            return result ? Ok("Successfully") : BadRequest("Fail");
-        }
-
         [HttpPost("CreateMedicalRecordDetail")]
         public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] MedicalRecordDetailDto dto)
         {
@@ -98,16 +116,18 @@ namespace infertility_system.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("GetDoctorsByServiceId/{serviceId}")]
-        public async Task<IActionResult> GetDoctorsByServiceId(int serviceId)
+        [HttpPut("UpdateMedicalRecord/{medicalRecordId}")]
+        public async Task<IActionResult> UpdateMedicalRecord(int medicalRecordId,
+            [FromBody] UpdateMedicalRecordDto updateDto)
         {
-            var doctors = await _doctorRepository.GetDoctorsByServiceIdAsync(serviceId);
-            if (doctors == null || !doctors.Any())
-            {
-                return NotFound($"No doctors found for service ID {serviceId}.");
-            }
-            var doctorDto = _mapper.Map<List<DoctorBookingRespondDto>>(doctors);
-            return Ok(doctorDto);
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecord = _mapper.Map<MedicalRecord>(updateDto);
+            medicalRecord.MedicalRecordId = medicalRecordId;
+
+            var result = await _medicalRecordRepository.
+                                UpdateMedicalRecordAsync(medicalRecord, doctorIdClaims);
+            return result ? Ok("Successfully") : BadRequest("Fail");
         }
 
         [HttpGet("GetFullInforCustomer")]

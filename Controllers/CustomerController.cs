@@ -22,7 +22,7 @@ namespace infertility_system.Controllers
         private readonly IMapper _mapper;
 
         public CustomerController(
-            ICustomerRepository customerRepository, 
+            ICustomerRepository customerRepository,
             IMapper mapper,
             IMedicalRecordDetailRepository medicalRecordDetailRepository,
             IEmbryoRepository embryoRepository,
@@ -36,7 +36,7 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet]
-        
+
         public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomer()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -54,27 +54,6 @@ namespace infertility_system.Controllers
             }
 
             return Ok(_mapper.Map<CustomerDto>(customer));
-        }
-
-        [HttpPut("ChangePassword")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
-            {
-                return Unauthorized(new { Message = "Token không hợp lệ hoặc thiếu UserId!" });
-            }
-            if (dto == null)
-            {
-                return BadRequest(new { Message = "Dữ liệu không hợp lệ!" });
-            }
-            var result = await _customerRepository.ChangePasswordAsync(userId, dto);
-            if (!result)
-            {
-                return BadRequest(new { Message = "Đổi mật khẩu không thành công!" });
-            }
-            return Ok(new { Message = "Đổi mật khẩu thành công!" });
         }
 
         [HttpGet("medicalRecordWithDetail")]
@@ -111,7 +90,7 @@ namespace infertility_system.Controllers
                         GetMedicalRecordDetailWithTreatmentRoadmapAsync(userIdClaims);
 
             var result = _mapper.Map<List<MedicalRecordDetailWithTreatmentDto>>(medicalRecordDetails);
-            
+
             return Ok(result);
         }
 
@@ -143,6 +122,27 @@ namespace infertility_system.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             return Ok(embryosDto);
+        }
+
+        [HttpPut("ChangePassword")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            {
+                return Unauthorized(new { Message = "Token không hợp lệ hoặc thiếu UserId!" });
+            }
+            if (dto == null)
+            {
+                return BadRequest(new { Message = "Dữ liệu không hợp lệ!" });
+            }
+            var result = await _customerRepository.ChangePasswordAsync(userId, dto);
+            if (!result)
+            {
+                return BadRequest(new { Message = "Đổi mật khẩu không thành công!" });
+            }
+            return Ok(new { Message = "Đổi mật khẩu thành công!" });
         }
 
         [HttpPut("UpdateCustomerProfile")]
