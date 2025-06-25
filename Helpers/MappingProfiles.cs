@@ -36,6 +36,9 @@ namespace infertility_system.Helpers
             //CreateMap<ConsulationRegistration, ConsulationRegistrationRespond>();
             CreateMap<FeedbackRequestDto, Feedback>();
             CreateMap<User, UserRespondDto>();
+            CreateMap<User, UserToManagementDto>()
+                .ForMember(dest => dest.FullName,
+                opt => opt.MapFrom(src => src.Role == "Customer" ? src.Customer.FullName : src.Doctor.FullName));
             CreateMap<Doctor, DoctorForManagementDto>()
             .ForMember(dest => dest.DegreeName,
                        opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().DegreeName))
