@@ -130,6 +130,7 @@ namespace infertility_system.Controllers
             return result ? Ok("Successfully") : BadRequest("Fail");
         }
 
+
         [HttpGet("GetFullInforCustomer")]
         public async Task<IActionResult> GetFullInforCustomer()
         {
@@ -147,6 +148,17 @@ namespace infertility_system.Controllers
 
             var medicalRecords = await _doctorRepository.GetMedicalRecordWithDetailAsync(doctorIdClaims, customerId);
             var result = _mapper.Map<List<MedicalRecordWithDetailDto>>(medicalRecords);
+            return Ok(result);
+        }
+
+        [HttpGet("GetMedicalRecordDetailWithTreatmentResultAndTypeTest/{customerId}")]
+        public async Task<IActionResult> GetMRDWithTreatmentResultAndTypeTest(int customerId)
+        {
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecordDetails = await _doctorRepository.
+                GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(doctorIdClaims, customerId);
+            var result = _mapper.Map<List<MedicalRecordDetailWithTypeTestDto>>(medicalRecordDetails);
             return Ok(result);
         }
     }

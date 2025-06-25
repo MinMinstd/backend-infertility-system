@@ -45,7 +45,7 @@ namespace infertility_system.Helpers
 
             CreateMap<ServiceDB, ServiceToBookingDto>();
 
-            CreateMap<Doctor, DoctorBookingRespondDto>();
+            //CreateMap<Doctor, DoctorBookingRespondDto>();
             CreateMap<Customer, CustomerInDoctorDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().Status))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().StartDate))
@@ -54,8 +54,11 @@ namespace infertility_system.Helpers
 
             CreateMap<Doctor, DoctorBookingServiceRespondDto>();
             CreateMap<Doctor, DoctorBookingConsulationRespondDto>();
-
-
+            CreateMap<Doctor, ListDoctorsDto>()
+                .ForMember(dest => dest.DegreeName, opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().DegreeName));
+            CreateMap<Doctor, DoctorDetailDto>()
+                .ForMember(dest => dest.DegreeName, opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().DegreeName))
+                .ForMember(dest => dest.GraduationYear, opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().GraduationYear));
 
             CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();
             CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>();
