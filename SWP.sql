@@ -150,13 +150,13 @@ CREATE TABLE [dbo].[DoctorSchedules] (
 
 INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Status], [DoctorId], [ManagerId]) VALUES
 -- cũng có IDENTITY, có thể không ghi DoctorScheduleId
-( '2025-07-01', '08:00:00', '10:30:00', N'Unavailable', 1, 1), --2 1
+( '2025-07-01', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
 ( '2025-07-01', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
 ( '2025-07-01', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
 ( '2025-07-04', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
 ( '2025-07-04', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
 ( '2025-07-04', '14:00:00', '16:30:00', N'Available', 1, 1), --5 6
-( '2025-07-02', '08:00:00', '10:30:00', N'Unavailable', 2, 1), --3 7
+( '2025-07-02', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
 ( '2025-07-02', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
 ( '2025-07-02', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
 ( '2025-07-05', '08:00:00', '10:30:00', N'Available', 2, 1), --6
@@ -310,7 +310,14 @@ select * from ConsulationResults
 INSERT INTO [TypeTests] ([ConsulationResultId], [TreatmentResultId], [Name], [Description])
 VALUES 
 (1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
+
+(2, 2, N'Siêu âm', N'Theo dõi nang trứng'),
+(3, 3, N'Xét nghiệm nước tiểu', N'Kiểm tra chức năng thận'),
+(4, 4, N'Nội soi tử cung', N'Đánh giá nội mạc tử cung'),
+(5, 5, N'Xét nghiệm di truyền', N'Phân tích NST phôi');
+
 (2, 2, N'Siêu âm', N'Theo dõi nang trứng')
+
 
 
 -- Prescription table

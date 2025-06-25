@@ -131,18 +131,6 @@ namespace infertility_system.Controllers
         }
 
 
-        [HttpGet("GetDoctorsByServiceId/{serviceId}")]
-        public async Task<IActionResult> GetDoctorsByServiceId(int serviceId)
-        {
-            var doctors = await _doctorRepository.GetDoctorsByServiceIdAsync(serviceId);
-            if (doctors == null || !doctors.Any())
-            {
-                return NotFound($"No doctors found for service ID {serviceId}.");
-            }
-            var doctorDto = _mapper.Map<List<DoctorBookingRespondDto>>(doctors);
-            return Ok(doctorDto);
-        }
-
         [HttpGet("GetFullInforCustomer")]
         public async Task<IActionResult> GetFullInforCustomer()
         {

@@ -48,6 +48,7 @@ namespace infertility_system.Repository
                 .ToListAsync();
         }
 
+
         public async Task<List<Customer>> GetListCustomerFullInforAsync(int doctorIdClaim)
         {
             var doctor = await _context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
@@ -83,6 +84,8 @@ namespace infertility_system.Repository
             return medicalRecords;
         }
 
+
+
         public async Task<List<Doctor>> GetDoctorsByServiceIdForBookingConsulation(int serviceId)
         {
             return await _context.Doctors
@@ -93,7 +96,6 @@ namespace infertility_system.Repository
         public async Task<List<Doctor>> GetDoctosForManagement()
         {
             return await _context.Doctors.Include(x => x.DoctorDegrees).ToListAsync();
-
         }
     }
 }

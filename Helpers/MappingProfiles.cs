@@ -10,6 +10,7 @@ using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.Service;
 using infertility_system.Dtos.Typetests;
 using infertility_system.Dtos.User;
+
 using infertility_system.Models;
 
 namespace infertility_system.Helpers
@@ -71,7 +72,7 @@ namespace infertility_system.Helpers
             CreateMap<Booking, BookingForListDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName));
-
+            
         }
 
         private static int CalculateAge(DateOnly birthday)
