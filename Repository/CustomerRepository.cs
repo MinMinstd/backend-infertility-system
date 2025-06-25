@@ -36,6 +36,19 @@ namespace infertility_system.Repository
             return await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
+        public async Task<Doctor> GetDoctorDetailAsync(int doctorId)
+        {
+            var doctor = await _context.Doctors.Include(d => d.DoctorDegrees).
+                FirstOrDefaultAsync(d => d.DoctorId == doctorId);
+            if (doctor == null) return null;
+            return doctor;
+        }
+
+        public async Task<List<Doctor>> GetListDoctorsAsync()
+        {
+            return await _context.Doctors.Include(d => d.DoctorDegrees).ToListAsync();
+        }
+
         public async Task<Customer> UpdateCutomerAsync(int userId, Customer customer)
         {
             var existingCustomer = await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);

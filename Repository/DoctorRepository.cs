@@ -97,5 +97,28 @@ namespace infertility_system.Repository
         {
             return await _context.Doctors.Include(x => x.DoctorDegrees).ToListAsync();
         }
+
+        public Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<MedicalRecordDetail>> GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(int doctorIdClaim, int customerId)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            if (doctor == null) return null;
+            var medicalRecords = await _context.MedicalRecords
+                        .Where(mr => mr.DoctorId == doctor.DoctorId && mr.CustomerId == customerId)
+                        .ToListAsync();
+            if (medicalRecords == null) return null;
+
+            var medicalRecordDetails = await _context.MedicalRecordDetails
+                        .Where(mrd => mrd.MedicalRecordId == medicalRecords.FirstOrDefault().MedicalRecordId)
+                        .Include(mrd => mrd.TreatmentResult)
+                        .ThenInclude(tr => tr.TypeTest)
+                        .ToListAsync();
+            return medicalRecordDetails;
+        }
     }
 }

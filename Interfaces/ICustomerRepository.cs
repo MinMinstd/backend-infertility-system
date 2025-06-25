@@ -12,6 +12,7 @@ namespace infertility_system.Interfaces
 
         Task<bool> CheckExistsByUserId(int id); // This method seems to be duplicated, consider removing one
         Task<Customer> UpdateCutomerAsync(int userId, Customer customer);
-
+        Task<List<Doctor>> GetListDoctorsAsync();
+        Task<Doctor> GetDoctorDetailAsync(int doctorId);
     }
 }

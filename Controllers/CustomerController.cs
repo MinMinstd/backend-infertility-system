@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using infertility_system.Dtos.Customer;
+using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.Typetests;
 using infertility_system.Dtos.User;
@@ -178,6 +179,24 @@ namespace infertility_system.Controllers
             }
             return Ok(new { Message = "Cập nhật thông tin thành công!", Customer = _mapper.Map<CustomerDto>(updatedCustomer) });
 
+        }
+
+        [HttpGet("GetListDoctors")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetListDoctor()
+        {
+            var doctors = await _customerRepository.GetListDoctorsAsync();
+            var result = _mapper.Map<List<ListDoctorsDto>>(doctors);
+            return Ok(result);
+        }
+
+        [HttpGet("GetDoctorDetail/{doctorId}")]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> GetDoctorDetail(int doctorId)
+        {
+            var doctorDetail = await _customerRepository.GetDoctorDetailAsync(doctorId);
+            var result = _mapper.Map<DoctorDetailDto>(doctorDetail);
+            return Ok(result);
         }
     }
 

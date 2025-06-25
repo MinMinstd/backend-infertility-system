@@ -151,5 +151,15 @@ namespace infertility_system.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetMedicalRecordDetailWithTreatmentResultAndTypeTest/{customerId}")]
+        public async Task<IActionResult> GetMRDWithTreatmentResultAndTypeTest(int customerId)
+        {
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecordDetails = await _doctorRepository.
+                GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(doctorIdClaims, customerId);
+            var result = _mapper.Map<List<MedicalRecordDetailWithTypeTestDto>>(medicalRecordDetails);
+            return Ok(result);
+        }
     }
 }
