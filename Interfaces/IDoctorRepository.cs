@@ -13,6 +13,7 @@ namespace infertility_system.Interfaces
         Task<List<Customer>> GetListCustomerFullInforAsync(int doctorIdClaim);
         Task<List<MedicalRecord>> GetMedicalRecordWithDetailAsync(int doctorIdClaim, int customerId);
         Task<List<MedicalRecordDetail>> GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(int doctorIdClaim, int customerId);
+        Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId);
 
         Task<List<Doctor>> GetDoctosForManagement();
         Task<List<Doctor>> GetDoctorsByServiceIdForBookingService(int serviceId);

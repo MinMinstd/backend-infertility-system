@@ -81,20 +81,6 @@ namespace infertility_system.Controllers
             return Ok(dto);
         }
 
-        [HttpGet("medicalRecordDetailWithTreatment")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> GetMedicalDetailWithTreatmentRoadMap()
-        {
-            var userIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-            var medicalRecordDetails = await _medicalRecordDetailRepository.
-                        GetMedicalRecordDetailWithTreatmentRoadmapAsync(userIdClaims);
-
-            var result = _mapper.Map<List<MedicalRecordDetailWithTreatmentDto>>(medicalRecordDetails);
-
-            return Ok(result);
-        }
-
         [HttpGet("medicalRecordDetailWithTypeTest")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetMedicalRecordDetailWithTypeTest()

@@ -8,6 +8,7 @@ using infertility_system.Dtos.DoctorSchedule;
 using infertility_system.Dtos.Feedback;
 using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.Service;
+using infertility_system.Dtos.TreatmentRoadmap;
 using infertility_system.Dtos.Typetests;
 using infertility_system.Dtos.User;
 
@@ -64,10 +65,10 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.GraduationYear, opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().GraduationYear));
 
             CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();
-            CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>();
-            CreateMap<MedicalRecord, MedicalRecordDto>();
-            CreateMap<MedicalRecordDetail, MedicalRecordDetailWithTreatmentDto>()
+            CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>()
                 .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage));
+            CreateMap<MedicalRecord, MedicalRecordDto>();
+            
 
             CreateMap<TypeTest, TypeTestDto>();
             CreateMap<MedicalRecordDetail, MedicalRecordDetailWithTypeTestDto>()
@@ -78,7 +79,8 @@ namespace infertility_system.Helpers
             CreateMap<Booking, BookingForListDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName));
-            
+
+            CreateMap<TreatmentRoadmap, TreatmentRoadmapDto>();
         }
 
         private static int CalculateAge(DateOnly birthday)

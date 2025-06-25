@@ -38,25 +38,6 @@ namespace infertility_system.Repository
             return medicalRecords;
         }
 
-        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecordDetailWithTreatmentRoadmapAsync(int userId)
-        {
-            var isValid = await _customerRepository.CheckCustomerExistsAsync(userId);
-            if (!isValid) return null;
-
-            var customer = await _customerRepository.GetCustomersAsync(userId);
-
-            var medicalRecord = await _context.MedicalRecords.
-                                FirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId);
-
-            if (medicalRecord == null) return null;
-
-            var medicalRecordDetails = await _context.MedicalRecordDetails
-                                .Include(x => x.TreatmentRoadmap)
-                                .Where(x => x.MedicalRecordId == medicalRecord.MedicalRecordId && x.Status == "Complete")
-                                .ToListAsync();
-
-            return medicalRecordDetails;
-        }
 
         public async Task<ICollection<MedicalRecord>> GetMedicalRecordWithDetailsAsync(int userId)
         {
@@ -67,7 +48,8 @@ namespace infertility_system.Repository
 
             var records = await _context.MedicalRecords
                 .Where(x => x.CustomerId == customer.CustomerId)
-                .Include(x => x.MedicalRecordDetails)
+                .Include(m => m.MedicalRecordDetails)
+                .ThenInclude(mrd => mrd.TreatmentRoadmap)
                 .ToListAsync();
 
             return records;
