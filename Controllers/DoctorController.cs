@@ -2,6 +2,7 @@
 using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
 using infertility_system.Dtos.MedicalRecord;
+using infertility_system.Dtos.TreatmentRoadmap;
 using infertility_system.Helpers;
 using infertility_system.Interfaces;
 using infertility_system.Models;
@@ -159,6 +160,15 @@ namespace infertility_system.Controllers
             var medicalRecordDetails = await _doctorRepository.
                 GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(doctorIdClaims, customerId);
             var result = _mapper.Map<List<MedicalRecordDetailWithTypeTestDto>>(medicalRecordDetails);
+            return Ok(result);
+        }
+
+        [HttpGet("GetListTreatmentRoadmapForCustomer/{customerId}")]
+        public async Task<IActionResult> GetListTreatmentRoadmapForCustomer(int customerId)
+        {
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var treatmentRoadmaps = await _doctorRepository.GetTreatmentRoadmapsAsync(doctorIdClaims, customerId);
+            var result = _mapper.Map<List<TreatmentRoadmapDto>>(treatmentRoadmaps);
             return Ok(result);
         }
     }
