@@ -30,5 +30,38 @@ namespace infertility_system.Controllers
             var userDto = _mapper.Map<UserRespondDto>(user);
             return Ok(userDto);
         }
+
+        [HttpGet("CountTotalAccounts")]
+        public async Task<IActionResult> CountTotalAccounts()
+        {
+            var totalAccounts = await _userRepository.CountTotalAccounts();
+            return Ok(totalAccounts);
+        }
+
+        [HttpGet("CountDoctorsAccount")]
+        public async Task<IActionResult> CountDoctorsAccount()
+        {
+            var totalDoctors = await _userRepository.CountDoctorsAccount();
+            return Ok(totalDoctors);
+        }
+
+        [HttpGet("CountCustomerAccount")]
+        public async Task<IActionResult> CountCustomerAccount()
+        {
+            var totalCustomers = await _userRepository.CountCustomerAccount();
+            return Ok(totalCustomers);
+        }
+
+        [HttpGet("GetAllUsersForManagement")]
+        public async Task<IActionResult> GetAllUsersForManagement()
+        {
+            var users = await _userRepository.GetAllUsersForManagement();
+            if (users == null || !users.Any())
+            {
+                return NotFound();
+            }
+            var userDtos = _mapper.Map<List<UserToManagementDto>>(users);
+            return Ok(userDtos);
+        }
     }
 }

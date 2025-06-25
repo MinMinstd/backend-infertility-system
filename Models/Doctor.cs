@@ -21,5 +21,7 @@
         //Service N-1 Doctor
         public int ServiceDBId { get; set; }
         public ServiceDB? ServiceDB { get; set; }
+
+        public virtual User? User { get; set; }
     }
 }

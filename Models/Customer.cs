@@ -28,5 +28,7 @@
 
         // Customer 1-N Order
         public List<Order>? Orders { get; set; }
+
+        public virtual User? User { get; set; }
     }
 }

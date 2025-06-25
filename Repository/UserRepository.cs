@@ -13,6 +13,32 @@ namespace infertility_system.Repository
             _context = context;
         }
 
+        public async Task<int> CountCustomerAccount()
+        {
+            return await _context.Users
+                .CountAsync(u => u.Role == "Customer");
+        }
+
+        public async Task<int> CountDoctorsAccount()
+        {
+            return await _context.Users
+                .CountAsync(u => u.Role == "Doctor");
+        }
+
+        public async Task<int> CountTotalAccounts()
+        {
+            return await _context.Users.CountAsync(u => u.Role == "Customer" || u.Role == "Doctor");
+        }
+
+        public async Task<List<User>> GetAllUsersForManagement()
+        {
+            return await _context.Users
+                .Where(u => u.Role == "Customer" || u.Role == "Doctor")
+                .Include(u => u.Customer)
+                .Include(u => u.Doctor)
+                .ToListAsync();
+        }
+
         public async Task<User> GetUserAfterLogin(int userId)
         {
             return await _context.Users.FindAsync(userId);

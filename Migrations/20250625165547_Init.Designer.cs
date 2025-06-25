@@ -12,7 +12,7 @@ using infertility_system.Data;
 namespace infertility_system.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250624100634_Init")]
+    [Migration("20250625165547_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -182,6 +182,9 @@ namespace infertility_system.Migrations
 
                     b.HasKey("CustomerId");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Customers");
                 });
 
@@ -214,6 +217,9 @@ namespace infertility_system.Migrations
                     b.HasKey("DoctorId");
 
                     b.HasIndex("ServiceDBId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Doctors");
                 });
@@ -759,8 +765,14 @@ namespace infertility_system.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("LastActiveAt")
+                        .HasColumnType("date");
 
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("varbinary(max)");
@@ -773,6 +785,9 @@ namespace infertility_system.Migrations
 
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("TotalActiveDays")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId");
 
@@ -823,6 +838,17 @@ namespace infertility_system.Migrations
                     b.Navigation("Booking");
                 });
 
+            modelBuilder.Entity("infertility_system.Models.Customer", b =>
+                {
+                    b.HasOne("infertility_system.Models.User", "User")
+                        .WithOne("Customer")
+                        .HasForeignKey("infertility_system.Models.Customer", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("infertility_system.Models.Doctor", b =>
                 {
                     b.HasOne("infertility_system.Models.ServiceDB", "ServiceDB")
@@ -831,7 +857,15 @@ namespace infertility_system.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("infertility_system.Models.User", "User")
+                        .WithOne("Doctor")
+                        .HasForeignKey("infertility_system.Models.Doctor", "UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("ServiceDB");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("infertility_system.Models.DoctorDegree", b =>
@@ -1173,6 +1207,13 @@ namespace infertility_system.Migrations
                     b.Navigation("Payment");
 
                     b.Navigation("TreatmentResults");
+                });
+
+            modelBuilder.Entity("infertility_system.Models.User", b =>
+                {
+                    b.Navigation("Customer");
+
+                    b.Navigation("Doctor");
                 });
 #pragma warning restore 612, 618
         }

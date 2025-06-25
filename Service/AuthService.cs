@@ -31,6 +31,14 @@ namespace infertility_system.Service
                 return null; // User not found
             }
 
+            if (user.LastActiveAt < DateOnly.FromDateTime(DateTime.UtcNow))
+            {
+                user.TotalActiveDays += 1;
+                user.LastActiveAt = DateOnly.FromDateTime(DateTime.UtcNow);
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            
             return GenerateJwtToken(user);
         }
 
@@ -38,7 +46,7 @@ namespace infertility_system.Service
         {
             var existingUser = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == user.Email || u.Phone == user.Phone);
-            if(existingUser != null)
+            if (existingUser != null)
             {
                 return null; // User already exists
             }
@@ -49,7 +57,8 @@ namespace infertility_system.Service
                 Phone = user.Phone,
                 PasswordHash = passwordHash, // In a real application, ensure to hash the password
                 PasswordSalt = passwordSalt, // Store the salt for password verification
-                Role = "Customer" // Default role, can be changed based on requirements
+                Role = "Customer", // Default role, can be changed based on requirements
+                CreatedAt = DateOnly.FromDateTime(DateTime.UtcNow),
             };
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -165,9 +174,9 @@ namespace infertility_system.Service
             {
                 return await Task.FromResult(false);
             }
-            if (!VerifyPasswordHash(dto.CurrentPassword,user.PasswordHash,user.PasswordSalt))
+            if (!VerifyPasswordHash(dto.CurrentPassword, user.PasswordHash, user.PasswordSalt))
             {
-                return  await Task.FromResult(false);
+                return await Task.FromResult(false);
             }
             if (dto.NewPassword != dto.ConfirmPassword)
             {
