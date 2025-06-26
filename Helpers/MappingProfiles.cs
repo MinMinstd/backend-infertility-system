@@ -81,6 +81,7 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName));
 
             CreateMap<TreatmentRoadmap, TreatmentRoadmapDto>();
+            CreateMap<Booking, BookingCustomerDto>();
         }
 
         private static int CalculateAge(DateOnly birthday)
