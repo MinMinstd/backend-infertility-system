@@ -379,6 +379,20 @@ namespace infertility_system.Data
                 .HasOne(tt => tt.TreatmentResult)
                 .WithMany(tr => tr.TypeTest)
                 .HasForeignKey(tt => tt.TreatmentResultId);
+
+            // User
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Customer)
+                .WithOne(c => c.User)
+                .HasForeignKey<Customer>(c => c.UserId)
+                .HasConstraintName(null);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Doctor)
+                .WithOne(d => d.User)
+                .HasForeignKey<Doctor>(d => d.UserId)
+                .HasConstraintName(null)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
