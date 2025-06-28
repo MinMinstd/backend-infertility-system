@@ -200,13 +200,6 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-        [HttpGet("GetBookingCustomer")]
-        public async Task<IActionResult> GetBookingCustomer()
-        {
-            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var bookings = await _doctorRepository.GetBookingsCustomerAsync(doctorIdClaims);
-            var result = _mapper.Map<List<BookingCustomerDto>>(bookings);
-            return Ok(result);
-        }
+        
     }
 }

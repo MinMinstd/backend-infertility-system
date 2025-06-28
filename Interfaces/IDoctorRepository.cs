@@ -22,8 +22,6 @@
         Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId);
         Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim);
 
-        Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim);
-
         Task<List<Doctor>> GetDoctosForManagement();
 
         Task<List<Doctor>> GetDoctorsByServiceIdForBookingService(int serviceId);
