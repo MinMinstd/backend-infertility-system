@@ -1,37 +1,39 @@
-﻿using AutoMapper;
-using infertility_system.Dtos.DoctorSchedule;
-using infertility_system.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
-namespace infertility_system.Controllers
+﻿namespace infertility_system.Controllers
 {
+    using AutoMapper;
+    using infertility_system.Dtos.DoctorSchedule;
+    using infertility_system.Interfaces;
+    using Microsoft.AspNetCore.Mvc;
+
     [Route("api/[controller]")]
     [ApiController]
     public class DoctorScheduleController : ControllerBase
     {
-        private readonly IDoctorScheduleRepository _doctorScheduleRepository;
-        private readonly IMapper _mapper;
+        private readonly IDoctorScheduleRepository doctorScheduleRepository;
+        private readonly IMapper mapper;
+
         public DoctorScheduleController(IDoctorScheduleRepository doctorScheduleRepository, IMapper mapper)
         {
-            _doctorScheduleRepository = doctorScheduleRepository;
-            _mapper = mapper;
+            this.doctorScheduleRepository = doctorScheduleRepository;
+            this.mapper = mapper;
         }
-        //[HttpGet]
-        //public async Task<IActionResult> GetDoctorSchedule()
-        //{
+
+        // [HttpGet]
+        // public async Task<IActionResult> GetDoctorSchedule()
+        // {
         //    // Lấy userId từ token
         //    int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
 
-        //    // Tìm doctorId tương ứng
+        // // Tìm doctorId tương ứng
         //    int doctorId = await _context.Doctors
         //        .Where(d => d.UserId == userId)
         //        .Select(d => d.DoctorId)
         //        .FirstOrDefaultAsync();
 
-        //    if (doctorId == 0)
+        // if (doctorId == 0)
         //        return NotFound("Doctor not found");
 
-        //    // Truy vấn dữ liệu
+        // // Truy vấn dữ liệu
         //    var schedule = await _context.DoctorSchedules
         //        .Where(ds => ds.DoctorId == doctorId)
         //        .Include(ds => ds.Bookings) // Thêm dòng này để tải dữ liệu quan hệ
@@ -51,24 +53,23 @@ namespace infertility_system.Controllers
         //        })
         //        .ToListAsync();
 
-        //    return Ok(schedule);
-        //}
-
+        // return Ok(schedule);
+        // }
         [HttpGet("GetListDoctorSchedule/{doctorId}")]
         public async Task<IActionResult> GetAllDoctorScheduleByDoctorId(int doctorId, [FromQuery] DateOnly date)
         {
-            var doctorSchedules = await _doctorScheduleRepository.GetSchedulesByDoctorAndDate(doctorId, date);
+            var doctorSchedules = await this.doctorScheduleRepository.GetSchedulesByDoctorAndDate(doctorId, date);
 
-            var doctorScheduleDtos = _mapper.Map<List<DoctorScheduleToBookingDto>>(doctorSchedules);
-            return Ok(doctorScheduleDtos);
+            var doctorScheduleDtos = this.mapper.Map<List<DoctorScheduleToBookingDto>>(doctorSchedules);
+            return this.Ok(doctorScheduleDtos);
         }
 
         [HttpGet("GetScheduleByDoctorId/{doctorId}")]
         public async Task<IActionResult> GetScheduleByDoctorId(int doctorId)
         {
-            var doctorSchedule = await _doctorScheduleRepository.GetScheduleByDoctorId(doctorId);
-            var doctorScheduleDto = _mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedule);
-            return Ok(doctorScheduleDto);
+            var doctorSchedule = await this.doctorScheduleRepository.GetScheduleByDoctorId(doctorId);
+            var doctorScheduleDto = this.mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedule);
+            return this.Ok(doctorScheduleDto);
         }
     }
 }

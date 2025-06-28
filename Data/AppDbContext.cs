@@ -1,35 +1,59 @@
-﻿using infertility_system.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace infertility_system.Data
+﻿namespace infertility_system.Data
 {
+    using infertility_system.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
         }
+
         public DbSet<Models.BlogPost> BlogPosts { get; set; }
+
         public DbSet<Models.Booking> Bookings { get; set; }
+
         public DbSet<Models.ConsulationResult> ConsulationResults { get; set; }
+
         public DbSet<Models.Customer> Customers { get; set; }
+
         public DbSet<Models.Doctor> Doctors { get; set; }
+
         public DbSet<Models.DoctorDegree> DoctorDegrees { get; set; }
+
         public DbSet<Models.DoctorSchedule> DoctorSchedules { get; set; }
+
         public DbSet<Models.Embryo> Embryos { get; set; }
+
         public DbSet<Models.Feedback> Feedbacks { get; set; }
+
         public DbSet<Models.Manager> Managers { get; set; }
+
         public DbSet<Models.MedicalRecord> MedicalRecords { get; set; }
+
         public DbSet<Models.MedicalRecordDetail> MedicalRecordDetails { get; set; }
+
         public DbSet<Models.Order> Orders { get; set; }
+
         public DbSet<Models.OrderDetail> OrderDetails { get; set; }
+
         public DbSet<Models.Payment> Payments { get; set; }
+
         public DbSet<Models.Prescription> Prescriptions { get; set; }
+
         public DbSet<Models.PrescriptionDetail> PrescriptionDetails { get; set; }
+
         public DbSet<Models.ServiceDB> Services { get; set; }
+
         public DbSet<Models.TreatmentResult> TreatmentResults { get; set; }
+
         public DbSet<Models.TreatmentRoadmap> TreatmentRoadmaps { get; set; }
+
         public DbSet<Models.TypeTest> TypeTests { get; set; }
+
         public DbSet<Models.User> Users { get; set; }
+
         public DbSet<Models.Admin> Admins { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -195,13 +219,10 @@ namespace infertility_system.Data
 
             //// ConsulationRegistration
 
-
-            //modelBuilder.Entity<ConsulationRegistration>()
+            // modelBuilder.Entity<ConsulationRegistration>()
             //    .HasMany(cr => cr.ConsulationResult)
             //    .WithOne(cr => cr.ConsulationRegistration)
             //    .HasForeignKey(cr => cr.ConsulationRegistrationId);
-
-
 
             // OrderDetail
             modelBuilder.Entity<OrderDetail>()
@@ -264,11 +285,10 @@ namespace infertility_system.Data
                 .HasForeignKey(mrd => mrd.MedicalRecordId);
 
             // ConsulationResult
-            //modelBuilder.Entity<ConsulationResult>()
+            // modelBuilder.Entity<ConsulationResult>()
             //    .HasOne(cr => cr.ConsulationRegistration)
             //    .WithMany(cr => cr.ConsulationResult)
             //    .HasForeignKey(cr => cr.ConsulationRegistrationId);
-
             modelBuilder.Entity<ConsulationResult>()
                 .HasMany(cr => cr.MedicalRecordDetails)
                 .WithOne(mrd => mrd.ConsulationResult)

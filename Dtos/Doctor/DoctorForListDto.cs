@@ -1,12 +1,13 @@
-﻿using infertility_system.Dtos.DoctorDegree;
-
-namespace infertility_system.Dtos.Doctor
+﻿namespace infertility_system.Dtos.Doctor
 {
+    using infertility_system.Dtos.DoctorDegree;
+
     public class DoctorForListDto
     {
         public int DoctorId { get; set; }
-        public String? FullName { get; set; }
-        public int Experience { get; set; }
 
+        public string? FullName { get; set; }
+
+        public int Experience { get; set; }
     }
 }
