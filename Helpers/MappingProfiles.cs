@@ -83,7 +83,9 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.DoctorName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName));
 
             this.CreateMap<TreatmentRoadmap, TreatmentRoadmapDto>();
-            this.CreateMap<Booking, BookingCustomerDto>();
+            this.CreateMap<Booking, BookingCustomerDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Order.OrderDetails.FirstOrDefault().ServiceName));
 
         }
 
