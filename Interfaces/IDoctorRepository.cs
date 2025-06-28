@@ -18,6 +18,8 @@
         Task<List<MedicalRecord>> GetMedicalRecordWithDetailAsync(int doctorIdClaim, int customerId);
 
         Task<List<MedicalRecordDetail>> GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(int doctorIdClaim, int customerId);
+        Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId);
+        Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim);
 
         Task<List<Doctor>> GetDoctosForManagement();
 

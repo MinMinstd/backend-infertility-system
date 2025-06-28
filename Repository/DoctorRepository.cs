@@ -86,6 +86,7 @@
             var medicalRecords = await this.context.MedicalRecords
                         .Where(m => m.DoctorId == doctor.DoctorId && m.CustomerId == customerId)
                         .Include(m => m.MedicalRecordDetails)
+                        .ThenInclude(mrd => mrd.TreatmentRoadmap)
                         .ToListAsync();
 
             return medicalRecords;
@@ -131,6 +132,41 @@
                         .ThenInclude(tr => tr.TypeTest)
                         .ToListAsync();
             return medicalRecordDetails;
+        }
+
+        public async Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await _context.MedicalRecords
+                        .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId && mr.CustomerId == customerId);
+
+            var medicalRecordDetails = await _context.MedicalRecordDetails
+                        .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                        .ToListAsync();
+
+            var treatmentRoadIds = medicalRecordDetails.Select(mrd => mrd.TreatmentRoadmapId).Distinct().ToList();
+
+            var treatmentRoadmaps = await _context.TreatmentRoadmaps
+                        .Where(tr => treatmentRoadIds.Contains(tr.TreatmentRoadmapId))
+                        .ToListAsync();
+            return treatmentRoadmaps;
+        }
+
+        public async Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var doctorSchedules = await _context.DoctorSchedules
+                            .Where(ds => ds.DoctorId == doctor.DoctorId)
+                            .ToListAsync();
+
+            var doctorScheduleId = doctorSchedules.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
+
+            var bookings = await _context.Bookings
+                            .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
+                            .ToListAsync();
+            return bookings;
         }
     }
 }
