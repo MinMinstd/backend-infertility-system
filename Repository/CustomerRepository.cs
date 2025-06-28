@@ -32,6 +32,19 @@
             return this.context.Customers.AnyAsync(x => x.UserId == id);
         }
 
+        public async Task<List<Booking>> GetBookingsAsync(int userId)
+        {
+            var customer = await this.GetCustomersAsync(userId);
+
+            var bookings = await this.context.Bookings
+                        .Where(b => b.CustomerId == customer.CustomerId)
+                        .Include(b => b.DoctorSchedule)
+                        .ThenInclude(ds => ds.Doctor)
+                        .ThenInclude(d => d.ServiceDB)
+                        .ToListAsync();
+            return bookings;
+        }
+
         public async Task<Customer> GetCustomersAsync(int userId)
         {
             return await this.context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);

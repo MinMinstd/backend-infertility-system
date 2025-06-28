@@ -87,6 +87,9 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Customer.FullName))
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Order.OrderDetails.FirstOrDefault().ServiceName));
 
+            this.CreateMap<Booking, BookingInCustomerDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.ServiceDB.Name));
         }
 
         private static int CalculateAge(DateOnly birthday)

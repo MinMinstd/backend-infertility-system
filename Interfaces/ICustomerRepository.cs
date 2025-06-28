@@ -18,5 +18,7 @@
         Task<List<Doctor>> GetListDoctorsAsync();
 
         Task<Doctor> GetDoctorDetailAsync(int doctorId);
+
+        Task<List<Booking>> GetBookingsAsync(int userId);
     }
 }
