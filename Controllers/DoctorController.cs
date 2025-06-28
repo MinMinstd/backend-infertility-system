@@ -1,4 +1,19 @@
-﻿namespace infertility_system.Controllers
+
+﻿using AutoMapper;
+using infertility_system.Dtos.Booking;
+using infertility_system.Dtos.Customer;
+using infertility_system.Dtos.Doctor;
+using infertility_system.Dtos.MedicalRecord;
+using infertility_system.Dtos.TreatmentRoadmap;
+using infertility_system.Helpers;
+using infertility_system.Interfaces;
+using infertility_system.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+
+namespace infertility_system.Controllers
+
 {
     using AutoMapper;
     using infertility_system.Dtos.Booking;
@@ -183,6 +198,15 @@
             var bookings = await this.doctorRepository.GetBookingsCustomerAsync(doctorIdClaims);
             var result = this.mapper.Map<List<BookingCustomerDto>>(bookings);
             return this.Ok(result);
+        }
+
+        [HttpGet("GetBookingCustomer")]
+        public async Task<IActionResult> GetBookingCustomer()
+        {
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var bookings = await _doctorRepository.GetBookingsCustomerAsync(doctorIdClaims);
+            var result = _mapper.Map<List<BookingCustomerDto>>(bookings);
+            return Ok(result);
         }
     }
 }

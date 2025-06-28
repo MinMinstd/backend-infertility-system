@@ -155,16 +155,30 @@
 
         public async Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim)
         {
+
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var doctorSchedules = await _context.DoctorSchedules
+
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
 
             var doctorSchedules = await this.context.DoctorSchedules
+
                             .Where(ds => ds.DoctorId == doctor.DoctorId)
                             .ToListAsync();
 
             var doctorScheduleId = doctorSchedules.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
 
+
+            var bookings = await _context.Bookings
+                            .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
+                            .Include(b => b.Customer)
+                            .ThenInclude(b => b.Orders)
+                            .ThenInclude(o => o.OrderDetails)
+
             var bookings = await this.context.Bookings
                             .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
+
                             .ToListAsync();
             return bookings;
         }
