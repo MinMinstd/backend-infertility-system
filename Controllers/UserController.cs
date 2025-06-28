@@ -1,10 +1,10 @@
 ﻿namespace infertility_system.Controllers
 {
-    using System.Security.Claims;
     using AutoMapper;
     using infertility_system.Dtos.User;
     using infertility_system.Interfaces;
     using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
 
     [ApiController]
     [Route("api/[controller]")]
@@ -52,6 +52,13 @@
         {
             var totalCustomers = await this.userRepository.CountCustomerAccount();
             return this.Ok(totalCustomers);
+        }
+
+        [HttpGet("CountNewAccount")]
+        public async Task<IActionResult> CountNewAccount()
+        {
+            var totalNewAccounts = await this.userRepository.CountNewAccount();
+            return this.Ok(totalNewAccounts);
         }
 
         [HttpGet("GetAllUsersForManagement")]

@@ -14,6 +14,8 @@
 
         Task<int> CountCustomerAccount();
 
+        Task<int> CountNewAccount();
+
         Task<List<User>> GetAllUsersForManagement();
     }
 }

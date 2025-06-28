@@ -26,6 +26,14 @@
                 .CountAsync(u => u.Role == "Doctor");
         }
 
+        public async Task<int> CountNewAccount()
+        {
+            var fromDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-30)); // Assuming "new" means created in the last 30 days
+            return await this.context.Users
+                .Where(u => u.CreatedAt >= fromDate && (u.Role == "Customer" || u.Role == "Doctor"))
+                .CountAsync();
+        }
+
         public async Task<int> CountTotalAccounts()
         {
             return await this.context.Users.CountAsync(u => u.Role == "Customer" || u.Role == "Doctor");

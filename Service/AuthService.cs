@@ -60,6 +60,8 @@
                 PasswordSalt = passwordSalt, // Store the salt for password verification
                 Role = "Customer", // Default role, can be changed based on requirements
                 CreatedAt = DateOnly.FromDateTime(DateTime.UtcNow),
+                TotalActiveDays = 1,
+                LastActiveAt = DateOnly.FromDateTime(DateTime.UtcNow),
             };
             this.context.Users.Add(newUser);
             await this.context.SaveChangesAsync();
