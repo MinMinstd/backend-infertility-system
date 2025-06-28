@@ -3,6 +3,7 @@
     public class FeedbackRequestDto
     {
         public string Comments { get; set; }
+
         public int Rating { get; set; }
     }
 }

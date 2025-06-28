@@ -3,10 +3,15 @@
     public class Manager
     {
         public int UserId { get; set; }
+
         public int ManagerId { get; set; }
+
         public string? FullName { get; set; }
+
         public string? Email { get; set; }
+
         public string? Phone { get; set; }
+
         public string? Address { get; set; }
 
         // Manager 1-N BlogPost

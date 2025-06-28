@@ -1,15 +1,15 @@
-﻿using FluentValidation;
-
-namespace infertility_system.Dtos.User
+﻿namespace infertility_system.Dtos.User
 {
+    using FluentValidation;
+
     public class LoginDtoValidator : AbstractValidator<LoginRequestDto>
     {
         public LoginDtoValidator()
         {
-            RuleFor(u => u.Username)
+            this.RuleFor(u => u.Username)
                 .NotEmpty().WithMessage("Tài khoản không được để trống");
 
-            RuleFor(u => u.Password)
+            this.RuleFor(u => u.Password)
                 .NotEmpty().WithMessage("Mật khẩu không được để trống");
         }
     }

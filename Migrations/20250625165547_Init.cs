@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace infertility_system.Migrations
 {
+    using System;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     /// <inheritdoc />
     public partial class Init : Migration
     {
@@ -19,7 +19,7 @@ namespace infertility_system.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -36,7 +36,7 @@ namespace infertility_system.Migrations
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,7 @@ namespace infertility_system.Migrations
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateOnly>(type: "date", nullable: false),
                     LastActiveAt = table.Column<DateOnly>(type: "date", nullable: true),
-                    TotalActiveDays = table.Column<int>(type: "int", nullable: true)
+                    TotalActiveDays = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -72,7 +72,7 @@ namespace infertility_system.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                    ManagerId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -97,7 +97,7 @@ namespace infertility_system.Migrations
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Birthday = table.Column<DateOnly>(type: "date", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -121,7 +121,7 @@ namespace infertility_system.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Experience = table.Column<int>(type: "int", nullable: false),
-                    ServiceDBId = table.Column<int>(type: "int", nullable: false)
+                    ServiceDBId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -150,7 +150,7 @@ namespace infertility_system.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DurationDay = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: false)
+                    ServiceId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -175,7 +175,7 @@ namespace infertility_system.Migrations
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                    ManagerId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -204,7 +204,7 @@ namespace infertility_system.Migrations
                     Quality = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Amount = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false)
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -229,7 +229,7 @@ namespace infertility_system.Migrations
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                    ManagerId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -256,7 +256,7 @@ namespace infertility_system.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DegreeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GraduationYear = table.Column<int>(type: "int", nullable: false),
-                    DoctorId = table.Column<int>(type: "int", nullable: false)
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -280,7 +280,7 @@ namespace infertility_system.Migrations
                     EndTime = table.Column<TimeOnly>(type: "time", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DoctorId = table.Column<int>(type: "int", nullable: false),
-                    ManagerId = table.Column<int>(type: "int", nullable: false)
+                    ManagerId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -312,7 +312,7 @@ namespace infertility_system.Migrations
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Attempt = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false),
-                    DoctorId = table.Column<int>(type: "int", nullable: false)
+                    DoctorId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -342,7 +342,7 @@ namespace infertility_system.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DurationDay = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TreatmentRoadmapId = table.Column<int>(type: "int", nullable: false)
+                    TreatmentRoadmapId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -367,7 +367,7 @@ namespace infertility_system.Migrations
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: true),
-                    DoctorScheduleId = table.Column<int>(type: "int", nullable: true)
+                    DoctorScheduleId = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -394,7 +394,7 @@ namespace infertility_system.Migrations
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TreatmentResultId = table.Column<int>(type: "int", nullable: false)
+                    TreatmentResultId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -416,7 +416,7 @@ namespace infertility_system.Migrations
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     ResultValue = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BookingId = table.Column<int>(type: "int", nullable: true)
+                    BookingId = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -441,7 +441,7 @@ namespace infertility_system.Migrations
                     Husband = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerId = table.Column<int>(type: "int", nullable: true),
                     BookingId = table.Column<int>(type: "int", nullable: true),
-                    ManagerId = table.Column<int>(type: "int", nullable: true)
+                    ManagerId = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -473,7 +473,7 @@ namespace infertility_system.Migrations
                     Dosage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DurationDay = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Instruction = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PrescriptionId = table.Column<int>(type: "int", nullable: false)
+                    PrescriptionId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -500,7 +500,7 @@ namespace infertility_system.Migrations
                     MedicalRecordId = table.Column<int>(type: "int", nullable: false),
                     ConsulationResultId = table.Column<int>(type: "int", nullable: true),
                     TreatmentResultId = table.Column<int>(type: "int", nullable: true),
-                    TreatmentRoadmapId = table.Column<int>(type: "int", nullable: true)
+                    TreatmentRoadmapId = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -537,7 +537,7 @@ namespace infertility_system.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConsulationResultId = table.Column<int>(type: "int", nullable: false),
-                    TreatmentResultId = table.Column<int>(type: "int", nullable: false)
+                    TreatmentResultId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -565,7 +565,7 @@ namespace infertility_system.Migrations
                     DoctorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ServiceName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: true),
-                    ServiceId = table.Column<int>(type: "int", nullable: true)
+                    ServiceId = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -593,7 +593,7 @@ namespace infertility_system.Migrations
                     Date = table.Column<DateOnly>(type: "date", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TreatmentRoadmapId = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false)
+                    OrderId = table.Column<int>(type: "int", nullable: false),
                 },
                 constraints: table =>
                 {

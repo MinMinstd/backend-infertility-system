@@ -3,14 +3,20 @@
     public class TreatmentResult
     {
         public int TreatmentResultId { get; set; }
+
         public DateOnly Date { get; set; }
+
         public string? Stage { get; set; }
+
         public string? Description { get; set; }
+
         public int DurationDay { get; set; }
+
         public decimal Price { get; set; }
 
         // TreatmentResult N-1 TreatementRoadmap
         public int TreatmentRoadmapId { get; set; }
+
         public TreatmentRoadmap? TreatmentRoadmap { get; set; }
 
         // TreatmentResult 1-N TypeTest
