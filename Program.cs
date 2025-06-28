@@ -1,20 +1,18 @@
-﻿
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using infertility_system.Dtos.Admin;
-using infertility_system.Dtos.User;
-using infertility_system.Interfaces;
-using infertility_system.Service;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Security.Claims;
-using System.Text;
-
-
-namespace infertility_system
+﻿namespace infertility_system
 {
+    using FluentValidation;
+    using FluentValidation.AspNetCore;
+    using infertility_system.Dtos.Admin;
+    using infertility_system.Dtos.User;
+    using infertility_system.Interfaces;
+    using infertility_system.Service;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.IdentityModel.Tokens;
+    using Microsoft.OpenApi.Models;
+    using System.Security.Claims;
+    using System.Text;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -25,8 +23,8 @@ namespace infertility_system
             builder.Services.AddSingleton(emailConfig); // Register the email configuration as a singleton
 
             // Add services to the container.
-
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -43,14 +41,13 @@ namespace infertility_system
             builder.Services.AddScoped<Interfaces.IConsulationResultRepository, Repository.ConsulationResultRepository>(); // Register the authentication service
             builder.Services.AddScoped<Interfaces.IManagerRepository, Repository.ManagerRepository>(); // Register the authentication service
 
-            builder.Services.AddScoped<Interfaces.IMedicalRecordRepository, Repository.MedicalRecordRepository>(); //Create, Update medicalRecord
+            builder.Services.AddScoped<Interfaces.IMedicalRecordRepository, Repository.MedicalRecordRepository>(); // Create, Update medicalRecord
             builder.Services.AddScoped<Interfaces.IMedicalRecordDetailRepository, Repository.MedicalRecordDetailRepository>();
 
             builder.Services.AddScoped<Interfaces.IOrderDetailRepository, Repository.OrderDetailRepository>(); // Register the order detail repository
             builder.Services.AddScoped<Interfaces.IEmbryoRepository, Repository.EmbryoRepository>(); // Register the embryo repository
             builder.Services.AddScoped<Interfaces.IUserRepository, Repository.UserRepository>(); // Register the user repository
             builder.Services.AddScoped<Interfaces.IMedicalRecordDetailRepository, Repository.MedicalRecordDetailRepository>(); // Register the medical record detail repository
-
 
             builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
@@ -79,7 +76,7 @@ namespace infertility_system
                     ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
                     ValidAudience = builder.Configuration["JwtSettings:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"]))
+                    Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"])),
                 };
             });
 
@@ -93,7 +90,7 @@ namespace infertility_system
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer"
+                    Scheme = "Bearer",
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -104,11 +101,11 @@ namespace infertility_system
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
+                                Id = "Bearer",
+                            },
                         },
-                    new List<string>()
-                    }
+                        new List<string>()
+                    },
                 });
             });
 
@@ -122,7 +119,6 @@ namespace infertility_system
                 });
             });
 
-
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy =>
@@ -132,9 +128,7 @@ namespace infertility_system
                     policy.RequireClaim(ClaimTypes.Role, "Customer"));
             });
 
-            //new repository
-
-
+            // new repository
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

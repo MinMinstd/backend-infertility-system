@@ -1,57 +1,62 @@
-﻿using infertility_system.Data;
-using infertility_system.Dtos.User;
-using infertility_system.Interfaces;
-using infertility_system.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace infertility_system.Repository
+﻿namespace infertility_system.Repository
 {
+    using infertility_system.Data;
+    using infertility_system.Dtos.User;
+    using infertility_system.Interfaces;
+    using infertility_system.Models;
+    using Microsoft.EntityFrameworkCore;
+
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly AppDbContext _context;
-        private readonly IAuthService _authService;
+        private readonly AppDbContext context;
+        private readonly IAuthService authService;
+
         public CustomerRepository(AppDbContext context, IAuthService authService)
         {
-            _context = context;
-            _authService = authService;
+            this.context = context;
+            this.authService = authService;
         }
 
         public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
         {
-            return await _authService.ChangePasswordAsync(userId, dto);
+            return await this.authService.ChangePasswordAsync(userId, dto);
         }
 
         public async Task<bool> CheckCustomerExistsAsync(int userId)
         {
-            return await _context.Customers.AnyAsync(x => x.UserId == userId);
+            return await this.context.Customers.AnyAsync(x => x.UserId == userId);
         }
 
         public Task<bool> CheckExistsByUserId(int id)
         {
-            return _context.Customers.AnyAsync(x => x.UserId == id);
+            return this.context.Customers.AnyAsync(x => x.UserId == id);
         }
 
         public async Task<Customer> GetCustomersAsync(int userId)
         {
-            return await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
+            return await this.context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task<Doctor> GetDoctorDetailAsync(int doctorId)
         {
-            var doctor = await _context.Doctors.Include(d => d.DoctorDegrees).
+            var doctor = await this.context.Doctors.Include(d => d.DoctorDegrees).
                 FirstOrDefaultAsync(d => d.DoctorId == doctorId);
-            if (doctor == null) return null;
+            if (doctor == null)
+            {
+                return null;
+            }
+
             return doctor;
         }
 
         public async Task<List<Doctor>> GetListDoctorsAsync()
         {
-            return await _context.Doctors.Include(d => d.DoctorDegrees).ToListAsync();
+            return await this.context.Doctors.Include(d => d.DoctorDegrees).ToListAsync();
         }
 
         public async Task<Customer> UpdateCutomerAsync(int userId, Customer customer)
         {
-            var existingCustomer = await _context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
+            var existingCustomer = await this.context.Customers.FirstOrDefaultAsync(x => x.UserId == userId);
             if (existingCustomer == null)
             {
                 return null;
@@ -64,7 +69,7 @@ namespace infertility_system.Repository
             existingCustomer.Address = customer.Address;
             existingCustomer.Birthday = customer.Birthday;
 
-            await _context.SaveChangesAsync();
+            await this.context.SaveChangesAsync();
             return existingCustomer;
         }
     }

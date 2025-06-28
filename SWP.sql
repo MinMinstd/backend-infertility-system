@@ -313,15 +313,7 @@ select * from ConsulationResults
 INSERT INTO [TypeTests] ([ConsulationResultId], [TreatmentResultId], [Name], [Description])
 VALUES 
 (1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
-
-(2, 2, N'Siêu âm', N'Theo dõi nang trứng'),
-(3, 3, N'Xét nghiệm nước tiểu', N'Kiểm tra chức năng thận'),
-(4, 4, N'Nội soi tử cung', N'Đánh giá nội mạc tử cung'),
-(5, 5, N'Xét nghiệm di truyền', N'Phân tích NST phôi');
-
 (2, 2, N'Siêu âm', N'Theo dõi nang trứng')
-
-
 
 -- Prescription table
 CREATE TABLE [dbo].[Prescriptions] (

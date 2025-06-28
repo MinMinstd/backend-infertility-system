@@ -3,10 +3,15 @@
     public class BookingConsulantDto
     {
         public DateOnly? Date { get; set; }
+
         public string? Time { get; set; }
+
         public string? Note { get; set; }
+
         public int DoctorId { get; set; }
+
         public int DoctorScheduleId { get; set; }
+
         public int ServiceId { get; set; }
     }
 }

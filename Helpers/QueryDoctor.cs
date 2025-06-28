@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
-
-namespace infertility_system.Helpers
+﻿namespace infertility_system.Helpers
 {
+    using Microsoft.EntityFrameworkCore.Metadata;
+
     public class QueryDoctor
     {
-        public String? FullName { get; set; } = null;
+        public string? FullName { get; set; } = null;
     }
 }

@@ -3,6 +3,7 @@
     public class DoctorDegreeDto
     {
         public string? DegreeName { get; set; }
+
         public int GraduationYear { get; set; }
     }
 }
