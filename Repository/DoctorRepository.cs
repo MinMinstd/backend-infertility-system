@@ -153,6 +153,9 @@ namespace infertility_system.Repository
 
             var bookings = await _context.Bookings
                             .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
+                            .Include(b => b.Customer)
+                            .ThenInclude(b => b.Orders)
+                            .ThenInclude(o => o.OrderDetails)
                             .ToListAsync();
             return bookings;
         }
