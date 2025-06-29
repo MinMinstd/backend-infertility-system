@@ -12,7 +12,7 @@ using infertility_system.Data;
 namespace infertility_system.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250625165547_Init")]
+    [Migration("20250629144523_Init")]
     partial class Init
     {
         /// <inheritdoc />
