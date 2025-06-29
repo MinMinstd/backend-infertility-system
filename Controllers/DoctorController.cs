@@ -178,7 +178,7 @@ namespace infertility_system.Controllers
 
             var medicalRecordDetails = await this.doctorRepository.
                 GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(doctorIdClaims, customerId);
-            var result = this.mapper.Map<List<MedicalRecordDetailWithTypeTestDto>>(medicalRecordDetails);
+            var result = this.mapper.Map<List<MedicalRecordDetailWithTreatmentResultAndTypeTestDto>>(medicalRecordDetails);
             return this.Ok(result);
         }
 
