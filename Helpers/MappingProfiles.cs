@@ -53,7 +53,7 @@ namespace infertility_system.Helpers
             this.CreateMap<ServiceDB, ServiceToBookingDto>();
 
             // CreateMap<Doctor, DoctorBookingRespondDto>();
-            this.CreateMap<Customer, CustomerInDoctorDto>()
+            this.CreateMap<Customer, ListCustomerInDoctorDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().Status))
                 .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().StartDate))
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.MedicalRecord.FirstOrDefault().Doctor.ServiceDB.Name))
@@ -78,8 +78,16 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.TreatmentResult.Description))
                 .ForMember(dest => dest.TypeTest, opt => opt.MapFrom(src => src.TreatmentResult.TypeTest))
                 .ForMember(dest => dest.DurationDay, opt => opt.MapFrom(src => src.TreatmentResult.DurationDay));
-                
-                
+
+            this.CreateMap<Customer, PatientInformationDto>()
+                .ForMember(dest => dest.Wife, opt => opt.MapFrom(src => src.Bookings.FirstOrDefault().Order.Wife))
+                .ForMember(dest => dest.Husband, opt => opt.MapFrom(src => src.Bookings.FirstOrDefault().Order.Husband))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Birthday)));
+
+            this.CreateMap<MedicalRecord, UseServiceByCustomerDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Doctor.FullName))
+                .ForMember(dest => dest.NameService, opt => opt.MapFrom(src => src.Doctor.ServiceDB.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Doctor.ServiceDB.Description));
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();

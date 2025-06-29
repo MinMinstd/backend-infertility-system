@@ -189,5 +189,15 @@
             var result = this.mapper.Map<List<BookingInCustomerDto>>(bookings);
             return this.Ok(result);
         }
+
+        [HttpGet("getInformationService")]
+        public async Task<IActionResult> GetInformationService()
+        {
+            var userIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecord = await this.customerRepository.GetInformationServiceAsync(userIdClaims);
+            var result = this.mapper.Map<UseServiceByCustomerDto>(medicalRecord);
+            return this.Ok(result);
+        }
     }
 }
