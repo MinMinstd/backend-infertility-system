@@ -13,7 +13,9 @@
 
         Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId);
 
-        Task<List<Customer>> GetListCustomerFullInforAsync(int doctorIdClaim);
+        Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim);
+
+        Task<Customer> GetPatientInformationAsync(int customerId);
 
         Task<List<MedicalRecord>> GetMedicalRecordWithDetailAsync(int doctorIdClaim, int customerId);
 

@@ -1,7 +1,8 @@
 ﻿namespace infertility_system.Dtos.Customer
 {
-    public class CustomerInDoctorDto
+    public class ListCustomerInDoctorDto
     {
+        public int CustomerId { get; set; }
         public string? FullName { get; set; }
 
         public DateOnly Birthday { get; set; }

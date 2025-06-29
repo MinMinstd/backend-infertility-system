@@ -50,7 +50,7 @@
                 .ToListAsync();
         }
 
-        public async Task<List<Customer>> GetListCustomerFullInforAsync(int doctorIdClaim)
+        public async Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
 
@@ -173,6 +173,14 @@
                         .ToListAsync();
 
             return bookings;
+        }
+
+        public async Task<Customer> GetPatientInformationAsync(int customerId)
+        {
+            return await this.context.Customers
+                        .Include(c => c.Bookings)
+                            .ThenInclude(b => b.Order)
+                        .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
     }
 }

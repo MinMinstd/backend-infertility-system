@@ -151,13 +151,13 @@ namespace infertility_system.Controllers
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
-        [HttpGet("GetFullInforCustomer")]
-        public async Task<IActionResult> GetFullInforCustomer()
+        [HttpGet("GetListCustomer")]
+        public async Task<IActionResult> GetListFullInforCustomer()
         {
             var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            var customers = await this.doctorRepository.GetListCustomerFullInforAsync(doctorIdClaims);
-            var result = this.mapper.Map<List<CustomerInDoctorDto>>(customers);
+            var customers = await this.doctorRepository.GetListCustomerAsync(doctorIdClaims);
+            var result = this.mapper.Map<List<ListCustomerInDoctorDto>>(customers);
             return this.Ok(result);
         }
 
@@ -200,6 +200,12 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-        
+        [HttpGet("getPatientInformation/{customerId}")]
+        public async Task<IActionResult> GetPatientInformation(int customerId)
+        {
+            var patientInformation = await this.doctorRepository.GetPatientInformationAsync(customerId);
+            var result = this.mapper.Map<PatientInformationDto>(patientInformation);
+            return this.Ok(result);
+        }
     }
 }
