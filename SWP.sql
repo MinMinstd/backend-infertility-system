@@ -1,19 +1,19 @@
-﻿DROP DATABASE InfertilitySystem
+﻿﻿DROP DATABASE InfertilitySystem
 CREATE DATABASE InfertilitySystem
 USE InfertilitySystem
 
 CREATE TABLE [dbo].[Users] (
-    [UserId]       INT             IDENTITY (1, 1) NOT NULL,
-    [Email]        NVARCHAR (MAX)  NULL,
-    [Phone]        NVARCHAR (MAX)  NULL,
-    [PasswordHash] VARBINARY (MAX) NULL,
-    [PasswordSalt] VARBINARY (MAX) NULL,
-    [Role]         NVARCHAR (MAX)  NULL,
-    [CreatedAt]   DATETIME2 (7)  NOT NULL,
-    [LastActiveAt] DATETIME2 (7) NULL,
-    [TotalActiveDays] INT NOT NULL DEFAULT 0,
-    [IsActive] BIT NOT NULL DEFAULT 0,
-    [TokenConfirmation] NVARCHAR (MAX) NULL,
+    [UserId]            INT             IDENTITY (1, 1) NOT NULL,
+    [Email]             NVARCHAR (MAX)  NULL,
+    [Phone]             NVARCHAR (MAX)  NULL,
+    [PasswordHash]      VARBINARY (MAX) NULL,
+    [PasswordSalt]      VARBINARY (MAX) NULL,
+    [Role]              NVARCHAR (MAX)  NULL,
+    [CreatedAt]         DATE            NOT NULL,
+    [LastActiveAt]      DATE            NULL,
+    [TotalActiveDays]   INT             NULL,
+    [IsActive]          BIT             NULL,
+    [TokenConfirmation] NVARCHAR (MAX)  NULL,
     CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED ([UserId] ASC)
 );
 
@@ -155,13 +155,13 @@ CREATE TABLE [dbo].[DoctorSchedules] (
 
 INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Status], [DoctorId], [ManagerId]) VALUES
 -- cũng có IDENTITY, có thể không ghi DoctorScheduleId
-( '2025-07-01', '08:00:00', '10:30:00', N'Unavailable', 1, 1), --2 1
+( '2025-07-01', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
 ( '2025-07-01', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
 ( '2025-07-01', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
 ( '2025-07-04', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
 ( '2025-07-04', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
 ( '2025-07-04', '14:00:00', '16:30:00', N'Available', 1, 1), --5 6
-( '2025-07-02', '08:00:00', '10:30:00', N'Unavailable', 2, 1), --3 7
+( '2025-07-02', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
 ( '2025-07-02', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
 ( '2025-07-02', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
 ( '2025-07-05', '08:00:00', '10:30:00', N'Available', 2, 1), --6
@@ -278,19 +278,19 @@ VALUES
 
 -- Treatment_result table
 CREATE TABLE [dbo].[TreatmentResults] (
-    [TreatmentResultId]  INT             IDENTITY (1, 1) NOT NULL,
-    [Date]               DATE            NOT NULL,
-    [Stage]              NVARCHAR (MAX)  NULL,
-    [Description]        NVARCHAR (MAX)  NULL,
-    [DurationDay]        INT             NOT NULL,
-    [Price]              DECIMAL (18, 2) NOT NULL,
-    [TreatmentRoadmapId] INT             NOT NULL,
+    [TreatmentResultId]   INT             IDENTITY (1, 1) NOT NULL,
+    [DateTreatmentResult] DATE            NOT NULL,
+    [Stage]               NVARCHAR (MAX)  NULL,
+    [Description]         NVARCHAR (MAX)  NULL,
+    [DurationDay]         INT             NOT NULL,
+    [Price]               DECIMAL (18, 2) NOT NULL,
+    [TreatmentRoadmapId]  INT             NOT NULL,
     CONSTRAINT [PK_TreatmentResults] PRIMARY KEY CLUSTERED ([TreatmentResultId] ASC),
     CONSTRAINT [FK_TreatmentResults_TreatmentRoadmaps_TreatmentRoadmapId] FOREIGN KEY ([TreatmentRoadmapId]) REFERENCES [dbo].[TreatmentRoadmaps] ([TreatmentRoadmapId]) ON DELETE CASCADE
 );
 
 
-INSERT INTO [TreatmentResults] ([TreatmentRoadmapId], [DurationDay], [Stage], [Date], [Price], [Description])
+INSERT INTO [TreatmentResults] ([TreatmentRoadmapId], [DurationDay], [Stage], [DateTreatmentResult], [Price], [Description])
 VALUES 
 (1, 1, 'IVF', '2025-06-01', 1000000, N'Bắt đầu tốt'),
 (2, 2, 'IUI', '2025-06-02', 800000, N'Theo dõi sát'),
