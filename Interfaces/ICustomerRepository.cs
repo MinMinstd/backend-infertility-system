@@ -21,6 +21,6 @@
 
         Task<List<Booking>> GetBookingsAsync(int userId);
 
-        Task<MedicalRecord> GetInformationServiceAsync(int userId);
+        Task<List<MedicalRecord>> GetInformationServiceAsync(int userId);
     }
 }
