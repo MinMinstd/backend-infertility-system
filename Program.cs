@@ -54,7 +54,7 @@
             builder.Services.AddScoped<IServiceRepository, Repository.ServiceRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
-            
+
             // Google Authentication Services
             builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
             builder.Services.AddScoped<IUserService, UserService>();

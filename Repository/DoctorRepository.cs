@@ -155,7 +155,6 @@
 
         public async Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim)
         {
-
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
 
             var doctorSchedules = await this.context.DoctorSchedules
@@ -163,7 +162,6 @@
                         .ToListAsync();
 
             var doctorScheduleId = doctorSchedules.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
-
 
             var bookings = await this.context.Bookings
                         .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))

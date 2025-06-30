@@ -20,6 +20,10 @@
 
         public int? TotalActiveDays { get; set; } // Optional, for tracking active days
 
+        public bool? IsActive { get; set; } // Default to true, can be set to false for deactivation
+
+        public string? TokenConfirmation { get; set; } // Optional, for email confirmation
+
         public virtual Customer? Customer { get; set; }
 
         public virtual Doctor? Doctor { get; set; }

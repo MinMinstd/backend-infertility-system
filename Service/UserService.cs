@@ -7,17 +7,17 @@ namespace infertility_system.Service
 
     public class UserService : IUserService
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
         public UserService(AppDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<User?> GetByEmailAsync(string email)
         {
-            return await _context.Users
+            return await this.context.Users
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
     }
-} 
+}

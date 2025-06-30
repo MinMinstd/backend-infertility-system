@@ -6,4 +6,4 @@ namespace infertility_system.Interfaces
     {
         Task<User?> GetByEmailAsync(string email);
     }
-} 
+}

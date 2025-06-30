@@ -4,4 +4,4 @@ namespace infertility_system.Dtos.User
     {
         public string Credential { get; set; } = string.Empty;
     }
-} 
+}

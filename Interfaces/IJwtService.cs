@@ -6,4 +6,4 @@ namespace infertility_system.Interfaces
     {
         string GenerateToken(User user);
     }
-} 
+}

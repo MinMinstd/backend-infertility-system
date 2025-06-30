@@ -7,11 +7,11 @@ namespace infertility_system.Service
 
     public class GoogleAuthService : IGoogleAuthService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
 
         public GoogleAuthService(IConfiguration configuration)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
         }
 
         public async Task<GoogleUserInfo?> VerifyGoogleTokenAsync(string credential)
@@ -20,7 +20,7 @@ namespace infertility_system.Service
             {
                 var settings = new GoogleJsonWebSignature.ValidationSettings
                 {
-                    Audience = new[] { _configuration["Google:ClientId"] }
+                    Audience = new[] { this.configuration["Google:ClientId"] },
                 };
 
                 var payload = await GoogleJsonWebSignature.ValidateAsync(credential, settings);
@@ -30,7 +30,7 @@ namespace infertility_system.Service
                     Email = payload.Email,
                     Name = payload.Name,
                     Picture = payload.Picture,
-                    Sub = payload.Subject
+                    Sub = payload.Subject,
                 };
             }
             catch (Exception)
@@ -39,4 +39,4 @@ namespace infertility_system.Service
             }
         }
     }
-} 
+}

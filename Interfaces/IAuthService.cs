@@ -13,5 +13,7 @@
         Task<string?> RegisterDoctorAndManagerAsync(RegisterRequestFromAdminDto user);
 
         Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto);
+
+        Task<bool> ConfirmEmailAsync(string token);
     }
 }

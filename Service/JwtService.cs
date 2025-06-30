@@ -10,17 +10,17 @@ namespace infertility_system.Service
 
     public class JwtService : IJwtService
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
 
         public JwtService(IConfiguration configuration)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
         }
 
         public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]);
+            var key = Encoding.UTF8.GetBytes(this.configuration["JwtSettings:Secret"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
@@ -30,9 +30,9 @@ namespace infertility_system.Service
                     new Claim(ClaimTypes.MobilePhone, user.Phone),
                     new Claim(ClaimTypes.Role, user.Role),
                 }),
-                Issuer = _configuration["JwtSettings:Issuer"],
-                Audience = _configuration["JwtSettings:Audience"],
-                Expires = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JwtSettings:ExpirationMinutes"])),
+                Issuer = this.configuration["JwtSettings:Issuer"],
+                Audience = this.configuration["JwtSettings:Audience"],
+                Expires = DateTime.UtcNow.AddMinutes(int.Parse(this.configuration["JwtSettings:ExpirationMinutes"])),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256),
             };
 
@@ -40,4 +40,4 @@ namespace infertility_system.Service
             return tokenHandler.WriteToken(token);
         }
     }
-} 
+}
