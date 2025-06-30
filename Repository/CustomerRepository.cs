@@ -62,16 +62,16 @@
             return doctor;
         }
 
-        public async Task<MedicalRecord> GetInformationServiceAsync(int userId)
+        public async Task<List<MedicalRecord>> GetInformationServiceAsync(int userId)
         {
             var customer = await this.GetCustomersAsync(userId);
 
-            var medicalRecord = await this.context.MedicalRecords
+            var medicalRecords = await this.context.MedicalRecords
                         .Where(m => m.CustomerId == customer.CustomerId)
                         .Include(m => m.Doctor)
                         .ThenInclude(d => d.ServiceDB)
-                        .FirstOrDefaultAsync();
-            return medicalRecord;
+                        .ToListAsync();
+            return medicalRecords;
 
         }
 

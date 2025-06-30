@@ -10,6 +10,7 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.Feedback;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.Service;
+    using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
     using infertility_system.Dtos.Typetests;
     using infertility_system.Dtos.User;
@@ -67,8 +68,8 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.DegreeName, opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().DegreeName))
                 .ForMember(dest => dest.GraduationYear, opt => opt.MapFrom(src => src.DoctorDegrees.FirstOrDefault().GraduationYear));
 
-            this.CreateMap<MedicalRecord, MedicalRecordWithDetailDto>();
             this.CreateMap<MedicalRecordDetail, MedicalRecordDetailDto>()
+                .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId))
                 .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage));
             this.CreateMap<MedicalRecord, MedicalRecordDto>();
 
@@ -88,6 +89,14 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Doctor.FullName))
                 .ForMember(dest => dest.NameService, opt => opt.MapFrom(src => src.Doctor.ServiceDB.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Doctor.ServiceDB.Description));
+
+            this.CreateMap<TreatmentRoadmap, TreatmentRoadmapDetailDto>()
+                .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId))
+                .ForMember(dest => dest.NameService, opt => opt.MapFrom(src => src.Service.Name))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.MedicalRecordDetails.FirstOrDefault().Status));
+
+            this.CreateMap<TreatmentResult, TreatmentResultDto>()
+                .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId));
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();

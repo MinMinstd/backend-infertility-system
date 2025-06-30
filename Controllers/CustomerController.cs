@@ -196,7 +196,7 @@
             var userIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
             var medicalRecord = await this.customerRepository.GetInformationServiceAsync(userIdClaims);
-            var result = this.mapper.Map<UseServiceByCustomerDto>(medicalRecord);
+            var result = this.mapper.Map<List<UseServiceByCustomerDto>>(medicalRecord);
             return this.Ok(result);
         }
     }
