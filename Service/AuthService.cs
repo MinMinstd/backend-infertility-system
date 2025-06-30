@@ -25,7 +25,7 @@
         public async Task<string?> AuthenticateUserAsync(LoginRequestDto loginRequest)
         {
             var user = await this.context.Users
-                .FirstOrDefaultAsync(u => u.Email == loginRequest.Username || u.Phone == loginRequest.Username);
+                .FirstOrDefaultAsync(u => (u.Email == loginRequest.Username || u.Phone == loginRequest.Username) && u.IsActive == true);
             if (user == null || !this.VerifyPasswordHash(loginRequest.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return null; // User not found
@@ -62,6 +62,8 @@
                 CreatedAt = DateOnly.FromDateTime(DateTime.UtcNow),
                 TotalActiveDays = 1,
                 LastActiveAt = DateOnly.FromDateTime(DateTime.UtcNow),
+                IsActive = false, // Default to false, can be activated later
+                TokenConfirmation = Guid.NewGuid().ToString(), // Generate a unique token for email confirmation
             };
             this.context.Users.Add(newUser);
             await this.context.SaveChangesAsync();
@@ -195,6 +197,21 @@
             user.PasswordSalt = passwordSalt;
             this.context.Users.Update(user);
             return await this.context.SaveChangesAsync().ContinueWith(t => t.Result > 0);
+        }
+
+        public async Task<bool> ConfirmEmailAsync(string token)
+        {
+            var user = await this.context.Users.FirstOrDefaultAsync(u => u.TokenConfirmation == token);
+            if (user == null || user.IsActive == true)
+            {
+                return false; // Token không hợp lệ hoặc đã active
+            }
+
+            user.IsActive = true;
+            user.TokenConfirmation = null; // Xoá token sau khi xác nhận
+            this.context.Users.Update(user);
+            await this.context.SaveChangesAsync();
+            return true;
         }
     }
 }
