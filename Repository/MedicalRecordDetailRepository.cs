@@ -40,48 +40,15 @@
             return medicalRecords;
         }
 
-        public async Task<ICollection<MedicalRecord>> GetMedicalRecordWithDetailsAsync(int userId)
+        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecordDetailWithTreatmentResultAndTypetestAsync(int medicalRecordId)
         {
-            var isValid = await this.customerRepository.CheckCustomerExistsAsync(userId);
-            if (!isValid)
-            {
-                return null;
-            }
-
-            var customer = await this.customerRepository.GetCustomersAsync(userId);
-
-            var records = await this.context.MedicalRecords
-                .Where(x => x.CustomerId == customer.CustomerId)
-                .Include(m => m.MedicalRecordDetails)
-                .ThenInclude(mrd => mrd.TreatmentRoadmap)
-                .ToListAsync();
-
-            return records;
-        }
-
-        public async Task<ICollection<MedicalRecordDetail>> GetMedicalRecordDetailTypetestBaseTreatmentCompleteAsync(int userId)
-        {
-            var isValid = await this.customerRepository.CheckCustomerExistsAsync(userId);
-            if (!isValid)
-            {
-                return null;
-            }
-
-            var customer = await this.customerRepository.GetCustomersAsync(userId);
-
-            var medicalRecord = await this.context.MedicalRecords.
-                                FirstOrDefaultAsync(x => x.CustomerId == customer.CustomerId);
-            if (medicalRecord == null)
-            {
-                return null;
-            }
+            var medicalRecord = await this.context.MedicalRecords.FirstOrDefaultAsync(m => m.MedicalRecordId == medicalRecordId);
 
             var medicalRecordDetails = await this.context.MedicalRecordDetails
-                            .Where(x => x.MedicalRecordId == medicalRecord.MedicalRecordId && x.TreatmentResultId != null)
-                            .Include(x => x.TreatmentResult)
+                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                            .Include(mrd => mrd.TreatmentResult)
                             .ThenInclude(tr => tr.TypeTest)
                             .ToListAsync();
-
             return medicalRecordDetails;
         }
     }

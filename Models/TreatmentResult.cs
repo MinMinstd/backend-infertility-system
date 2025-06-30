@@ -4,7 +4,7 @@
     {
         public int TreatmentResultId { get; set; }
 
-        public DateOnly Date { get; set; }
+        public DateOnly DateTreatmentResult { get; set; }
 
         public string? Stage { get; set; }
 

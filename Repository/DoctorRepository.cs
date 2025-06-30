@@ -50,7 +50,7 @@
                 .ToListAsync();
         }
 
-        public async Task<List<Customer>> GetListCustomerFullInforAsync(int doctorIdClaim)
+        public async Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
 
@@ -75,7 +75,7 @@
             return customers;
         }
 
-        public async Task<List<MedicalRecord>> GetMedicalRecordWithDetailAsync(int doctorIdClaim, int customerId)
+        public async Task<List<MedicalRecordDetail>> GetMedicalRecordDetailAsync(int doctorIdClaim, int customerId)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
             if (doctor == null)
@@ -83,13 +83,16 @@
                 return null;
             }
 
-            var medicalRecords = await this.context.MedicalRecords
-                        .Where(m => m.DoctorId == doctor.DoctorId && m.CustomerId == customerId)
-                        .Include(m => m.MedicalRecordDetails)
-                        .ThenInclude(mrd => mrd.TreatmentRoadmap)
-                        .ToListAsync();
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.CustomerId == customerId);
 
-            return medicalRecords;
+            var medicalRecordDetails = await this.context.MedicalRecordDetails
+                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                            .Include(tr => tr.TreatmentRoadmap)
+                            .ToListAsync();
+
+            return medicalRecordDetails;
         }
 
         public async Task<List<Doctor>> GetDoctorsByServiceIdForBookingConsulation(int serviceId)
@@ -107,31 +110,6 @@
         public Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId)
         {
             throw new NotImplementedException();
-        }
-
-        public async Task<List<MedicalRecordDetail>> GetMedicalRecordDetailWithTreatmentResultAndTypeTestAsync(int doctorIdClaim, int customerId)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-
-            if (doctor == null)
-            {
-                return null;
-            }
-
-            var medicalRecords = await this.context.MedicalRecords
-                        .Where(mr => mr.DoctorId == doctor.DoctorId && mr.CustomerId == customerId)
-                        .ToListAsync();
-            if (medicalRecords == null)
-            {
-                return null;
-            }
-
-            var medicalRecordDetails = await this.context.MedicalRecordDetails
-                        .Where(mrd => mrd.MedicalRecordId == medicalRecords.FirstOrDefault().MedicalRecordId)
-                        .Include(mrd => mrd.TreatmentResult)
-                        .ThenInclude(tr => tr.TypeTest)
-                        .ToListAsync();
-            return medicalRecordDetails;
         }
 
         public async Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId)
@@ -171,6 +149,93 @@
                         .ToListAsync();
 
             return bookings;
+        }
+
+        public async Task<Customer> GetPatientInformationAsync(int customerId)
+        {
+            return await this.context.Customers
+                        .Include(c => c.Bookings)
+                            .ThenInclude(b => b.Order)
+                        .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+        }
+
+        public async Task<List<TreatmentRoadmap>> GetDetailTreatmentRoadmapAsync(int doctorIdClaim, int customerId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.CustomerId == customerId);
+
+            var medicalRecordDetails = await this.context.MedicalRecordDetails
+                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                            .ToListAsync();
+
+            var treatmentRoadmapId = medicalRecordDetails.Select(mrd => mrd.TreatmentRoadmapId).Distinct().ToList();
+
+            var treatmentRoadmap = await this.context.TreatmentRoadmaps
+                            .Where(tr => treatmentRoadmapId.Contains(tr.TreatmentRoadmapId))
+                            .Include(tr => tr.Service)
+                            .ToListAsync();
+
+            int step = 1;
+            foreach (var tr in treatmentRoadmap)
+            {
+                tr.TreatmentRoadmapId = step++;
+            }
+
+            return treatmentRoadmap;
+        }
+
+        public async Task<List<TreatmentResult>> GetTreatmentResultsAsync(int doctorIdClaim, int customerId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.CustomerId == customerId);
+
+            var medicalRecordDetails = await this.context.MedicalRecordDetails
+                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                            .ToListAsync();
+
+            var treatmentResultId = medicalRecordDetails.Select(mrd => mrd.TreatmentResultId).Distinct().ToList();
+
+            var treatmentResult = await this.context.TreatmentResults
+                            .Where(tr => treatmentResultId.Contains(tr.TreatmentResultId))
+                            .ToListAsync();
+
+            int step = 1;
+            foreach (var item in treatmentResult)
+            {
+                item.TreatmentRoadmapId = step++;
+            }
+            return treatmentResult;
+        }
+
+        public async Task<List<TypeTest>> GetTypeTestsAsync(int doctorIdClaim, int customerId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.CustomerId == customerId);
+
+            var medicalRecordDetails = await this.context.MedicalRecordDetails
+                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                            .ToListAsync();
+
+            var treatmentResultId = medicalRecordDetails.Select(mrd => mrd.TreatmentResultId).Distinct().ToList();
+
+            var treatmentResult = await this.context.TreatmentResults
+                            .Where(tr => treatmentResultId.Contains(tr.TreatmentResultId))
+                            .ToListAsync();
+
+            var typeTest = await this.context.TypeTests
+                            .Where(tt => treatmentResultId.Contains(tt.TreatmentResultId))
+                            .ToListAsync();
+
+            return typeTest;
         }
     }
 }

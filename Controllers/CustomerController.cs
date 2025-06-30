@@ -57,18 +57,6 @@
             return this.Ok(this.mapper.Map<CustomerDto>(customer));
         }
 
-        [HttpGet("medicalRecordWithDetail")]
-        [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> GetMedicalRecordsWithDetail()
-        {
-            var userIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-            var medicalRecords = await this.medicalRecordDetailRepository.GetMedicalRecordWithDetailsAsync(userIdClaims);
-            var recordsDto = this.mapper.Map<List<MedicalRecordWithDetailDto>>(medicalRecords);
-
-            return this.Ok(recordsDto);
-        }
-
         [HttpGet("medicalRecord")]
         [Authorize(Roles = "Customer")]
         public async Task<IActionResult> GetMedicalRecord()
@@ -81,16 +69,15 @@
             return this.Ok(dto);
         }
 
-        [HttpGet("medicalRecordDetailWithTypeTest")]
+        [HttpGet("medicalRecordDetail-treatmentResult-typeTest/{medicalRecordId}")]
         [Authorize(Roles = "Customer")]
-        public async Task<IActionResult> GetMedicalRecordDetailWithTypeTest()
+        public async Task<IActionResult> GetMedicalRecordDetailWithTreatmentResultAndTypeTest(int medicalRecordId)
         {
-            var userIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
             var medicalRecordDetails = await this.medicalRecordDetailRepository.
-                        GetMedicalRecordDetailTypetestBaseTreatmentCompleteAsync(userIdClaims);
+                        GetMedicalRecordDetailWithTreatmentResultAndTypetestAsync(medicalRecordId);
 
-            var result = this.mapper.Map<List<MedicalRecordDetailWithTypeTestDto>>(medicalRecordDetails);
+            var result = this.mapper.Map<List<MedicalRecordDetailWithTreatmentResultAndTypeTestDto>>(medicalRecordDetails);
 
             return this.Ok(result);
         }
@@ -200,6 +187,16 @@
             var bookings = await this.customerRepository.GetBookingsAsync(userIdClaims);
 
             var result = this.mapper.Map<List<BookingInCustomerDto>>(bookings);
+            return this.Ok(result);
+        }
+
+        [HttpGet("getInformationService")]
+        public async Task<IActionResult> GetInformationService()
+        {
+            var userIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecord = await this.customerRepository.GetInformationServiceAsync(userIdClaims);
+            var result = this.mapper.Map<List<UseServiceByCustomerDto>>(medicalRecord);
             return this.Ok(result);
         }
     }
