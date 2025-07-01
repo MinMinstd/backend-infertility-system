@@ -96,7 +96,11 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.MedicalRecordDetails.FirstOrDefault().Status));
 
             this.CreateMap<TreatmentResult, TreatmentResultDto>()
-                .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId));
+                .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId))
+                .ForMember(dest => dest.TypeTest, opt => opt.MapFrom(src => src.TypeTest));
+
+            this.CreateMap<ConsulationResult, ConsultationResultDto>()
+                .ForMember(dest => dest.TypeTests, opt => opt.MapFrom(src => src.TypeTests));
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();

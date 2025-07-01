@@ -2,6 +2,8 @@
 {
     public class MedicalRecordDetailDto
     {
+        public int MedicalRecordDetailId { get; set; }
+
         public int StepNumber { get; set; }
 
         public DateOnly Date { get; set; }

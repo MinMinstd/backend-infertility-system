@@ -187,7 +187,7 @@
             return treatmentRoadmap;
         }
 
-        public async Task<List<TreatmentResult>> GetTreatmentResultsAsync(int doctorIdClaim, int customerId)
+        public async Task<List<TreatmentResult>> GetTreatmentResultsTypeTestAsync(int doctorIdClaim, int customerId)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
 
@@ -203,6 +203,7 @@
 
             var treatmentResult = await this.context.TreatmentResults
                             .Where(tr => treatmentResultId.Contains(tr.TreatmentResultId))
+                            .Include(tr => tr.TypeTest)
                             .ToListAsync();
 
             int step = 1;
@@ -213,7 +214,7 @@
             return treatmentResult;
         }
 
-        public async Task<List<TypeTest>> GetTypeTestsAsync(int doctorIdClaim, int customerId)
+        public async Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int doctorIdClaim, int customerId)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
 
@@ -225,17 +226,16 @@
                             .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
                             .ToListAsync();
 
-            var treatmentResultId = medicalRecordDetails.Select(mrd => mrd.TreatmentResultId).Distinct().ToList();
+            var consultationResultId = medicalRecordDetails
+                            .Where(mrd => mrd.ConsulationResultId != null)
+                            .Select(mrd => mrd.ConsulationResultId).Distinct().ToList();
 
-            var treatmentResult = await this.context.TreatmentResults
-                            .Where(tr => treatmentResultId.Contains(tr.TreatmentResultId))
+            var consultationResult = await this.context.ConsulationResults
+                            .Where(cr => consultationResultId.Contains(cr.ConsulationResultId))
+                            .Include(cr => cr.TypeTests)
                             .ToListAsync();
 
-            var typeTest = await this.context.TypeTests
-                            .Where(tt => treatmentResultId.Contains(tt.TreatmentResultId))
-                            .ToListAsync();
-
-            return typeTest;
+            return consultationResult;
         }
     }
 }

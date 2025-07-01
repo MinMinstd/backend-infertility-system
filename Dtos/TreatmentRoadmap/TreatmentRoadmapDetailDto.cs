@@ -2,6 +2,8 @@
 {
     public class TreatmentRoadmapDetailDto
     {
+        public int TreatmentRoadmapId { get; set; }
+
         public int StepNumber { get; set; }
 
         public DateOnly Date { get; set; }

@@ -21,9 +21,9 @@
 
         Task<List<TreatmentRoadmap>> GetDetailTreatmentRoadmapAsync(int doctorIdClaim, int customerId);
 
-        Task<List<TreatmentResult>> GetTreatmentResultsAsync(int doctorIdClaim, int customerId);
+        Task<List<TreatmentResult>> GetTreatmentResultsTypeTestAsync(int doctorIdClaim, int customerId);
 
-        Task<List<TypeTest>> GetTypeTestsAsync(int doctorIdClaim, int customerId);
+        Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int doctorIdClaim, int customerId);
 
         Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId);
 
