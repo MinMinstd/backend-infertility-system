@@ -17,6 +17,7 @@ namespace infertility_system.Controllers
 {
     using AutoMapper;
     using infertility_system.Dtos.Booking;
+    using infertility_system.Dtos.ConsulationResult;
     using infertility_system.Dtos.Customer;
     using infertility_system.Dtos.Doctor;
     using infertility_system.Dtos.MedicalRecord;
@@ -200,11 +201,11 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-        [HttpGet("getTreatmentResult/{customerId}")]
+        [HttpGet("treatmentResult-typeTest/{customerId}")]
         public async Task<IActionResult> GetTreatmentResult(int customerId)
         {
             var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var treatmentResult = await this.doctorRepository.GetTreatmentResultsAsync(doctorIdClaims, customerId);
+            var treatmentResult = await this.doctorRepository.GetTreatmentResultsTypeTestAsync(doctorIdClaims, customerId);
             var result = this.mapper.Map<List<TreatmentResultDto>>(treatmentResult);
             return this.Ok(result);
         }
@@ -219,12 +220,12 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-        [HttpGet("getTypeTests/{customerId}")]
-        public async Task<IActionResult> GetTypeTests(int customerId)
+        [HttpGet("consultationResult-typeTests/{customerId}")]
+        public async Task<IActionResult> GetConsultationResultAndTypeTests(int customerId)
         {
             var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var typeTests = await this.doctorRepository.GetTypeTestsAsync(doctorIdClaims, customerId);
-            var result = this.mapper.Map<List<TypeTestDto>>(typeTests);
+            var consulationResults = await this.doctorRepository.GetConsultationResultAndTypeTestsAsync(doctorIdClaims, customerId);
+            var result = this.mapper.Map<List<ConsultationResultDto>>(consulationResults);
             return this.Ok(result);
         }
     }
