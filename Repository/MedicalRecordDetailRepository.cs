@@ -19,11 +19,6 @@
             this.customerRepository = customerRepository;
         }
 
-        public Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ICollection<MedicalRecord>> GetMedicalRecordAsync(int userId)
         {
             var isValid = await this.customerRepository.CheckCustomerExistsAsync(userId);

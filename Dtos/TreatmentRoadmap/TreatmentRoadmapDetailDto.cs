@@ -10,8 +10,6 @@
 
         public string? Stage { get; set; }
 
-        public string? NameService { get; set; }
-
         public string? Description { get; set; }
 
         public int DurationDay { get; set; }

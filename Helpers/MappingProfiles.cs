@@ -9,6 +9,7 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.DoctorSchedule;
     using infertility_system.Dtos.Feedback;
     using infertility_system.Dtos.MedicalRecord;
+    using infertility_system.Dtos.MedicalRecordDetail;
     using infertility_system.Dtos.Service;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
@@ -92,7 +93,6 @@ namespace infertility_system.Helpers
 
             this.CreateMap<TreatmentRoadmap, TreatmentRoadmapDetailDto>()
                 .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId))
-                .ForMember(dest => dest.NameService, opt => opt.MapFrom(src => src.Service.Name))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.MedicalRecordDetails.FirstOrDefault().Status));
 
             this.CreateMap<TreatmentResult, TreatmentResultDto>()
@@ -101,6 +101,10 @@ namespace infertility_system.Helpers
 
             this.CreateMap<ConsulationResult, ConsultationResultDto>()
                 .ForMember(dest => dest.TypeTests, opt => opt.MapFrom(src => src.TypeTests));
+
+            this.CreateMap<UpdateDetailTreatmentRoadmapDto, TreatmentRoadmap>();
+            this.CreateMap<CreateMedicalRecordDetailDto, MedicalRecordDetail>();
+            this.CreateMap<UpdateMedicalRecordDetailDto, MedicalRecordDetail>();
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();

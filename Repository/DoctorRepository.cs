@@ -237,5 +237,66 @@
 
             return consultationResult;
         }
+
+        public async Task<bool> UpdateDetailTreatmentRoadmapAsync(TreatmentRoadmap updateTreamentRoadmap, string status, 
+                                                int treatmentRoadmapId, int customerId)
+        {
+            var treatmentRoadmap = await this.context.TreatmentRoadmaps.
+                                        FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == treatmentRoadmapId);
+
+            var medicalRecord = await this.context.MedicalRecords.FirstOrDefaultAsync(mr => mr.CustomerId == customerId);
+
+            var medicalRecordDetail = await this.context.MedicalRecordDetails
+                                .FirstOrDefaultAsync(mrd => mrd.TreatmentRoadmapId == treatmentRoadmapId
+                                                         && mrd.MedicalRecordId == medicalRecord.MedicalRecordId);
+
+            treatmentRoadmap.Date = updateTreamentRoadmap.Date;
+            treatmentRoadmap.DurationDay = updateTreamentRoadmap.DurationDay;   
+            treatmentRoadmap.Description = updateTreamentRoadmap.Description;
+
+            if (medicalRecordDetail != null && !string.IsNullOrEmpty(status))
+            {
+                medicalRecordDetail.Status = status;
+            }
+
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail, int doctorIdClaim, int customerId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .Where(mr => mr.DoctorId == doctor.DoctorId
+                                      && mr.CustomerId == customerId).FirstOrDefaultAsync();
+
+            medicalRecordDetail.MedicalRecordId = medicalRecord.MedicalRecordId;
+            this.context.MedicalRecordDetails.Add(medicalRecordDetail);
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateMedicalRecordDetailDtoAsync(MedicalRecordDetail update, int doctorIdClaim, int customerId, int medicalRecordDetailId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.CustomerId == customerId);
+
+            var medicalRecordDetail = await this.context.MedicalRecordDetails
+                            .FirstOrDefaultAsync(mrd => mrd.MedicalRecordDetailId == medicalRecordDetailId);
+
+            if(medicalRecordDetail.MedicalRecordId == medicalRecord.MedicalRecordId)
+            {
+                medicalRecordDetail.Date = update.Date;
+                medicalRecordDetail.TestResult = update.TestResult;
+                medicalRecordDetail.Note = update.Note;
+                medicalRecordDetail.Status = update.Status;
+            }
+            await this.context.SaveChangesAsync();
+            return true;
+        }
     }
 }

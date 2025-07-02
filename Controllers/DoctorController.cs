@@ -1,9 +1,8 @@
 
-﻿using AutoMapper;
+using AutoMapper;
 using infertility_system.Dtos.Booking;
 using infertility_system.Dtos.Customer;
 using infertility_system.Dtos.Doctor;
-using infertility_system.Dtos.MedicalRecord;
 using infertility_system.Dtos.TreatmentRoadmap;
 using infertility_system.Helpers;
 using infertility_system.Interfaces;
@@ -21,6 +20,7 @@ namespace infertility_system.Controllers
     using infertility_system.Dtos.Customer;
     using infertility_system.Dtos.Doctor;
     using infertility_system.Dtos.MedicalRecord;
+    using infertility_system.Dtos.MedicalRecordDetail;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
     using infertility_system.Dtos.Typetests;
@@ -128,15 +128,14 @@ namespace infertility_system.Controllers
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
-        [HttpPost("CreateMedicalRecordDetail")]
-        public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] MedicalRecordDetailDto dto)
+        [HttpPost("CreateMedicalRecordDetail/{customerId}")]
+        public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] CreateMedicalRecordDetailDto dto, int customerId)
         {
-            // var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            // if(!await _doctorRepository.CheckDoctorIdInMedicalRecordAsync(doctorIdClaims, dto.MedicalRecordId))
-            //    return Unauthorized("Bạn không có quyền cập nhật hồ sơ này");
-            var medicalRecordDetailDto = this.mapper.Map<MedicalRecordDetail>(dto);
-            var medicalRecordDetail = await this.medicalRecordDetailRepository.CreateMedicalRecordDetailAsync(medicalRecordDetailDto);
-            return this.Ok(dto);
+            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            
+            var medicalRecordDetail = this.mapper.Map<MedicalRecordDetail>(dto);
+            var result = await this.doctorRepository.CreateMedicalRecordDetailAsync(medicalRecordDetail, doctorIdClaims, customerId);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
         [HttpPut("UpdateMedicalRecord/{medicalRecordId}")]
@@ -151,6 +150,19 @@ namespace infertility_system.Controllers
 
             var result = await this.medicalRecordRepository.
                                 UpdateMedicalRecordAsync(medicalRecord, doctorIdClaims);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
+        }
+
+        [HttpPut("UpdateMedicalRecordDetail/{customerId}/{medicalRecordDetailId}")]
+        public async Task<IActionResult> UpdateMedicalRecordDetail([FromBody] UpdateMedicalRecordDetailDto dto
+                        ,int customerId, int medicalRecordDetailId)
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var medicalRecordDetail = this.mapper.Map<MedicalRecordDetail>(dto);
+            medicalRecordDetail.MedicalRecordDetailId = medicalRecordDetailId;
+
+            var result = await this.doctorRepository.UpdateMedicalRecordDetailDtoAsync(medicalRecordDetail, doctorIdClaims, customerId, medicalRecordDetailId);
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
@@ -227,6 +239,16 @@ namespace infertility_system.Controllers
             var consulationResults = await this.doctorRepository.GetConsultationResultAndTypeTestsAsync(doctorIdClaims, customerId);
             var result = this.mapper.Map<List<ConsultationResultDto>>(consulationResults);
             return this.Ok(result);
+        }
+
+        [HttpPut("updateDetailTreatmentRoadmap/{customerId}/{treatmentRoadmapId}")]
+        public async Task<IActionResult> UpdateDetailTreatmentRoadmap(int treatmentRoadmapId, int customerId
+                            ,[FromBody] UpdateDetailTreatmentRoadmapDto dto)
+        {
+            var updateTreatmentRoadmap = this.mapper.Map<TreatmentRoadmap>(dto);
+
+            var result = await this.doctorRepository.UpdateDetailTreatmentRoadmapAsync(updateTreatmentRoadmap, dto.Status, treatmentRoadmapId, customerId);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
     }
 }
