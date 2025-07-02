@@ -25,6 +25,12 @@
 
         Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int doctorIdClaim, int customerId);
 
+        Task<bool> UpdateDetailTreatmentRoadmapAsync(TreatmentRoadmap updateTreamentRoadmap, string status, int treatmentRoadmapId, int customerId);
+
+        Task<bool> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail, int doctorIdClaim, int customerId);
+
+        Task<bool> UpdateMedicalRecordDetailDtoAsync(MedicalRecordDetail update, int doctorIdClaim, int customerId, int medicalRecordDetailId);
+
         Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId);
 
         Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim);

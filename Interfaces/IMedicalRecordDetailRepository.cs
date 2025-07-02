@@ -5,9 +5,6 @@
 
     public interface IMedicalRecordDetailRepository
     {
-        
-
-        Task<MedicalRecordDetail> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail);
 
         Task<ICollection<MedicalRecord>> GetMedicalRecordAsync(int userId);
 

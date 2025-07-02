@@ -1,4 +1,4 @@
-﻿namespace infertility_system.Dtos.MedicalRecord
+﻿namespace infertility_system.Dtos.MedicalRecordDetail
 {
     public class MedicalRecordDetailDto
     {

@@ -12,7 +12,7 @@
 
         public int DurationDay { get; set; }
 
-        public decimal Price { get; set; }
+        public string? Result { get; set; }
 
         // TreatmentResult N-1 TreatementRoadmap
         public int TreatmentRoadmapId { get; set; }

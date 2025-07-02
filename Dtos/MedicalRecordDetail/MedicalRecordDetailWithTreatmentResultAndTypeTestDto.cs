@@ -1,4 +1,4 @@
-﻿namespace infertility_system.Dtos.MedicalRecord
+﻿namespace infertility_system.Dtos.MedicalRecordDetail
 {
     using infertility_system.Dtos.Typetests;
     using infertility_system.Models;
