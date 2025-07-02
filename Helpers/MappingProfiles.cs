@@ -14,6 +14,7 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
     using infertility_system.Dtos.Typetests;
+    using infertility_system.Dtos.TypeTests;
     using infertility_system.Dtos.User;
     using infertility_system.Models;
 
@@ -105,6 +106,8 @@ namespace infertility_system.Helpers
             this.CreateMap<UpdateDetailTreatmentRoadmapDto, TreatmentRoadmap>();
             this.CreateMap<CreateMedicalRecordDetailDto, MedicalRecordDetail>();
             this.CreateMap<UpdateMedicalRecordDetailDto, MedicalRecordDetail>();
+            this.CreateMap<CreateTreatmentResultAndTypeTestDto, TreatmentResult>();
+            this.CreateMap<CreateTypeTestTreatmentDto, TypeTest>();
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();
