@@ -1,6 +1,8 @@
 ﻿namespace infertility_system.Repository
 {
+    using AutoMapper;
     using infertility_system.Data;
+    using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Helpers;
     using infertility_system.Interfaces;
     using infertility_system.Models;
@@ -9,10 +11,12 @@
     public class DoctorRepository : IDoctorRepository
     {
         private readonly AppDbContext context;
+        private readonly IMapper mapper;
 
-        public DoctorRepository(AppDbContext context)
+        public DoctorRepository(AppDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public async Task<List<Doctor>> GetListDoctorsAsync(QueryDoctor? query)
@@ -295,6 +299,98 @@
                 medicalRecordDetail.Note = update.Note;
                 medicalRecordDetail.Status = update.Status;
             }
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CreateTreatmentResultAndTypeTestAsync(CreateTreatmentResultAndTypeTestDto dto, int doctorIdClaim, int customerId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.CustomerId == customerId);
+
+            if(medicalRecord == null) return false;
+
+            var treatmentResult = this.mapper.Map<TreatmentResult>(dto);
+            treatmentResult.DateTreatmentResult = dto.DateTreatmentResult;
+            treatmentResult.Stage = dto.Stage;
+            treatmentResult.Description = dto.Description;
+            treatmentResult.DurationDay = dto.DurationDay;
+            treatmentResult.Result = dto.Result;
+
+            var typeTest = new TypeTest()
+            {
+                Name = dto.Name,
+                Description = dto.DescriptionTypeTest,
+                TreatmentResult = treatmentResult,
+            };
+            this.context.TreatmentResults.Add(treatmentResult);
+            this.context.TypeTests.Add(typeTest);
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CreateTypeTestTreatementResultAsync(TypeTest create, int doctorIdClaim, int customerId, int treatmentResultId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                        .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                && mr.CustomerId == customerId);
+            if(medicalRecord == null)
+            {
+                Console.WriteLine("Lỗi");
+                return false;
+            }
+
+            var typeTest = new TypeTest
+            {
+                Name = create.Name,
+                Description = create.Description,
+                TreatmentResultId = treatmentResultId,
+            };
+            this.context.TypeTests.Add(typeTest);
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateTreatmentResultAndTypeTestAsync(UpdateTreatmentResultAndTypetestDto dto, int treatmentResultId)
+        {
+            var treatmentResult = await this.context.TreatmentResults
+                        .Include(tr => tr.TypeTest)
+                        .FirstOrDefaultAsync(tr => tr.TreatmentResultId == treatmentResultId);
+
+            if (treatmentResult == null) return false;
+
+            treatmentResult.DateTreatmentResult = dto.DateTreatmentResult;
+            treatmentResult.Description = dto.Description;
+            treatmentResult.Result = dto.Result;
+
+            var listTypeTest = treatmentResult.TypeTest.ToList();
+
+            foreach (var typeTestDto in dto.TypeTest)
+            {
+                if (typeTestDto.TypeTestId == 0)
+                {
+                    treatmentResult.TypeTest.Add(new TypeTest
+                    {
+                        Name = typeTestDto.Name,
+                        Description = typeTestDto.Description,
+                    });
+                }
+                else
+                {
+                    var existing = listTypeTest.FirstOrDefault(t => t.TypeTestId == typeTestDto.TypeTestId);
+                    if (existing != null)
+                    {
+                        existing.Name = typeTestDto.Name;
+                        existing.Description = typeTestDto.Description;
+                    }
+                }
+            }
+
             await this.context.SaveChangesAsync();
             return true;
         }
