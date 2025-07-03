@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using infertility_system.Data;
+    using infertility_system.Dtos.ConsulationResult;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Helpers;
     using infertility_system.Interfaces;
@@ -375,6 +376,104 @@
                 if (typeTestDto.TypeTestId == 0)
                 {
                     treatmentResult.TypeTest.Add(new TypeTest
+                    {
+                        Name = typeTestDto.Name,
+                        Description = typeTestDto.Description,
+                    });
+                }
+                else
+                {
+                    var existing = listTypeTest.FirstOrDefault(t => t.TypeTestId == typeTestDto.TypeTestId);
+                    if (existing != null)
+                    {
+                        existing.Name = typeTestDto.Name;
+                        existing.Description = typeTestDto.Description;
+                    }
+                }
+            }
+
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int doctorIdClaim, int customerId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var doctorSchedule = await this.context.DoctorSchedules
+                        .Where(ds => ds.DoctorId == doctor.DoctorId)
+                        .ToListAsync();
+
+            var doctorScheduleId = doctorSchedule.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
+
+            var booking = await this.context.Bookings
+                    .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId) 
+                             && b.CustomerId == customerId).ToListAsync();
+
+            var consulationResult = this.mapper.Map<ConsulationResult>(dto);
+            consulationResult.BookingId = booking.FirstOrDefault().BookingId;
+            consulationResult.Date = dto.Date;
+            consulationResult.ResultValue = dto.ResultValue;
+            consulationResult.Note = dto.Note;
+
+            var typeTest = new TypeTest()
+            {
+                Name = dto.Name,
+                Description = dto.DescriptionTypeTest,
+                ConsulationResult = consulationResult,
+            };
+
+            this.context.ConsulationResults.Add(consulationResult);
+            this.context.TypeTests.Add(typeTest);
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> CreateTypeTestConsultationResultAsync(TypeTest create, int doctorIdClaim, int customerId, int consultationResultId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var doctorSchedule = await this.context.DoctorSchedules
+                        .Where(ds => ds.DoctorId == doctor.DoctorId)
+                        .ToListAsync();
+
+            var doctorScheduleId = doctorSchedule.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
+
+            var booking = await this.context.Bookings
+                    .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId)
+                             && b.CustomerId == customerId).ToListAsync();
+
+            if(booking == null) return false;
+
+            var typeTest = new TypeTest
+            {
+                Name = create.Name,
+                Description = create.Description,
+                ConsulationResultId = consultationResultId,
+            };
+            this.context.TypeTests.Add(typeTest);
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateConsultationResultAndTypeTestAsync(UpdateConsultationResultAndTypetestDto dto, int consultationResultId)
+        {
+            var consultationResult = await this.context.ConsulationResults
+                        .Include(tr => tr.TypeTests)
+                        .Where(cs => cs.ConsulationResultId == consultationResultId)
+                        .FirstOrDefaultAsync();
+
+            consultationResult.Date = dto.Date;
+            consultationResult.ResultValue = dto.ResultValue;
+            consultationResult.Note = dto.Note;
+
+            var listTypeTest = consultationResult.TypeTests.ToList();
+
+            foreach (var typeTestDto in dto.TypeTest)
+            {
+                if (typeTestDto.TypeTestId == 0)
+                {
+                    consultationResult.TypeTests.Add(new TypeTest
                     {
                         Name = typeTestDto.Name,
                         Description = typeTestDto.Description,

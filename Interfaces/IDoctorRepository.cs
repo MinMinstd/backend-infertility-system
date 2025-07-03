@@ -1,5 +1,6 @@
 ﻿namespace infertility_system.Interfaces
 {
+    using infertility_system.Dtos.ConsulationResult;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Helpers;
     using infertility_system.Models;
@@ -36,7 +37,13 @@
 
         Task<bool> CreateTypeTestTreatementResultAsync(TypeTest create, int doctorIdClaim, int customerId, int treatmentResultId);
 
+        Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int doctorIdClaim, int customerId);
+
+        Task<bool> CreateTypeTestConsultationResultAsync(TypeTest create, int doctorIdClaim, int customerId, int consultationResultId);
+
         Task<bool> UpdateTreatmentResultAndTypeTestAsync(UpdateTreatmentResultAndTypetestDto dto, int treatmentResultId);
+
+        Task<bool> UpdateConsultationResultAndTypeTestAsync(UpdateConsultationResultAndTypetestDto dto, int consultationResultId);
 
         Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId);
 

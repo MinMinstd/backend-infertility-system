@@ -260,7 +260,7 @@ namespace infertility_system.Controllers
         }
 
         [HttpPost("typeTest-treatmentResult/{customerId}/{treatmentResultId}")]
-        public async Task<IActionResult> CreateTypeTestTreatmentResult([FromBody] CreateTypeTestTreatmentDto dto, int customerId, int treatmentResultId)
+        public async Task<IActionResult> CreateTypeTestTreatmentResult([FromBody] CreateTypeTestDto dto, int customerId, int treatmentResultId)
         {
             if (dto == null)
                 return BadRequest("DTO binding failed: dto is null. Check your JSON format and Content-Type.");
@@ -276,6 +276,32 @@ namespace infertility_system.Controllers
         public async Task<IActionResult> UpdateTreatmentResultAndTypeTest([FromBody] UpdateTreatmentResultAndTypetestDto dto, int treatmentResultId)
         {
             var result = await this.doctorRepository.UpdateTreatmentResultAndTypeTestAsync(dto, treatmentResultId);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
+        }
+
+        [HttpPost("consultationResult-typeTest/{customerId}")]
+        public async Task<IActionResult> CreateConsultationResultAndTypeTest([FromBody] CreateConsultatioResultAndTypeTestDto dto, int customerId)
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var result = await this.doctorRepository.CreateConsultationAndTypeTestAsync(dto, doctorIdClaims, customerId);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
+        }
+
+        [HttpPost("typeTest-consultationResult/{customerId}/{consultationResultId}")]
+        public async Task<IActionResult> CreateTypeTestConsultationResult([FromBody] CreateTypeTestDto dto, int customerId, int consultationResultId)
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var typeTest = this.mapper.Map<TypeTest>(dto);
+            var result = await this.doctorRepository.CreateTypeTestConsultationResultAsync(typeTest, doctorIdClaims, customerId, consultationResultId);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
+        }
+
+        [HttpPut("consultationResult-typeTest/{consultationResultId}")]
+        public async Task<IActionResult> UpdateConsultationResultAndTypeTest([FromBody] UpdateConsultationResultAndTypetestDto dto, int consultationResultId)
+        {
+            var result = await this.doctorRepository.UpdateConsultationResultAndTypeTestAsync(dto, consultationResultId);
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
     }
