@@ -1,6 +1,6 @@
 ﻿namespace infertility_system.Dtos.TypeTests
 {
-    public class CreateTypeTestTreatmentDto
+    public class CreateTypeTestDto
     {
         public string? Name { get; set; }
 
