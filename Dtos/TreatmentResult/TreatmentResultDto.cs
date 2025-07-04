@@ -8,7 +8,7 @@ namespace infertility_system.Dtos.TreatmentResult
 
         public int StepNumber { get; set; }
 
-        public DateOnly Date { get; set; }
+        public DateOnly DateTreatmentResult { get; set; }
 
         public string? Description { get; set; }
 
