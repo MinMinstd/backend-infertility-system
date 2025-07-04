@@ -98,7 +98,8 @@ namespace infertility_system.Helpers
 
             this.CreateMap<TreatmentResult, TreatmentResultDto>()
                 .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId))
-                .ForMember(dest => dest.TypeTest, opt => opt.MapFrom(src => src.TypeTest));
+                .ForMember(dest => dest.TypeTest, opt => opt.MapFrom(src => src.TypeTest))
+                .ForMember(dest => dest.DateTreatmentResult, opt => opt.MapFrom(src => src.DateTreatmentResult));
 
             this.CreateMap<ConsulationResult, ConsultationResultDto>()
                 .ForMember(dest => dest.TypeTests, opt => opt.MapFrom(src => src.TypeTests));
@@ -109,6 +110,7 @@ namespace infertility_system.Helpers
             this.CreateMap<CreateTreatmentResultAndTypeTestDto, TreatmentResult>();
             this.CreateMap<CreateTypeTestDto, TypeTest>();
             this.CreateMap<CreateConsultatioResultAndTypeTestDto, ConsulationResult>();
+            this.CreateMap<CreateBookingCustomerDto, Booking>();
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();
