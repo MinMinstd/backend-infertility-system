@@ -1,0 +1,17 @@
+﻿namespace infertility_system.Dtos.Booking
+{
+    public class CreateBookingCustomerDto
+    {
+        public DateOnly? Date { get; set; }
+
+        public string? Time { get; set; }
+
+        public string? Note { get; set; }
+
+        public string? Description { get; set; }
+
+        public int DoctorScheduleId { get; set; }
+
+        public int ServiceId { get; set; }
+    }
+}

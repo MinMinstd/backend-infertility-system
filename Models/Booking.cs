@@ -14,6 +14,8 @@
 
         public string? Note { get; set; }
 
+        public string? Description { get; set; }
+
         // Booking N-1 Customer
         public int? CustomerId { get; set; }
 

@@ -4,6 +4,10 @@
     {
         public int? TreatmentRoadmapId { get; set; }
 
+        public int? ConsulationResultId { get; set; }
+
+        public int? TreatmentResultId { get; set; }
+
         public DateOnly Date { get; set; }
 
         public string? TypeName { get; set; }

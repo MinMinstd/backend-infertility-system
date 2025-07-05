@@ -129,13 +129,13 @@ namespace infertility_system.Controllers
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
-        [HttpPost("CreateMedicalRecordDetail/{customerId}")]
-        public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] CreateMedicalRecordDetailDto dto, int customerId)
+        [HttpPost("CreateMedicalRecordDetail/{medicalRecordId}")]
+        public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] CreateMedicalRecordDetailDto dto, int medicalRecordId)
         {
             var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             
             var medicalRecordDetail = this.mapper.Map<MedicalRecordDetail>(dto);
-            var result = await this.doctorRepository.CreateMedicalRecordDetailAsync(medicalRecordDetail, doctorIdClaims, customerId);
+            var result = await this.doctorRepository.CreateMedicalRecordDetailAsync(medicalRecordDetail, doctorIdClaims, medicalRecordId);
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
@@ -203,30 +203,28 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-        [HttpGet("getDetailTreatmentRoadmap/{customerId}")]
-        public async Task<IActionResult> GetDetailTreatmentRoadmap(int customerId)
+        [HttpGet("getDetailTreatmentRoadmap/{customerId}/{bookingId}")]
+        public async Task<IActionResult> GetDetailTreatmentRoadmap(int customerId, int bookingId)
         {
-            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var treatmentRoadmapDetail = await this.doctorRepository.GetDetailTreatmentRoadmapAsync(doctorIdClaims, customerId);
+            var treatmentRoadmapDetail = await this.doctorRepository.GetDetailTreatmentRoadmapAsync(bookingId, customerId);
             var result = this.mapper.Map<List<TreatmentRoadmapDetailDto>>(treatmentRoadmapDetail);
             return this.Ok(result);
         }
 
-        [HttpGet("treatmentResult-typeTest/{customerId}")]
-        public async Task<IActionResult> GetTreatmentResult(int customerId)
+        [HttpGet("treatmentResult-typeTest/{customerId}/{bookingId}")]
+        public async Task<IActionResult> GetTreatmentResult(int bookingId, int customerId)
         {
-            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var treatmentResult = await this.doctorRepository.GetTreatmentResultsTypeTestAsync(doctorIdClaims, customerId);
+            var treatmentResult = await this.doctorRepository.GetTreatmentResultsTypeTestAsync(bookingId, customerId);
             var result = this.mapper.Map<List<TreatmentResultDto>>(treatmentResult);
             return this.Ok(result);
         }
 
-        [HttpGet("GetMedicalRecordDetail/{customerId}")]
-        public async Task<IActionResult> GetMedicalRecordDetail(int customerId)
+        [HttpGet("GetMedicalRecordDetail/{medicalRecordId}")]
+        public async Task<IActionResult> GetMedicalRecordDetail(int medicalRecordId)
         {
             var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            var medicalRecords = await this.doctorRepository.GetMedicalRecordDetailAsync(doctorIdClaims, customerId);
+            var medicalRecords = await this.doctorRepository.GetMedicalRecordDetailAsync(doctorIdClaims, medicalRecordId);
             var result = this.mapper.Map<List<MedicalRecordDetailDto>>(medicalRecords);
             return this.Ok(result);
         }
@@ -302,6 +300,21 @@ namespace infertility_system.Controllers
         public async Task<IActionResult> UpdateConsultationResultAndTypeTest([FromBody] UpdateConsultationResultAndTypetestDto dto, int consultationResultId)
         {
             var result = await this.doctorRepository.UpdateConsultationResultAndTypeTestAsync(dto, consultationResultId);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
+        }
+
+        [HttpGet("medicalRecord/{customerId}")]
+        public async Task<IActionResult> GetMedicalRecord(int customerId)
+        {
+            var medicalRecords = await this.doctorRepository.GetMedicalRecordsCustomerAsync(customerId);
+            return this.Ok(medicalRecords);
+        }
+
+        [HttpPost("booking/{customerId}")]
+        public async Task<IActionResult> CreateBookingForCustomer([FromBody] CreateBookingCustomerDto dto,int customerId)
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await this.doctorRepository.CreateBookingForCustomerAsync(dto, doctorIdClaims, customerId);
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
     }
