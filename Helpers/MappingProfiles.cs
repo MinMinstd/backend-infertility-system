@@ -93,7 +93,6 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Doctor.ServiceDB.Description));
 
             this.CreateMap<TreatmentRoadmap, TreatmentRoadmapDetailDto>()
-                .ForMember(dest => dest.StepNumber, opt => opt.MapFrom(src => src.TreatmentRoadmapId))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.MedicalRecordDetails.FirstOrDefault().Status));
 
             this.CreateMap<TreatmentResult, TreatmentResultDto>()

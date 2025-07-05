@@ -2,7 +2,9 @@
 {
     using AutoMapper;
     using infertility_system.Data;
+    using infertility_system.Dtos.Booking;
     using infertility_system.Dtos.ConsulationResult;
+    using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Helpers;
     using infertility_system.Interfaces;
@@ -13,11 +15,13 @@
     {
         private readonly AppDbContext context;
         private readonly IMapper mapper;
+        private readonly IDoctorScheduleRepository doctorScheduleRepository;
 
-        public DoctorRepository(AppDbContext context, IMapper mapper)
+        public DoctorRepository(AppDbContext context, IMapper mapper, IDoctorScheduleRepository doctorScheduleRepository)
         {
             this.context = context;
             this.mapper = mapper;
+            this.doctorScheduleRepository = doctorScheduleRepository;
         }
 
         public async Task<List<Doctor>> GetListDoctorsAsync(QueryDoctor? query)
@@ -80,7 +84,7 @@
             return customers;
         }
 
-        public async Task<List<MedicalRecordDetail>> GetMedicalRecordDetailAsync(int doctorIdClaim, int customerId)
+        public async Task<List<MedicalRecordDetail>> GetMedicalRecordDetailAsync(int doctorIdClaim, int medicalRecordId)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
             if (doctor == null)
@@ -90,7 +94,7 @@
 
             var medicalRecord = await this.context.MedicalRecords
                             .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
-                                                    && mr.CustomerId == customerId);
+                                                    && mr.MedicalRecordId == medicalRecordId);
 
             var medicalRecordDetails = await this.context.MedicalRecordDetails
                             .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
@@ -164,50 +168,58 @@
                         .FirstOrDefaultAsync(c => c.CustomerId == customerId);
         }
 
-        public async Task<List<TreatmentRoadmap>> GetDetailTreatmentRoadmapAsync(int doctorIdClaim, int customerId)
+        public async Task<List<TreatmentRoadmap>> GetDetailTreatmentRoadmapAsync(int bookingId, int customerId)
         {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            var booking = await this.context.Bookings
+                        .FirstOrDefaultAsync(b => b.BookingId == bookingId
+                                               && b.CustomerId == customerId);
 
-            var medicalRecord = await this.context.MedicalRecords
-                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
-                                                    && mr.CustomerId == customerId);
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
 
-            var medicalRecordDetails = await this.context.MedicalRecordDetails
-                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
-                            .ToListAsync();
+            var orderDetail = await this.context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == order.OrderId);
 
-            var treatmentRoadmapId = medicalRecordDetails.Select(mrd => mrd.TreatmentRoadmapId).Distinct().ToList();
+            var service = await this.context.Services.FirstOrDefaultAsync(s => s.ServiceDBId == orderDetail.ServiceId);
 
             var treatmentRoadmap = await this.context.TreatmentRoadmaps
-                            .Where(tr => treatmentRoadmapId.Contains(tr.TreatmentRoadmapId))
-                            .Include(tr => tr.Service)
-                            .ToListAsync();
+                        .Where(tr => tr.ServiceId == service.ServiceDBId)
+                        .Include(tr => tr.MedicalRecordDetails)
+                        .ToListAsync();
 
-            int step = 1;
             foreach (var tr in treatmentRoadmap)
             {
-                tr.TreatmentRoadmapId = step++;
+
+                if (tr.MedicalRecordDetails == null || !tr.MedicalRecordDetails.Any())
+                {
+                    tr.MedicalRecordDetails = new List<MedicalRecordDetail>
+                    {
+                        new MedicalRecordDetail { Status = "Chưa thực hiện" }
+                    };
+                }
             }
 
             return treatmentRoadmap;
         }
 
-        public async Task<List<TreatmentResult>> GetTreatmentResultsTypeTestAsync(int doctorIdClaim, int customerId)
+        public async Task<List<TreatmentResult>> GetTreatmentResultsTypeTestAsync(int bookingId, int customerId)
         {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            var booking = await this.context.Bookings
+                        .FirstOrDefaultAsync(b => b.BookingId == bookingId
+                                               && b.CustomerId == customerId);
 
-            var medicalRecord = await this.context.MedicalRecords
-                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
-                                                    && mr.CustomerId == customerId);
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
 
-            var medicalRecordDetails = await this.context.MedicalRecordDetails
-                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
-                            .ToListAsync();
+            var orderDetail = await this.context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == order.OrderId);
 
-            var treatmentResultId = medicalRecordDetails.Select(mrd => mrd.TreatmentResultId).Distinct().ToList();
+            var service = await this.context.Services.FirstOrDefaultAsync(s => s.ServiceDBId == orderDetail.ServiceId);
+
+            var treatmentRoadmap = await this.context.TreatmentRoadmaps
+                        .Where(tr => tr.ServiceId == service.ServiceDBId)
+                        .ToListAsync();
+
+            var treatmentRoadmapId = treatmentRoadmap.Select(tr => tr.TreatmentRoadmapId).Distinct().ToList();
 
             var treatmentResult = await this.context.TreatmentResults
-                            .Where(tr => treatmentResultId.Contains(tr.TreatmentResultId))
+                            .Where(tr => treatmentRoadmapId.Contains(tr.TreatmentRoadmapId))
                             .Include(tr => tr.TypeTest)
                             .ToListAsync();
 
@@ -268,13 +280,13 @@
             return true;
         }
 
-        public async Task<bool> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail, int doctorIdClaim, int customerId)
+        public async Task<bool> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail, int doctorIdClaim, int medicalRecordId)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
 
             var medicalRecord = await this.context.MedicalRecords
                             .Where(mr => mr.DoctorId == doctor.DoctorId
-                                      && mr.CustomerId == customerId).FirstOrDefaultAsync();
+                                      && mr.MedicalRecordId == medicalRecordId).FirstOrDefaultAsync();
 
             medicalRecordDetail.MedicalRecordId = medicalRecord.MedicalRecordId;
             this.context.MedicalRecordDetails.Add(medicalRecordDetail);
@@ -368,6 +380,7 @@
             treatmentResult.DateTreatmentResult = dto.DateTreatmentResult;
             treatmentResult.Description = dto.Description;
             treatmentResult.Result = dto.Result;
+
 
             var listTypeTest = treatmentResult.TypeTest.ToList();
 
@@ -490,6 +503,62 @@
                 }
             }
 
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId)
+        {
+            var bookings = await this.context.Bookings
+                        .Where(b => b.CustomerId == customerId)
+                        .ToListAsync();
+
+            var medicalRecords = await this.context.MedicalRecords
+                        .Where(mr => mr.CustomerId == customerId)
+                        .ToListAsync();
+
+            var result = new List<MedicalRecordWithBookingDto>();
+
+            for (int i = 0; i < medicalRecords.Count; i++)
+            {
+                var record = medicalRecords[i];
+                var booking = bookings.ElementAtOrDefault(i); // ánh xạ theo index hoặc logic khác
+
+                result.Add(new MedicalRecordWithBookingDto
+                {
+                    BookingId = booking.BookingId,
+                    MedicalRecordId = record.MedicalRecordId,
+                    StartDate = record.StartDate,
+                    EndDate = record.EndDate,
+                    Stage = record.Stage,
+                    Diagnosis = record.Diagnosis,
+                    Status = record.Status,
+                    Attempt = record.Attempt
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int doctorIdClaim, int customerId)
+        {
+            var customer = await this.context.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
+
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            var medicalRecord = await this.context.MedicalRecords
+                        .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                && mr.CustomerId == customer.CustomerId);
+            if (medicalRecord == null) return false;
+
+            var booking = this.mapper.Map<Booking>(dto);
+            booking.Status = "Pending";
+            booking.CustomerId = customer.CustomerId;
+            booking.Type = "Service";
+
+            await this.doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
+
+            this.context.Bookings.Add(booking);
             await this.context.SaveChangesAsync();
             return true;
         }
