@@ -27,7 +27,7 @@
 
         Task<List<TreatmentResult>> GetTreatmentResultsTypeTestAsync(int bookingId, int customerId);
 
-        Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int doctorIdClaim, int customerId);
+        Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int bookingId, int customerId);
 
         Task<bool> UpdateDetailTreatmentRoadmapAsync(TreatmentRoadmap updateTreamentRoadmap, string status, int treatmentRoadmapId, int customerId);
 
@@ -39,7 +39,7 @@
 
         Task<bool> CreateTypeTestTreatementResultAsync(TypeTest create, int doctorIdClaim, int customerId, int treatmentResultId);
 
-        Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int doctorIdClaim, int customerId);
+        Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int bookingId, int customerId);
 
         Task<bool> CreateTypeTestConsultationResultAsync(TypeTest create, int doctorIdClaim, int customerId, int consultationResultId);
 
