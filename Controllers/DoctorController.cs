@@ -175,11 +175,10 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-        [HttpGet("consultationResult-typeTests/{customerId}")]
-        public async Task<IActionResult> GetConsultationResultAndTypeTests(int customerId)
+        [HttpGet("consultationResult-typeTests/{customerId}/{bookingId}")]
+        public async Task<IActionResult> GetConsultationResultAndTypeTests(int customerId, int bookingId)
         {
-            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var consulationResults = await this.doctorRepository.GetConsultationResultAndTypeTestsAsync(doctorIdClaims, customerId);
+            var consulationResults = await this.doctorRepository.GetConsultationResultAndTypeTestsAsync(bookingId, customerId);
             var result = this.mapper.Map<List<ConsultationResultDto>>(consulationResults);
             return this.Ok(result);
         }
@@ -240,12 +239,10 @@ namespace infertility_system.Controllers
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
-        [HttpPost("consultationResult-typeTest/{customerId}")]
-        public async Task<IActionResult> CreateConsultationResultAndTypeTest([FromBody] CreateConsultatioResultAndTypeTestDto dto, int customerId)
+        [HttpPost("consultationResult-typeTest/{customerId}/{bookingId}")]
+        public async Task<IActionResult> CreateConsultationResultAndTypeTest([FromBody] CreateConsultatioResultAndTypeTestDto dto, int customerId, int bookingId)
         {
-            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-
-            var result = await this.doctorRepository.CreateConsultationAndTypeTestAsync(dto, doctorIdClaims, customerId);
+            var result = await this.doctorRepository.CreateConsultationAndTypeTestAsync(dto, bookingId, customerId);
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 

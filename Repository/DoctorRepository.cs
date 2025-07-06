@@ -231,24 +231,14 @@
             return treatmentResult;
         }
 
-        public async Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int doctorIdClaim, int customerId)
+        public async Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int bookingId, int customerId)
         {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-
-            var medicalRecord = await this.context.MedicalRecords
-                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
-                                                    && mr.CustomerId == customerId);
-
-            var medicalRecordDetails = await this.context.MedicalRecordDetails
-                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
-                            .ToListAsync();
-
-            var consultationResultId = medicalRecordDetails
-                            .Where(mrd => mrd.ConsulationResultId != null)
-                            .Select(mrd => mrd.ConsulationResultId).Distinct().ToList();
+            var booking = await this.context.Bookings
+                    .FirstOrDefaultAsync(b => b.BookingId == bookingId
+                                           && b.CustomerId == customerId);
 
             var consultationResult = await this.context.ConsulationResults
-                            .Where(cr => consultationResultId.Contains(cr.ConsulationResultId))
+                            .Where(cr => cr.BookingId == booking.BookingId)
                             .Include(cr => cr.TypeTests)
                             .ToListAsync();
 
@@ -409,22 +399,14 @@
             return true;
         }
 
-        public async Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int doctorIdClaim, int customerId)
+        public async Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int bookingId, int customerId)
         {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-
-            var doctorSchedule = await this.context.DoctorSchedules
-                        .Where(ds => ds.DoctorId == doctor.DoctorId)
-                        .ToListAsync();
-
-            var doctorScheduleId = doctorSchedule.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
-
             var booking = await this.context.Bookings
-                    .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId) 
-                             && b.CustomerId == customerId).ToListAsync();
+                    .Where(b => b.BookingId == bookingId
+                             && b.CustomerId == customerId).FirstOrDefaultAsync();
 
             var consulationResult = this.mapper.Map<ConsulationResult>(dto);
-            consulationResult.BookingId = booking.FirstOrDefault().BookingId;
+            consulationResult.BookingId = booking.BookingId;
             consulationResult.Date = dto.Date;
             consulationResult.ResultValue = dto.ResultValue;
             consulationResult.Note = dto.Note;
