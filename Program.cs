@@ -59,6 +59,7 @@
             builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<IVnpayService, VnpayService>();
 
             builder.Services.AddControllers();
             builder.Services.AddFluentValidationAutoValidation();
