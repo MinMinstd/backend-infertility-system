@@ -40,6 +40,7 @@
             builder.Services.AddScoped<Interfaces.IFeedbackRepository, Repository.FeedbackRepository>(); // Register the feedback repository
             builder.Services.AddScoped<Interfaces.IConsulationResultRepository, Repository.ConsulationResultRepository>(); // Register the authentication service
             builder.Services.AddScoped<Interfaces.IManagerRepository, Repository.ManagerRepository>(); // Register the authentication service
+            builder.Services.AddScoped<Interfaces.ITreatementRoadmapRepository, Repository.TreatmentRoadmapRepository>(); // Register the treatment roadmap repository
 
             builder.Services.AddScoped<Interfaces.IMedicalRecordRepository, Repository.MedicalRecordRepository>(); // Create, Update medicalRecord
             builder.Services.AddScoped<Interfaces.IMedicalRecordDetailRepository, Repository.MedicalRecordDetailRepository>();
