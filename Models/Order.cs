@@ -1,4 +1,6 @@
-﻿namespace infertility_system.Models
+﻿using System.Text.Json.Serialization;
+
+namespace infertility_system.Models
 {
     public class Order
     {
@@ -17,6 +19,7 @@
         // Order N-1 Customer
         public int? CustomerId { get; set; }
 
+        [JsonIgnore]
         public Customer? Customer { get; set; }
 
         // Order 1-1 Booking

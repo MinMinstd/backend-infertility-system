@@ -1,4 +1,6 @@
-﻿namespace infertility_system.Models
+﻿using System.Text.Json.Serialization;
+
+namespace infertility_system.Models
 {
     public class OrderDetail
     {
@@ -11,6 +13,7 @@
         // OrderDetail N-1 Order
         public int? OrderId { get; set; }
 
+        [JsonIgnore]
         public Order? Order { get; set; }
 
         // OrderDetail N-1 Service

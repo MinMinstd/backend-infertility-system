@@ -72,5 +72,15 @@ namespace infertility_system.Repository
             // await _context.SaveChangesAsync();
             var createdOrderDetail = await this.orderDetailRepository.CreateOrderDetail(orderDetail);
         }
+
+        public async Task<Order> GetOrderCurrent(int customerId)
+        {
+            return await this.context.Orders
+                .Include(o => o.OrderDetails)
+                .Where(o => o.CustomerId == customerId && o.Status == "Pending")
+                .OrderByDescending(o => o.Date)
+                .ThenByDescending(o => o.Time)
+                .FirstOrDefaultAsync();
+        }
     }
 }
