@@ -11,6 +11,7 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
     using infertility_system.Dtos.Order;
+    using infertility_system.Dtos.Payment;
     using infertility_system.Dtos.Service;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
@@ -140,6 +141,10 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => src.OrderDetails.FirstOrDefault().ServiceId));
 
             this.CreateMap<TreatmentRoadmap, TreatmentRoadmapToPaymentDto>();
+
+            this.CreateMap<Payment, HistoryPaymentDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Service.Name));
         }
 
         private static int CalculateAge(DateOnly birthday)
