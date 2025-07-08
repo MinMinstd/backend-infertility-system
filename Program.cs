@@ -5,6 +5,7 @@
     using infertility_system.Dtos.Admin;
     using infertility_system.Dtos.User;
     using infertility_system.Interfaces;
+    using infertility_system.Repository;
     using infertility_system.Service;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.EntityFrameworkCore;
@@ -53,6 +54,7 @@
             builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
             builder.Services.AddScoped<IServiceRepository, Repository.ServiceRepository>();
+            builder.Services.AddScoped<IPaymentRepository, Repository.PaymentRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
 
