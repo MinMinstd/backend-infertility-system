@@ -4,6 +4,7 @@ namespace infertility_system.Repository
     using infertility_system.Interfaces;
     using infertility_system.Models;
     using Microsoft.EntityFrameworkCore;
+    using System.Collections.Generic;
 
     public class OrderRepository : IOrderRepository
     {
@@ -73,6 +74,11 @@ namespace infertility_system.Repository
             var createdOrderDetail = await this.orderDetailRepository.CreateOrderDetail(orderDetail);
         }
 
+        public async Task<List<Order>> GetAllOrders()
+        {
+            return await this.context.Orders.ToListAsync();
+        }
+
         public async Task<Order> GetOrderCurrent(int customerId)
         {
             return await this.context.Orders
@@ -82,5 +88,7 @@ namespace infertility_system.Repository
                 .ThenByDescending(o => o.Time)
                 .FirstOrDefaultAsync();
         }
+
+
     }
 }

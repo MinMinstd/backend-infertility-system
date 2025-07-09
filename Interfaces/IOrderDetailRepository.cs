@@ -5,5 +5,6 @@
     public interface IOrderDetailRepository
     {
         Task<OrderDetail> CreateOrderDetail(OrderDetail orderDetail);
+        Task<List<OrderDetail>> GetListOrderDetailByOrderId(int OrdersId);
     }
 }

@@ -3,21 +3,27 @@
     using infertility_system.Data;
     using infertility_system.Interfaces;
     using infertility_system.Models;
+    using Microsoft.EntityFrameworkCore;
 
     public class OrderDetailRepository : IOrderDetailRepository
     {
-        private readonly AppDbContext context;
+        private readonly AppDbContext _context;
 
         public OrderDetailRepository(AppDbContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public async Task<OrderDetail> CreateOrderDetail(OrderDetail orderDetail)
         {
-            this.context.OrderDetails.Add(orderDetail);
-            await this.context.SaveChangesAsync();
+            _context.OrderDetails.Add(orderDetail);
+            await _context.SaveChangesAsync();
             return orderDetail;
+        }
+
+        public async Task<List<OrderDetail>> GetListOrderDetailByOrderId(int OrdersId)
+        {
+            return await _context.OrderDetails.Where(x => x.OrderId == OrdersId).ToListAsync();
         }
     }
 }
