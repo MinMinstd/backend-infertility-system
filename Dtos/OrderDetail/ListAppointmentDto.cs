@@ -1,4 +1,4 @@
-﻿namespace infertility_system.Dtos.OrderDetailDto
+﻿namespace infertility_system.Dtos.OrderDetail
 {
     public class ListAppointmentDto
     {
