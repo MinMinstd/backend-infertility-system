@@ -11,6 +11,7 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
     using infertility_system.Dtos.Order;
+    using infertility_system.Dtos.OrderDetail;
     using infertility_system.Dtos.Payment;
     using infertility_system.Dtos.Service;
     using infertility_system.Dtos.TreatmentResult;
@@ -139,6 +140,8 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Customer.Birthday))
                 .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => src.OrderDetails.FirstOrDefault().ServiceId));
+            this.CreateMap<Order, OrderDto>();
+            this.CreateMap<OrderDetail, OrderDetailDto>();
 
             this.CreateMap<TreatmentRoadmap, TreatmentRoadmapToPaymentDto>();
             this.CreateMap<TreatmentRoadmap, ListTreatmentRoadMapDto>()

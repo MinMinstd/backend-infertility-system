@@ -11,5 +11,6 @@ namespace infertility_system.Interfaces
         Task<int> CountOrdersByCustomerId(int customerId);
 
         Task<Order> GetOrderCurrent(int customerId);
+        Task<List<Order>> GetAllOrders();
     }
 }
