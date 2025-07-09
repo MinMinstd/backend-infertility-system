@@ -534,8 +534,14 @@
                 DateTreatment = dto.DateTreatment,
                 TimeTreatment = dto.TimeTreatment,
             };
+
+            await this.doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
+
             this.context.OrderDetails.Add(orderDetail);
             await this.context.SaveChangesAsync();
+
+            //tích hợp tạo luôn payment phía sau đó
+            await this.CreatePaymentForCustomerAsync(bookingId, dto.TreatmentRoadmapId);
             return true;
         }
 
@@ -549,6 +555,34 @@
                     .Where(od => od.OrderId == order.OrderId)
                     .ToListAsync();
             return orderDetail;
+        }
+
+        public async Task<bool> CreatePaymentForCustomerAsync(int bookingId, int treamentRoadmapId)
+        {
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
+
+            var roadMap = await this.context.TreatmentRoadmaps.FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == treamentRoadmapId);
+
+            var orderDetail = await this.context.OrderDetails
+                        .Where(od => od.OrderId == order.OrderId
+                                  && od.StageName == roadMap.Stage).FirstOrDefaultAsync();
+
+            var payment = new Payment()
+            {
+                PriceByTreatement = roadMap.Price,
+                Method = null,
+                Date = (DateOnly)orderDetail.DateTreatment,
+                Status = "Pending",
+                TreatmentRoadmapId = roadMap.TreatmentRoadmapId,
+                OrderId = order.OrderId
+            };
+
+            this.context.Payments.Add(payment);
+            await this.context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

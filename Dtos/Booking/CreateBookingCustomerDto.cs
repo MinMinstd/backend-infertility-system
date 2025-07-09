@@ -4,6 +4,8 @@
     {
         public int TreatmentRoadmapId { get; set; }
 
+        public int DoctorScheduleId { get; set; }
+
         public DateOnly? DateTreatment { get; set; }
 
         public string? TimeTreatment { get; set; }

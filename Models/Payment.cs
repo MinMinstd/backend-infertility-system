@@ -12,7 +12,7 @@
 
         public string? Status { get; set; }
 
-        // Payment 1-1 TreatmentRoadmap
+        // Payment N-1 TreatmentRoadmap
         public int TreatmentRoadmapId { get; set; }
 
         public TreatmentRoadmap? TreatmentRoadmap { get; set; }
