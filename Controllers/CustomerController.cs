@@ -4,6 +4,7 @@
     using infertility_system.Dtos.Booking;
     using infertility_system.Dtos.Customer;
     using infertility_system.Dtos.Doctor;
+    using infertility_system.Dtos.Embryo;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
     using infertility_system.Dtos.User;

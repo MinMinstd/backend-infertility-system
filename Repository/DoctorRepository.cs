@@ -140,18 +140,10 @@
             return treatmentRoadmaps;
         }
 
-        public async Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim)
+        public async Task<List<Booking>> GetBookingsCustomerAsync(int customerId)
         {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-
-            var doctorSchedules = await this.context.DoctorSchedules
-                        .Where(d => d.DoctorId == doctor.DoctorId)
-                        .ToListAsync();
-
-            var doctorScheduleId = doctorSchedules.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
-
             var bookings = await this.context.Bookings
-                        .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
+                        .Where(b => b.CustomerId == customerId)
                         .Include(b => b.Customer)
                         .ThenInclude(b => b.Orders)
                         .ThenInclude(b => b.OrderDetails)
@@ -522,27 +514,41 @@
             return result;
         }
 
-        public async Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int doctorIdClaim, int customerId)
+        public async Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int bookingId)
         {
-            var customer = await this.context.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
 
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
 
-            var medicalRecord = await this.context.MedicalRecords
-                        .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
-                                                && mr.CustomerId == customer.CustomerId);
-            if (medicalRecord == null) return false;
+            var orderDetailOld = await this.context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == order.OrderId);
 
-            var booking = this.mapper.Map<Booking>(dto);
-            booking.Status = "Pending";
-            booking.CustomerId = customer.CustomerId;
-            booking.Type = "Service";
+            var treatmentRoadmap = await this.context.TreatmentRoadmaps.FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == dto.TreatmentRoadmapId);
 
-            await this.doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
-
-            this.context.Bookings.Add(booking);
+            var orderDetail = new OrderDetail()
+            {
+                OrderId = order.OrderId,
+                ServiceId = orderDetailOld.ServiceId,
+                DoctorName = orderDetailOld.DoctorName,
+                ServiceName = orderDetailOld.ServiceName,
+                StageName = treatmentRoadmap.Stage,
+                DateTreatment = dto.DateTreatment,
+                TimeTreatment = dto.TimeTreatment,
+            };
+            this.context.OrderDetails.Add(orderDetail);
             await this.context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId)
+        {
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
+
+            var orderDetail = await this.context.OrderDetails
+                    .Where(od => od.OrderId == order.OrderId)
+                    .ToListAsync();
+            return orderDetail;
         }
     }
 }

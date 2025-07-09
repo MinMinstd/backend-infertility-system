@@ -6,11 +6,15 @@
 
         public DateOnly CreateAt { get; set; }
 
+        public DateOnly? TransferredAt { get; set; }
+
         public string? Quality { get; set; }
 
         public string? Type { get; set; }
 
-        public int Amount { get; set; }
+        public string? Status { get; set; }
+
+        public string? Note { get; set; }
 
         // Embryo N-1 Customer
         public int CustomerId { get; set; }
