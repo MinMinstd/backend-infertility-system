@@ -145,6 +145,11 @@ namespace infertility_system.Helpers
             this.CreateMap<Payment, HistoryPaymentDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Service.Name));
+            this.CreateMap<Payment, PaymentDetailDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Service.Name))
+                .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TreatmentRoadmap.Price));
         }
 
         private static int CalculateAge(DateOnly birthday)
