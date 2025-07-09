@@ -21,7 +21,7 @@ namespace infertility_system.Controllers
     using infertility_system.Dtos.Doctor;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
-    using infertility_system.Dtos.OrderDetailDto;
+    using infertility_system.Dtos.OrderDetail;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
     using infertility_system.Dtos.Typetests;

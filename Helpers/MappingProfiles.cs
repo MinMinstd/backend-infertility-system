@@ -12,8 +12,6 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
 
-    using infertility_system.Dtos.OrderDetailDto;
-
     using infertility_system.Dtos.Order;
     using infertility_system.Dtos.OrderDetail;
     using infertility_system.Dtos.Payment;
