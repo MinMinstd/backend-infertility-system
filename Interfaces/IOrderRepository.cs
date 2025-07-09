@@ -9,5 +9,8 @@ namespace infertility_system.Interfaces
         Task CreateOrderDetail(int orderId, int doctorId, int serviceId);
 
         Task<int> CountOrdersByCustomerId(int customerId);
+
+        Task<Order> GetOrderCurrent(int customerId);
+        Task<List<Order>> GetAllOrders();
     }
 }

@@ -11,7 +11,13 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.Feedback;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
+
     using infertility_system.Dtos.OrderDetailDto;
+
+    using infertility_system.Dtos.Order;
+    using infertility_system.Dtos.OrderDetail;
+    using infertility_system.Dtos.Payment;
+
     using infertility_system.Dtos.Service;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
@@ -128,6 +134,33 @@ namespace infertility_system.Helpers
             this.CreateMap<Booking, BookingInCustomerDto>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.FullName))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.DoctorSchedule.Doctor.ServiceDB.Name));
+
+            this.CreateMap<Order, OrderToPaymentDto>()
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.OrderDetails.FirstOrDefault().ServiceName))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => CalculateAge(src.Customer.Birthday)))
+                .ForMember(dest => dest.Wife, opt => opt.MapFrom(src => src.Wife))
+                .ForMember(dest => dest.Husband, opt => opt.MapFrom(src => src.Husband))
+                .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Customer.Phone))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Customer.Email))
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Customer.Address))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Customer.Birthday))
+                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => src.OrderDetails.FirstOrDefault().ServiceId));
+            this.CreateMap<Order, OrderDto>();
+            this.CreateMap<OrderDetail, OrderDetailDto>();
+
+            this.CreateMap<TreatmentRoadmap, TreatmentRoadmapToPaymentDto>();
+            this.CreateMap<TreatmentRoadmap, ListTreatmentRoadMapDto>()
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name));
+
+            this.CreateMap<Payment, HistoryPaymentDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Service.Name));
+            this.CreateMap<Payment, PaymentDetailDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Service.Name))
+                .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TreatmentRoadmap.Price));
         }
 
         private static int CalculateAge(DateOnly birthday)

@@ -5,6 +5,7 @@
     using infertility_system.Dtos.Admin;
     using infertility_system.Dtos.User;
     using infertility_system.Interfaces;
+    using infertility_system.Repository;
     using infertility_system.Service;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,7 @@
             builder.Services.AddScoped<Interfaces.IFeedbackRepository, Repository.FeedbackRepository>(); // Register the feedback repository
             builder.Services.AddScoped<Interfaces.IConsulationResultRepository, Repository.ConsulationResultRepository>(); // Register the authentication service
             builder.Services.AddScoped<Interfaces.IManagerRepository, Repository.ManagerRepository>(); // Register the authentication service
+            builder.Services.AddScoped<Interfaces.ITreatementRoadmapRepository, Repository.TreatmentRoadmapRepository>(); // Register the treatment roadmap repository
 
             builder.Services.AddScoped<Interfaces.IMedicalRecordRepository, Repository.MedicalRecordRepository>(); // Create, Update medicalRecord
             builder.Services.AddScoped<Interfaces.IMedicalRecordDetailRepository, Repository.MedicalRecordDetailRepository>();
@@ -52,6 +54,7 @@
             builder.Services.AddScoped<ICustomerRepository, Repository.CustomerRepository>(); // Register the customer repository
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
             builder.Services.AddScoped<IServiceRepository, Repository.ServiceRepository>();
+            builder.Services.AddScoped<IPaymentRepository, Repository.PaymentRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
 
@@ -59,6 +62,7 @@
             builder.Services.AddScoped<IGoogleAuthService, GoogleAuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IJwtService, JwtService>();
+            builder.Services.AddScoped<IVnpayService, VnpayService>();
 
             builder.Services.AddControllers();
             builder.Services.AddFluentValidationAutoValidation();
