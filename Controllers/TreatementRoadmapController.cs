@@ -28,5 +28,12 @@ namespace infertility_system.Controllers
             var treatmentRoadmapToPaymentDto = _mapper.Map<TreatmentRoadmapToPaymentDto>(treatmentRoadmap);
             return Ok(treatmentRoadmapToPaymentDto);
         }
+
+        [HttpGet("GetAllTreatmentRoadMap")]
+        public async Task<IActionResult> GetAllTreatmentRoadMap()
+        {
+            var listTreatmentRoadMap = await _treatmentRoadmapRepository.GetAllTreatmentRoadmapAsync();
+            return Ok(_mapper.Map<List<ListTreatmentRoadMapDto>>(listTreatmentRoadMap));
+        }
     }
 }

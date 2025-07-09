@@ -141,6 +141,8 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => src.OrderDetails.FirstOrDefault().ServiceId));
 
             this.CreateMap<TreatmentRoadmap, TreatmentRoadmapToPaymentDto>();
+            this.CreateMap<TreatmentRoadmap, ListTreatmentRoadMapDto>()
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name));
 
             this.CreateMap<Payment, HistoryPaymentDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
