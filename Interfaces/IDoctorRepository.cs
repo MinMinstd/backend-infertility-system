@@ -61,6 +61,8 @@
 
         Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int bookingId);
 
+        Task<bool> CreatePaymentForCustomerAsync(int bookingId, int treamentRoadmapId);
+
         Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId);
     }
 }

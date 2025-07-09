@@ -305,6 +305,11 @@
                 .WithMany(o => o.Payments)
                 .HasForeignKey(p => p.OrderId);
 
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.TreatmentRoadmap)
+                .WithMany(tr => tr.Payment)
+                .HasForeignKey(p => p.TreatmentRoadmapId);
+
             // TreatmentRoadmap
             modelBuilder.Entity<TreatmentRoadmap>()
                 .HasKey(tr => tr.TreatmentRoadmapId);
@@ -324,9 +329,9 @@
                 .HasForeignKey(tr => tr.ServiceId);
 
             modelBuilder.Entity<TreatmentRoadmap>()
-                .HasOne(tr => tr.Payment)
+                .HasMany(tr => tr.Payment)
                 .WithOne(p => p.TreatmentRoadmap)
-                .HasForeignKey<Payment>(p => p.TreatmentRoadmapId)
+                .HasForeignKey(p => p.TreatmentRoadmapId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<TreatmentRoadmap>()

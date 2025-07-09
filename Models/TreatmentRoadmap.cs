@@ -27,8 +27,8 @@
         // TreatmentRoadmap 1-N MedicalRecordDetail
         public List<MedicalRecordDetail>? MedicalRecordDetails { get; set; }
 
-        // TreatmentRoadmap 1-1 Payment
-        public Payment? Payment { get; set; }
+        // TreatmentRoadmap 1-N Payment
+        public List<Payment>? Payment { get; set; }
 
         // TreatmentRoadmap 1-N TreatmentResult
         public List<TreatmentResult>? TreatmentResults { get; set; }
