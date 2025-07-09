@@ -14,8 +14,6 @@
 
         public string? Result { get; set; }
 
-        public decimal Price { get; set; }
-
         // TreatmentResult N-1 TreatementRoadmap
         public int TreatmentRoadmapId { get; set; }
 
