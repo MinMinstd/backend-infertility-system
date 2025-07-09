@@ -7,9 +7,11 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.Doctor;
     using infertility_system.Dtos.DoctorDegree;
     using infertility_system.Dtos.DoctorSchedule;
+    using infertility_system.Dtos.Embryo;
     using infertility_system.Dtos.Feedback;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
+    using infertility_system.Dtos.OrderDetailDto;
     using infertility_system.Dtos.Service;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Dtos.TreatmentRoadmap;
@@ -110,6 +112,7 @@ namespace infertility_system.Helpers
             this.CreateMap<CreateTypeTestDto, TypeTest>();
             this.CreateMap<CreateConsultatioResultAndTypeTestDto, ConsulationResult>();
             this.CreateMap<CreateBookingCustomerDto, Booking>();
+            this.CreateMap<OrderDetail, ListAppointmentDto>();
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();

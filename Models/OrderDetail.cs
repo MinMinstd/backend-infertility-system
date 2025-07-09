@@ -8,6 +8,12 @@
 
         public string? ServiceName { get; set; }
 
+        public string? StageName { get; set; }
+
+        public DateOnly? DateTreatment { get; set; }
+
+        public string? TimeTreatment { get; set; }
+
         // OrderDetail N-1 Order
         public int? OrderId { get; set; }
 

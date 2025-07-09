@@ -49,7 +49,7 @@
 
         Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int bookingId, int customerId);
 
-        Task<List<Booking>> GetBookingsCustomerAsync(int doctorIdClaim);
+        Task<List<Booking>> GetBookingsCustomerAsync(int customerId);
 
         Task<List<Doctor>> GetDoctosForManagement();
 
@@ -59,6 +59,8 @@
 
         Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId);
 
-        Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int doctorIdClaim, int customerId);
+        Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int bookingId);
+
+        Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId);
     }
 }

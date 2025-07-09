@@ -1,4 +1,4 @@
-﻿﻿DROP DATABASE InfertilitySystem
+﻿﻿DROP DATABASE InfertilitySystem;
 CREATE DATABASE InfertilitySystem
 USE InfertilitySystem
 
@@ -61,6 +61,14 @@ select * from Users
 select * from DoctorSchedules
 select * from Services
 select * from DoctorDegrees
+select * from ConsulationResults
+select * from TypeTests
+select * from BlogPosts
+select * from Payments
+
+
+select b.CustomerId, b.BookingId from MedicalRecords mr left join Customers c on mr.CustomerId = c.CustomerId
+left join Bookings b on c.CustomerId = b.CustomerId where b.CustomerId = 1
 
 SELECT d.MedicalRecordDetailId, d.MedicalRecordId, d.TreatmentRoadmapId, t.Stage
 FROM MedicalRecordDetails d
@@ -193,21 +201,23 @@ INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Statu
 CREATE TABLE [dbo].[Bookings] (
     [BookingId]        INT            IDENTITY (1, 1) NOT NULL,
     [Date]             DATE           NOT NULL,
-    [Time]             NVARCHAR (MAX) NOT NULL,
+    [Time]             NVARCHAR (MAX) NULL,
     [Type]             NVARCHAR (MAX) NULL,
     [Status]           NVARCHAR (MAX) NULL,
     [Note]             NVARCHAR (MAX) NULL,
+    [Description]      NVARCHAR (MAX) NULL,
     [CustomerId]       INT            NULL,
     [DoctorScheduleId] INT            NULL,
     CONSTRAINT [PK_Bookings] PRIMARY KEY CLUSTERED ([BookingId] ASC),
     CONSTRAINT [FK_Bookings_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Customers] ([CustomerId]),
     CONSTRAINT [FK_Bookings_DoctorSchedules_DoctorScheduleId] FOREIGN KEY ([DoctorScheduleId]) REFERENCES [dbo].[DoctorSchedules] ([DoctorScheduleId])
 );
-
-INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, Status, Date, Time, Note, Type)
+select * from Customers
+select * from Bookings
+INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, Status, Date, Time, Note, Type, Description)
 VALUES 
-(1, 1,  N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF', N'Service'),
-(2, 7,  N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI', N'Service');
+(1, 1,  N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF', N'Service', null),
+(2, 7,  N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI', N'Service', null);
 
 
 -- Consultation_result table
@@ -278,25 +288,26 @@ VALUES
 
 -- Treatment_result table
 CREATE TABLE [dbo].[TreatmentResults] (
-    [TreatmentResultId]   INT             IDENTITY (1, 1) NOT NULL,
-    [DateTreatmentResult] DATE            NOT NULL,
-    [Stage]               NVARCHAR (MAX)  NULL,
-    [Description]         NVARCHAR (MAX)  NULL,
-    [DurationDay]         INT             NOT NULL,
-    [Price]               DECIMAL (18, 2) NOT NULL,
-    [TreatmentRoadmapId]  INT             NOT NULL,
+    [TreatmentResultId]   INT            IDENTITY (1, 1) NOT NULL,
+    [DateTreatmentResult] DATE           NOT NULL,
+    [Stage]               NVARCHAR (MAX) NULL,
+    [Description]         NVARCHAR (MAX) NULL,
+    [DurationDay]         INT            NOT NULL,
+    [Result]              NVARCHAR (MAX) NULL,
+    [TreatmentRoadmapId]  INT            NOT NULL,
     CONSTRAINT [PK_TreatmentResults] PRIMARY KEY CLUSTERED ([TreatmentResultId] ASC),
     CONSTRAINT [FK_TreatmentResults_TreatmentRoadmaps_TreatmentRoadmapId] FOREIGN KEY ([TreatmentRoadmapId]) REFERENCES [dbo].[TreatmentRoadmaps] ([TreatmentRoadmapId]) ON DELETE CASCADE
 );
 
 
-INSERT INTO [TreatmentResults] ([TreatmentRoadmapId], [DurationDay], [Stage], [DateTreatmentResult], [Price], [Description])
+INSERT INTO [TreatmentResults] 
+    ([TreatmentRoadmapId], [DurationDay], [Stage], [DateTreatmentResult], [Description], [Result])
 VALUES 
-(1, 1, 'IVF', '2025-06-01', 1000000, N'Bắt đầu tốt'),
-(2, 2, 'IUI', '2025-06-02', 800000, N'Theo dõi sát'),
-(3, 3, 'IVF', '2025-06-03', 1500000, N'Trứng phát triển'),
-(4, 4, 'IUI', '2025-06-04', 900000, N'Chuẩn bị tốt'),
-(5, 5, 'IVF', '2025-06-05', 2000000, N'Thành công');
+    (1, 1, 'IVF', '2025-06-01', N'Bắt đầu tốt', N'Đang theo dõi'),
+    (2, 2, 'IUI', '2025-06-02', N'Theo dõi sát', N'Cần theo dõi tiếp'),
+    (3, 3, 'IVF', '2025-06-03', N'Trứng phát triển', N'Hiệu quả tốt'),
+    (4, 4, 'IUI', '2025-06-04', N'Chuẩn bị tốt', N'Đạt yêu cầu'),
+    (5, 5, 'IVF', '2025-06-05', N'Thành công', N'Hoàn thành');
 
 
 -- Type_test table
@@ -421,7 +432,7 @@ CREATE TABLE [dbo].[Orders] (
     CONSTRAINT [FK_Orders_Managers_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Managers] ([ManagerId])
 );
 
-select * from Bookings
+select * from Orders
 INSERT INTO [Orders] ([BookingId], [CustomerId], [ManagerId], [Date], [Time], [Status], [Wife], [Husband])
 VALUES 
 (1, 1, 1, '2025-07-01', '08:00:00', N'Pending', N'Đoàn Ngọc Khánh', N'Nguyen Van B'),
@@ -431,11 +442,14 @@ VALUES
 
 -- Order_detail table
 CREATE TABLE [dbo].[OrderDetails] (
-    [OrderDetailId] INT             IDENTITY (1, 1) NOT NULL,
-    [DoctorName]    NVARCHAR (MAX)  NULL,
-    [ServiceName]   NVARCHAR (MAX)  NULL,
-    [OrderId]       INT             NULL,
-    [ServiceId]     INT             NULL,
+    [OrderDetailId] INT            IDENTITY (1, 1) NOT NULL,
+    [DoctorName]    NVARCHAR (MAX) NULL,
+    [ServiceName]   NVARCHAR (MAX) NULL,
+    [StageName]     NVARCHAR (MAX) NULL,
+    [DateTreatment] DATE           NULL,
+    [TimeTreatment] NVARCHAR (MAX) NULL,
+    [OrderId]       INT            NULL,
+    [ServiceId]     INT            NULL,
     CONSTRAINT [PK_OrderDetails] PRIMARY KEY CLUSTERED ([OrderDetailId] ASC),
     CONSTRAINT [FK_OrderDetails_Orders_OrderId] FOREIGN KEY ([OrderId]) REFERENCES [dbo].[Orders] ([OrderId]),
     CONSTRAINT [FK_OrderDetails_Services_ServiceId] FOREIGN KEY ([ServiceId]) REFERENCES [dbo].[Services] ([ServiceDBId])
@@ -446,11 +460,14 @@ INSERT INTO [dbo].[OrderDetails]
     [OrderId], 
     [ServiceId], 
     [DoctorName], 
-    [ServiceName]
+    [ServiceName],
+	[StageName],
+	[DateTreatment],
+	[TimeTreatment]
 )
-VALUES 
-(1, 1, N'Doctor 1', N'IVF'),
-(2, 2, N'Doctor 2', N'IVF');
+VALUES
+(1, 1, N'Doctor 1', N'IVF', null, null, null),
+(2, 2, N'Doctor 2', N'IVF', null, null, null);
 
 
 
@@ -525,21 +542,39 @@ VALUES
 
 -- Embryo table
 CREATE TABLE [dbo].[Embryos] (
-    [EmbryoId]   INT            IDENTITY (1, 1) NOT NULL,
-    [CreateAt]   DATE           NOT NULL,
-    [Quality]    NVARCHAR (MAX) NULL,
-    [Type]       NVARCHAR (MAX) NULL,
-    [Amount]     INT            NOT NULL,
-    [CustomerId] INT            NOT NULL,
+    [EmbryoId]      INT            IDENTITY (1, 1) NOT NULL,
+    [CreateAt]      DATE           NOT NULL,
+    [TransferredAt] DATE           NULL,
+    [Quality]       NVARCHAR (MAX) NULL,
+    [Type]          NVARCHAR (MAX) NULL,
+    [Status]        NVARCHAR (MAX) NULL,
+    [Note]          NVARCHAR (MAX) NULL,
+    [CustomerId]    INT            NOT NULL,
     CONSTRAINT [PK_Embryos] PRIMARY KEY CLUSTERED ([EmbryoId] ASC),
     CONSTRAINT [FK_Embryos_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Customers] ([CustomerId]) ON DELETE CASCADE
 );
+select * from Customers
 
-
-INSERT INTO [Embryos] ([CustomerId], [CreateAt], [Quality], [Type], [Amount])
+INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
 VALUES 
-(1, '2025-06-01', N'Tốt', 'D5', 5),
-(2, '2025-06-02', N'Trung bình', 'D3', 4);
+(1, '2025-07-01', NULL, N'Tốt', N'NA', N'Đạt chuẩn',  N'Trứng chọc hút lần 1, số lượng tốt');
+
+INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
+VALUES 
+(1, '2025-07-02', NULL, N'Trung bình', N'NA', N'Đạt chuẩn',  N'Trứng chờ thụ tinh ICSI');
+
+INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
+VALUES 
+(1, '2025-07-03', NULL, N'Kém', N'NA', N'Không đạt',  N'Trứng không đạt tiêu chuẩn');
+
+INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
+VALUES 
+(1, '2025-07-04', NULL, N'Tốt', N'NA', N'Đạt chuẩn',  N'Trứng đông lạnh sau chọc hút');
+
+INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
+VALUES 
+(1, '2025-07-05', NULL, N'Trung bình', N'NA', N'Đạt chuẩn',  N'Trứng thu được, chờ thụ tinh IVF');
+
 
 
 select s.Name, tr.Stage ,mrd.Note, mrd.TestResult, mrd.Type, mrd.Date as N'Ngày thực hiện', d.FullName as 'DoctorName' from Services s 
