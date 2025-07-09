@@ -13,6 +13,13 @@ namespace infertility_system.Repository
             _context = context;
         }
 
+        public async Task<List<TreatmentRoadmap>> GetAllTreatmentRoadmapAsync()
+        {
+            return await _context.TreatmentRoadmaps
+                .Include(x => x.Service)
+                .ToListAsync();
+        }
+
         public async Task<TreatmentRoadmap> GetTreatmentRoadmapByIdAsync(int treatmentRoadmapId, int serviceId)
         {
             return await _context.TreatmentRoadmaps

@@ -6,7 +6,7 @@
 
         public string DoctorName { get; set; }
 
-        public string Note { get; set; }
+        public string Type { get; set; }
 
         public DateOnly Date { get; set; }
 
