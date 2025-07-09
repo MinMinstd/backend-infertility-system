@@ -9,5 +9,8 @@
         public decimal PriceByTreatement { get; set; }
         public string Method { get; set; }
         public string Status { get; set; }
+        public int TreatmentRoadmapId { get; set; }
+        public string Stage { get; set; }
+        public decimal Price { get; set; }
     }
 }

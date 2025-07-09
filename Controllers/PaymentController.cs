@@ -2,7 +2,9 @@
 using infertility_system.Dtos.Payment;
 using infertility_system.Interfaces;
 using infertility_system.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace infertility_system.Controllers
 {
@@ -18,17 +20,27 @@ namespace infertility_system.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("GetHistoryPayment")]
+        [HttpGet("GetAllHistoryPayment")]
         public async Task<IActionResult> GetHistoryPayment() 
         {
             var listHistory = await _paymentRepository.GetAllPayment();
             return this.Ok(this._mapper.Map<List<HistoryPaymentDto>>(listHistory));
         }
 
+        [HttpGet("GetHistoryPaymentByUserId")]
+        [Authorize]
+        public async Task<IActionResult> GetListPaymentById()
+        {
+            var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var listPayment = await _paymentRepository.GetListPaymentByUserId(userId);
+            return this.Ok(this._mapper.Map<List<HistoryPaymentDto>>(listPayment));
+        }
+
         [HttpGet("GetPaymentDetail/{paymentId}")]
         public async Task<IActionResult> GetPaymentDetailById(int paymentId)
         {
-            return null;
+            var payment = await _paymentRepository.GetPaymentById(paymentId);
+            return this.Ok(this._mapper.Map<PaymentDetailDto>(payment));
         }
     }
 }

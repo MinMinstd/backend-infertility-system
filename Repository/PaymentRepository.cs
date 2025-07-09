@@ -21,5 +21,26 @@ namespace infertility_system.Repository
                         .ThenInclude(tr => tr.Service)
                     .ToListAsync();
         }
+
+        public async Task<List<Payment>> GetListPaymentByUserId(int userId)
+        {
+            return await _context.Payments
+                    .Include(x => x.Order)
+                        .ThenInclude(o => o.Customer)
+                    .Include(x => x.TreatmentRoadmap)
+                        .ThenInclude(tr => tr.Service)
+                    .Where(x => x.Order.Customer.UserId == userId)
+                    .ToListAsync();
+        }
+
+        public async Task<Payment> GetPaymentById(int id)
+        {
+            return await _context.Payments
+                    .Include(x => x.Order)
+                        .ThenInclude(o => o.Customer)
+                    .Include(x => x.TreatmentRoadmap)
+                        .ThenInclude(tr => tr.Service)
+                    .FirstOrDefaultAsync(x => x.PaymentId == id);
+        }
     }
 }
