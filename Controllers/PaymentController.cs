@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using infertility_system.Dtos.Payment;
 using infertility_system.Interfaces;
-using infertility_system.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -21,7 +20,7 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet("GetAllHistoryPayment")]
-        public async Task<IActionResult> GetHistoryPayment() 
+        public async Task<IActionResult> GetHistoryPayment()
         {
             var listHistory = await _paymentRepository.GetAllPayment();
             return this.Ok(this._mapper.Map<List<HistoryPaymentDto>>(listHistory));
@@ -41,6 +40,24 @@ namespace infertility_system.Controllers
         {
             var payment = await _paymentRepository.GetPaymentById(paymentId);
             return this.Ok(this._mapper.Map<PaymentDetailDto>(payment));
+        }
+
+        [HttpGet("GetPaymentByOrderId/{orderId}")]
+        public async Task<IActionResult> GetPaymentByOrderId(int orderId)
+        {
+            var payment = await _paymentRepository.GetPaymentByOrderId(orderId);
+            if (payment == null)
+            {
+                return NotFound("Payment not found for the given order ID.");
+            }
+            return this.Ok(this._mapper.Map<PaymentOnPendingDto>(payment));
+        }
+
+        [HttpPut("UpdateStatusPayment/{paymentId}")]
+        public async Task<IActionResult> UpdateStatusPayment(int paymentId)
+        {
+            await _paymentRepository.UpdateStatusPayment(paymentId);
+            return this.Ok("Payment status updated successfully.");
         }
     }
 }

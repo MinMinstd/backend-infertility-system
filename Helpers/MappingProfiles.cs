@@ -11,7 +11,7 @@ namespace infertility_system.Helpers
     using infertility_system.Dtos.Feedback;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
-    
+
     using infertility_system.Dtos.Order;
     using infertility_system.Dtos.OrderDetail;
     using infertility_system.Dtos.Payment;
@@ -141,13 +141,12 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Customer.Phone))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Customer.Address))
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.Customer.Birthday))
-                .ForMember(dest => dest.ServiceId, opt => opt.MapFrom(src => src.OrderDetails.FirstOrDefault().ServiceId));
+                .ForMember(dest => dest.StageName, opt => opt.MapFrom(src => src.OrderDetails.FirstOrDefault().StageName))
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId));
             this.CreateMap<Order, OrderDto>();
             this.CreateMap<OrderDetail, OrderDetailDto>();
 
-            this.CreateMap<TreatmentRoadmap, TreatmentRoadmapToPaymentDto>();
             this.CreateMap<TreatmentRoadmap, ListTreatmentRoadMapDto>()
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name));
 
@@ -159,6 +158,13 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Service.Name))
                 .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TreatmentRoadmap.Price));
+
+            this.CreateMap<Payment, PaymentOnPendingDto>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.TreatmentRoadmapId, opt => opt.MapFrom(src => src.TreatmentRoadmapId))
+                .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TreatmentRoadmap.Price))
+                .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => src.PaymentId));
         }
 
         private static int CalculateAge(DateOnly birthday)

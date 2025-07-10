@@ -1,4 +1,4 @@
-namespace infertility_system.Repository
+﻿namespace infertility_system.Repository
 {
     using infertility_system.Data;
     using infertility_system.Interfaces;
@@ -82,13 +82,13 @@ namespace infertility_system.Repository
         public async Task<Order> GetOrderCurrent(int customerId)
         {
             return await this.context.Orders
-                .Include(o => o.OrderDetails)
-                .Where(o => o.CustomerId == customerId && o.Status == "Pending")
-                .OrderByDescending(o => o.Date)
-                .ThenByDescending(o => o.Time)
-                .FirstOrDefaultAsync();
+                    .Include(o => o.OrderDetails
+                        .OrderByDescending(od => od.OrderDetailId) // Sắp xếp OrderDetail giảm dần (vd: Id lớn nhất = mới nhất)
+                        .Take(1))
+                    .Where(o => o.CustomerId == customerId && o.Status == "Pending")
+                    .OrderByDescending(o => o.Date)
+                    .ThenByDescending(o => o.Time)
+                    .FirstOrDefaultAsync();
         }
-
-
     }
 }

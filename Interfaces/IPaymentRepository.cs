@@ -5,7 +5,13 @@ namespace infertility_system.Interfaces
     public interface IPaymentRepository
     {
         Task<List<Payment>> GetAllPayment();
+
         Task<Payment> GetPaymentById(int id);
+
         Task<List<Payment>> GetListPaymentByUserId(int userId);
+
+        Task<Payment> GetPaymentByOrderId(int orderId);
+
+        Task UpdateStatusPayment(int paymentId);
     }
 }
