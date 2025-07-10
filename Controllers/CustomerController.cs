@@ -7,6 +7,7 @@
     using infertility_system.Dtos.Embryo;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
+    using infertility_system.Dtos.OrderDetail;
     using infertility_system.Dtos.User;
     using infertility_system.Interfaces;
     using infertility_system.Models;
@@ -199,6 +200,14 @@
 
             var medicalRecord = await this.customerRepository.GetInformationServiceAsync(userIdClaims);
             var result = this.mapper.Map<List<UseServiceByCustomerDto>>(medicalRecord);
+            return this.Ok(result);
+        }
+
+        [HttpGet("getListAppointment/{bookingId}")]
+        public async Task<IActionResult> GetListAppointment(int bookingId)
+        {
+            var orderDetail = await this.customerRepository.GetListAppointmentAsync(bookingId);
+            var result = this.mapper.Map<List<ListAppointmentDto>>(orderDetail);
             return this.Ok(result);
         }
     }

@@ -75,6 +75,18 @@
 
         }
 
+        public async Task<List<OrderDetail>> GetListAppointmentAsync(int bookingId)
+        {
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
+
+            var orderDetail = await this.context.OrderDetails
+                        .Where(od => od.OrderId == order.OrderId)
+                        .ToListAsync();
+            return orderDetail;
+        }
+
         public async Task<List<Doctor>> GetListDoctorsAsync()
         {
             return await this.context.Doctors.Include(d => d.DoctorDegrees).ToListAsync();
