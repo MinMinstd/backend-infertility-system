@@ -42,5 +42,24 @@ namespace infertility_system.Repository
                         .ThenInclude(tr => tr.Service)
                     .FirstOrDefaultAsync(x => x.PaymentId == id);
         }
+
+        public async Task<Payment> GetPaymentByOrderId(int orderId)
+        {
+            return await _context.Payments
+                .Include(x => x.TreatmentRoadmap)
+                .Where(x => x.OrderId == orderId && x.Status == "Pending")
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateStatusPayment(int paymentId)
+        {
+            var payment = await _context.Payments.FindAsync(paymentId);
+            if (payment != null && payment.Status == "Pending")
+            {
+                payment.Status = "Đã Thanh Toán";
+                _context.Payments.Update(payment);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

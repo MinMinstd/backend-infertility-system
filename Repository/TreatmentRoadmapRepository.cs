@@ -19,12 +19,5 @@ namespace infertility_system.Repository
                 .Include(x => x.Service)
                 .ToListAsync();
         }
-
-        public async Task<TreatmentRoadmap> GetTreatmentRoadmapByIdAsync(int treatmentRoadmapId, int serviceId)
-        {
-            return await _context.TreatmentRoadmaps
-                .Where(tr => tr.TreatmentRoadmapId == treatmentRoadmapId && tr.ServiceId == serviceId)
-                .FirstOrDefaultAsync();
-        }
     }
 }
