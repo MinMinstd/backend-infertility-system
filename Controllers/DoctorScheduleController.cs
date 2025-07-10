@@ -1,5 +1,6 @@
 ﻿namespace infertility_system.Controllers
 {
+    using System.Security.Claims;
     using AutoMapper;
     using infertility_system.Dtos.DoctorSchedule;
     using infertility_system.Interfaces;
@@ -70,6 +71,16 @@
             var doctorSchedule = await this.doctorScheduleRepository.GetScheduleByDoctorId(doctorId);
             var doctorScheduleDto = this.mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedule);
             return this.Ok(doctorScheduleDto);
+        }
+
+        [HttpGet("GetListScheduleForDoctor")]
+        public async Task<IActionResult> GetListScheduleForDoctor([FromQuery] DateOnly date)
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var doctorSchedules = await this.doctorScheduleRepository.GetListScheduleForDoctorAsync(doctorIdClaims, date);
+            var result = this.mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedules);
+            return this.Ok(result);
         }
     }
 }
