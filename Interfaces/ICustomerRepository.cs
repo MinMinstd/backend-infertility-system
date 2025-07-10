@@ -22,5 +22,7 @@
         Task<List<Booking>> GetBookingsAsync(int userId);
 
         Task<List<MedicalRecord>> GetInformationServiceAsync(int userId);
+
+        Task<List<OrderDetail>> GetListAppointmentAsync(int bookingId);
     }
 }
