@@ -82,5 +82,15 @@
             var result = this.mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedules);
             return this.Ok(result);
         }
+
+        [HttpGet("GetFullScheduleForDoctor")]
+        public async Task<IActionResult> GetFullScheduleForDoctor()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            var doctorSchedules = await this.doctorScheduleRepository.GetFullScheduleAsync(doctorIdClaims);
+            var result = this.mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedules);
+            return this.Ok(result);
+        }
     }
 }

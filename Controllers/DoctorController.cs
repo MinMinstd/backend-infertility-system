@@ -199,6 +199,15 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
+        [HttpGet("searchCustomerByName/{keyword}")]
+        public async Task<IActionResult> SearchCustomerByName(string keyword)
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var customer = await this.doctorRepository.FindCustomerByNameAsync(keyword, doctorIdClaims);
+            var result = this.mapper.Map<List<ListCustomerInDoctorDto>>(customer);
+            return this.Ok(result);
+        }
+
         // [Authorize(Roles = "Doctor")]
         [HttpPost("CreateMedicalRecord/{customerId}")]
         public async Task<IActionResult> CreateMedicalRecord(
@@ -323,5 +332,11 @@ namespace infertility_system.Controllers
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 
+        [HttpPut("updateStatusBooking/{bookingId}")]
+        public async Task<IActionResult> UpdateStatusBooking([FromQuery] string status, int bookingId)
+        {
+            var result = await this.doctorRepository.UpdateStatusBookingAfterCompleteAsync(bookingId, status);
+            return result ? this.Ok("Successfully") : this.BadRequest("Fail");
+        }
     }
 }

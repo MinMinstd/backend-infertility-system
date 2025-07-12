@@ -64,5 +64,9 @@
         Task<bool> CreatePaymentForCustomerAsync(int bookingId, int treamentRoadmapId);
 
         Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId);
+
+        Task<bool> UpdateStatusBookingAfterCompleteAsync(int bookingId, string status);
+
+        Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim);
     }
 }
