@@ -584,5 +584,22 @@
 
             return true;
         }
+
+        public async Task<bool> UpdateStatusBookingAfterCompleteAsync(int bookingId, string status)
+        {
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
+            if (booking == null) return false;
+            booking.Status = status;
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim)
+        {
+            var customerLists = await this.GetListCustomerAsync(doctorIdClaim);
+
+            customerLists = customerLists.Where(x => x.FullName.ToLower().Contains(name.ToLower())).ToList();
+            return customerLists;
+        }
     }
 }

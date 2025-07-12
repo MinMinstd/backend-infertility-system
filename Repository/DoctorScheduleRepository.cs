@@ -58,5 +58,15 @@ namespace infertility_system.Repository
                         .ToListAsync();
             return doctorSchedules;
         }
+
+        public async Task<List<DoctorSchedule>> GetFullScheduleAsync(int userId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == userId);
+
+            var doctorSchedules = await this.context.DoctorSchedules
+                        .Where(ds => ds.DoctorId == doctor.DoctorId)
+                        .ToListAsync();
+            return doctorSchedules;
+        }
     }
 }
