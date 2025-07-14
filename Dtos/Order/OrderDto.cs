@@ -12,6 +12,6 @@ namespace infertility_system.Dtos.Order
 
         public string? Husband { get; set; }
 
-        public List<OrderDetailDto> orderDetailList { get; set; }
+        public List<OrderDetailDto>? orderDetailList { get; set; }
     }
 }

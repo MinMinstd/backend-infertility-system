@@ -23,7 +23,7 @@
 
         public async Task<List<OrderDetail>> GetListOrderDetailByOrderId(int OrdersId)
         {
-            return await _context.OrderDetails.Where(x => x.OrderId == OrdersId).ToListAsync();
+            return await _context.OrderDetails.Where(x => x.OrderId == OrdersId && !string.IsNullOrEmpty(x.StageName) && !string.IsNullOrEmpty(x.TimeTreatment)).ToListAsync();
         }
     }
 }
