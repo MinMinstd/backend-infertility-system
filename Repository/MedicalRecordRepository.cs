@@ -82,6 +82,16 @@
                 return false;
             }
 
+            var startDate = medicalRecord.StartDate;
+            var endDate = updateRecord.EndDate;
+            if (startDate < endDate)
+            {
+                medicalRecord.EndDate = updateRecord.EndDate;
+            }
+            else
+            {
+                throw new ArgumentException("Ngày kết thúc phải sau ngày bắt đầu.");
+            }
             medicalRecord.Stage = updateRecord.Stage;
             medicalRecord.Diagnosis = updateRecord.Diagnosis;
             medicalRecord.Status = updateRecord.Status;

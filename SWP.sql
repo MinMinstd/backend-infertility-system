@@ -65,7 +65,7 @@ select * from ConsulationResults
 select * from TypeTests
 select * from BlogPosts
 select * from Payments
-
+select * from Embryos
 
 select b.CustomerId, b.BookingId from MedicalRecords mr left join Customers c on mr.CustomerId = c.CustomerId
 left join Bookings b on c.CustomerId = b.CustomerId where b.CustomerId = 1
@@ -215,7 +215,7 @@ CREATE TABLE [dbo].[Bookings] (
 select * from Customers
 select * from Bookings
 INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, Status, Date, Time, Note, Type, Description)
-VALUES 
+VALUES
 (1, 1,  N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF', N'Service', null),
 (2, 7,  N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI', N'Service', null);
 
@@ -549,31 +549,24 @@ CREATE TABLE [dbo].[Embryos] (
     [Type]          NVARCHAR (MAX) NULL,
     [Status]        NVARCHAR (MAX) NULL,
     [Note]          NVARCHAR (MAX) NULL,
-    [CustomerId]    INT            NOT NULL,
+    [OrderId]       INT            NOT NULL,
     CONSTRAINT [PK_Embryos] PRIMARY KEY CLUSTERED ([EmbryoId] ASC),
-    CONSTRAINT [FK_Embryos_Customers_CustomerId] FOREIGN KEY ([CustomerId]) REFERENCES [dbo].[Customers] ([CustomerId]) ON DELETE CASCADE
+    CONSTRAINT [FK_Embryos_Orders_OrderId] FOREIGN KEY ([OrderId]) REFERENCES [dbo].[Orders] ([OrderId]) ON DELETE CASCADE
 );
-select * from Customers
 
-INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
+INSERT INTO Embryos (CreateAt, TransferredAt, Quality, Type, Status, Note, OrderId)
 VALUES 
-(1, '2025-07-01', NULL, N'Tốt', N'NA', N'Đạt chuẩn',  N'Trứng chọc hút lần 1, số lượng tốt');
+('2025-07-01', NULL, N'Tốt',         N'NA', N'Đạt chuẩn',  N'Trứng chọc hút lần 1, số lượng tốt', 1),
+('2025-07-02', NULL, N'Trung bình',  N'NA', N'Đạt chuẩn',  N'Trứng chờ thụ tinh ICSI',            1),
+('2025-07-03', NULL, N'Kém',         N'NA', N'Không đạt',  N'Trứng không đạt tiêu chuẩn',         1),
+('2025-07-04', NULL, N'Tốt',         N'NA', N'Đạt chuẩn',  N'Trứng đông lạnh sau chọc hút',       1),
+('2025-07-05', NULL, N'Trung bình',  N'NA', N'Đạt chuẩn',  N'Trứng thu được, chờ thụ tinh IVF',   1),
+('2025-07-06', NULL, N'Tốt',         N'NA', N'Đạt chuẩn',  N'Trứng chọc hút lần 2, số lượng tốt', 2),
+('2025-07-07', NULL, N'Trung bình',  N'NA', N'Đạt chuẩn',  N'Trứng chờ thụ tinh ICSI',            2),
+('2025-07-08', NULL, N'Kém',         N'NA', N'Không đạt',  N'Trứng không đạt tiêu chuẩn',         2),
+('2025-07-09', NULL, N'Tốt',         N'NA', N'Đạt chuẩn',  N'Trứng đông lạnh sau chọc hút',       2),
+('2025-07-10', NULL, N'Trung bình',  N'NA', N'Đạt chuẩn',  N'Trứng thu được, chờ thụ tinh IVF',   2);
 
-INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
-VALUES 
-(1, '2025-07-02', NULL, N'Trung bình', N'NA', N'Đạt chuẩn',  N'Trứng chờ thụ tinh ICSI');
-
-INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
-VALUES 
-(1, '2025-07-03', NULL, N'Kém', N'NA', N'Không đạt',  N'Trứng không đạt tiêu chuẩn');
-
-INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
-VALUES 
-(1, '2025-07-04', NULL, N'Tốt', N'NA', N'Đạt chuẩn',  N'Trứng đông lạnh sau chọc hút');
-
-INSERT INTO Embryos ([CustomerId], [CreateAt], [TransferredAt], [Quality], [Type], [Status], [Note])
-VALUES 
-(1, '2025-07-05', NULL, N'Trung bình', N'NA', N'Đạt chuẩn',  N'Trứng thu được, chờ thụ tinh IVF');
 
 
 

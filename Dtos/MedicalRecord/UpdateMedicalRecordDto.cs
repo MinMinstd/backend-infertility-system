@@ -2,6 +2,8 @@
 {
     public class UpdateMedicalRecordDto
     {
+        public DateOnly EndDate { get; set; }
+
         public string? Stage { get; set; }
 
         public string? Diagnosis { get; set; }
