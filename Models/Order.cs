@@ -37,5 +37,8 @@ namespace infertility_system.Models
 
         // Order 1-N Payment
         public List<Payment>? Payments { get; set; }
+
+        //Order 1-N Embryo
+        public List<Embryo>? Embryos { get; set; }
     }
 }

@@ -17,8 +17,8 @@
         public string? Note { get; set; }
 
         // Embryo N-1 Customer
-        public int CustomerId { get; set; }
+        public int OrderId { get; set; }
 
-        public Customer? Customer { get; set; }
+        public Order? Order { get; set; }
     }
 }
