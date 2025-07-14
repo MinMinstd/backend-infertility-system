@@ -97,9 +97,9 @@
 
             // Embryo
             modelBuilder.Entity<Embryo>()
-                .HasOne(e => e.Customer)
+                .HasOne(e => e.Order)
                 .WithMany(c => c.Embryos)
-                .HasForeignKey(e => e.CustomerId);
+                .HasForeignKey(e => e.OrderId);
 
             // Customer
             modelBuilder.Entity<Customer>()
@@ -200,6 +200,11 @@
                 .HasOne(o => o.Booking)
                 .WithOne(b => b.Order)
                 .HasForeignKey<Order>(o => o.BookingId);
+
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Embryos)
+                .WithOne(e => e.Order)
+                .HasForeignKey(e => e.OrderId);
 
             // Booking
             modelBuilder.Entity<Booking>()
