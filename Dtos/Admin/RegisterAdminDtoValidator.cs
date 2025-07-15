@@ -2,7 +2,7 @@
 {
     using FluentValidation;
 
-    public class RegisterAdminDtoValidator : AbstractValidator<RegisterRequestFromAdminDto>
+    public class RegisterAdminDtoValidator : AbstractValidator<RegisterRequestFromManagernDto>
     {
         public RegisterAdminDtoValidator()
         {
@@ -26,20 +26,20 @@
                .Matches("[0-9]").WithMessage("Mật khẩu phải có số")
                .Matches("[^a-zA-Z0-9]").WithMessage("Mật khẩu phải có ký tự đặc biệt");
 
-            this.RuleFor(u => u.Role)
-                .NotEmpty().WithMessage("Role không được để trống");
+            //this.RuleFor(u => u.Role)
+            //    .NotEmpty().WithMessage("Role không được để trống");
 
-            this.RuleFor(u => u.Experience)
-                .NotEmpty().WithMessage("Experience không được để trống")
-                .LessThanOrEqualTo(100).WithMessage("Experience phải lớn hơn 0 và nhỏ hơn bằng 100")
-                .When(u => u.Role == "Doctor");
+            //this.RuleFor(u => u.Experience)
+            //    .NotEmpty().WithMessage("Experience không được để trống")
+            //    .LessThanOrEqualTo(100).WithMessage("Experience phải lớn hơn 0 và nhỏ hơn bằng 100")
+            //    .When(u => u.Role == "Doctor");
 
-            this.RuleFor(u => u.Experience)
-                .Equal(0).WithMessage("Chỉ bác sĩ mới được có kinh nghiệm")
-                .When(u => u.Role != "Doctor");
+            //this.RuleFor(u => u.Experience)
+            //    .Equal(0).WithMessage("Chỉ bác sĩ mới được có kinh nghiệm")
+            //    .When(u => u.Role != "Doctor");
 
-            this.RuleFor(u => u.Address)
-                .NotEmpty().WithMessage("Địa chỉ không được để trống");
+            //this.RuleFor(u => u.Address)
+            //    .NotEmpty().WithMessage("Địa chỉ không được để trống");
         }
     }
 }
