@@ -64,7 +64,10 @@ namespace infertility_system.Repository
 
         public async Task<List<Payment>> GetListPaymentByMonthYearandIdTreatement(int month, int year, int id)
         {
-            return await _context.Payments.Where(x => x.Date.Month == month && x.Date.Year == year && x.TreatmentRoadmapId == id).ToListAsync();
+            return await _context.Payments.Where(x => x.Date.Month == month && x.Date.Year == year && x.TreatmentRoadmapId == id)
+                .Include(x => x.Order)
+                        .ThenInclude(o => o.Customer)
+                .ToListAsync();
         }
     }
 }
