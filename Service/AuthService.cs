@@ -125,11 +125,11 @@
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<string?> RegisterDoctorAndManagerAsync(RegisterRequestFromAdminDto userDto)
+        public async Task<bool> RegisterDoctorAsync(RegisterRequestFromManagernDto userDto)
         {
-            if (userDto.Role != "Manager" && userDto.Role != "Doctor")
+            if (userDto == null)
             {
-                return "Admin chỉ có thể tạo Manager hoặc Doctor!";
+                return false;
             }
 
             this.CreatePasswordHash(userDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -139,39 +139,38 @@
                 Phone = userDto.Phone,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Role = userDto.Role,
+                Role = "Doctor",
+                IsActive = true,
+                TotalActiveDays = 1,
+                LastActiveAt = DateOnly.FromDateTime(DateTime.UtcNow),
             };
 
             this.context.Users.Add(newUser);
             await this.context.SaveChangesAsync();
 
-            if (userDto.Role == "Doctor")
+            var newDoctor = new Doctor
             {
-                var newDoctor = new Doctor
-                {
-                    UserId = newUser.UserId,
-                    FullName = userDto.FullName,
-                    Email = userDto.Email,
-                    Phone = userDto.Phone,
-                    Experience = userDto.Experience,
-                };
-                this.context.Doctors.Add(newDoctor);
-            }
-            else if (userDto.Role == "Manager")
-            {
-                var newManager = new Manager
-                {
-                    UserId = newUser.UserId,
-                    FullName = userDto.FullName,
-                    Email = userDto.Email,
-                    Phone = userDto.Phone,
-                    Address = userDto.Address,
-                };
-                this.context.Managers.Add(newManager);
-            }
-
+                UserId = newUser.UserId,
+                FullName = userDto.FullName,
+                Email = userDto.Email,
+                Phone = userDto.Phone,
+                Experience = userDto.Experience,
+                ServiceDBId = userDto.ServiceDBId,
+            };
+            this.context.Doctors.Add(newDoctor);
             await this.context.SaveChangesAsync();
-            return "Tài khoản đã được tạo thành công!";
+
+            var newDoctorDegree = new DoctorDegree
+            {
+                DegreeName = userDto.DegreeName,
+                DoctorId = newDoctor.DoctorId,
+                GraduationYear = userDto.GraduationYear,
+                Description = userDto.Description,
+            };
+            this.context.DoctorDegrees.Add(newDoctorDegree);
+            await this.context.SaveChangesAsync();
+
+            return true; // Trả về true nếu đăng ký thành công
         }
 
         public async Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto)
