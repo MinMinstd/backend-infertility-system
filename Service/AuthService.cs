@@ -141,6 +141,8 @@
                 PasswordSalt = passwordSalt,
                 Role = "Doctor",
                 IsActive = true,
+                TotalActiveDays = 1,
+                LastActiveAt = DateOnly.FromDateTime(DateTime.UtcNow),
             };
 
             this.context.Users.Add(newUser);
@@ -163,6 +165,7 @@
                 DegreeName = userDto.DegreeName,
                 DoctorId = newDoctor.DoctorId,
                 GraduationYear = userDto.GraduationYear,
+                Description = userDto.Description,
             };
             this.context.DoctorDegrees.Add(newDoctorDegree);
             await this.context.SaveChangesAsync();

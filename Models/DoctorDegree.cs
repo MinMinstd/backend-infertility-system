@@ -8,6 +8,8 @@
 
         public int GraduationYear { get; set; }
 
+        public string? Description { get; set; }
+
         // DoctorDegree N-1 Doctor
         public int DoctorId { get; set; }
 

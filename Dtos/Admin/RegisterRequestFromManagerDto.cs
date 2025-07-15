@@ -16,6 +16,8 @@
 
         public string? DegreeName { get; set; }
 
+        public string? Description { get; set; }
+
         public int GraduationYear { get; set; }
     }
 }
