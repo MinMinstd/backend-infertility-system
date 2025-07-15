@@ -4,6 +4,7 @@
     using infertility_system.Dtos.Service;
     using infertility_system.Helpers;
     using infertility_system.Interfaces;
+    using infertility_system.Models;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
@@ -41,6 +42,61 @@
             var services = await this.serviceRepository.GetServicesForManagement();
             var servicesDto = this.mapper.Map<List<ServiceToDtoForList>>(services);
             return this.Ok(servicesDto);
+        }
+
+        [HttpPost("AddService")]
+        public async Task<IActionResult> AddService([FromBody] RequestServiceDto serviceDto)
+        {
+            if (serviceDto == null)
+            {
+                return BadRequest("Service data is null.");
+            }
+
+            if (string.IsNullOrEmpty(serviceDto.Name) || string.IsNullOrEmpty(serviceDto.Description))
+            {
+                return BadRequest("Service name and description cannot be null.");
+            }
+
+            var service = this.mapper.Map<ServiceDB>(serviceDto);
+            service.ManagerId = 1;
+            await this.serviceRepository.AddServiceAsync(service);
+            return this.Ok("Service added successfully.");
+        }
+
+        [HttpGet("GetServiceById/{serviceDBId}")]
+        public async Task<IActionResult> GetServiceById(int serviceDBId)
+        {
+            var service = await this.serviceRepository.GetServiceByIdAsync(serviceDBId);
+            if (service == null)
+            {
+                return NotFound("Service not found.");
+            }
+
+            var serviceDto = this.mapper.Map<RequestServiceDto>(service);
+            return this.Ok(serviceDto);
+        }
+
+        [HttpPut("UpdateService")]
+        public async Task<IActionResult> UpdateService(int serviceDBId, [FromBody] RequestServiceDto serviceDto)
+        {
+            if (serviceDto == null)
+            {
+                return BadRequest("Service data is null.");
+            }
+
+            if (string.IsNullOrEmpty(serviceDto.Name) || string.IsNullOrEmpty(serviceDto.Description))
+            {
+                return BadRequest("Service name and description cannot be null.");
+            }
+
+            var service = this.mapper.Map<ServiceDB>(serviceDto);
+            var result = await this.serviceRepository.UpdateServiceAsync(serviceDBId, service);
+            if (!result)
+            {
+                return NotFound("Service not found.");
+            }
+
+            return this.Ok("Service updated successfully.");
         }
     }
 }
