@@ -35,5 +35,34 @@
         {
             return await this.context.Services.ToListAsync();
         }
+
+        public async Task AddServiceAsync(ServiceDB service)
+        {
+            await this.context.Services.AddAsync(service);
+            await this.context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateServiceAsync(int serviceDBId, ServiceDB service)
+        {
+            var existingService = await this.context.Services.FindAsync(serviceDBId);
+            if (existingService == null)
+            {
+                return false;
+            }
+
+            existingService.Name = service.Name;
+            existingService.Description = service.Description;
+
+            this.context.Services.Update(existingService);
+            return await this.context.SaveChangesAsync() > 0; // Returns true if any changes were saved
+        }
+
+        public async Task<ServiceDB?> GetServiceByIdAsync(int serviceDBId)
+        {
+            return await this.context.Services
+                .Include(s => s.Manager)
+                .Include(s => s.Doctors)
+                .FirstOrDefaultAsync(s => s.ServiceDBId == serviceDBId);
+        }
     }
 }
