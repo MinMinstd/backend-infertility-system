@@ -10,7 +10,7 @@
 
         Task<User?> RegisterUserAsync(RegisterRequestDto user);
 
-        Task<string?> RegisterDoctorAndManagerAsync(RegisterRequestFromAdminDto user);
+        Task<bool> RegisterDoctorAsync(RegisterRequestFromManagernDto user);
 
         Task<bool> ChangePasswordAsync(int userId, ChangePasswordDto dto);
 

@@ -1,6 +1,5 @@
 ﻿namespace infertility_system.Controllers
 {
-    using infertility_system.Dtos.Admin;
     using infertility_system.Interfaces;
     using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +14,12 @@
             this.authService = authService;
         }
 
-        // [Authorize(Roles = "Admin")]
-        [HttpPost("create-user")]
-        public async Task<IActionResult> CreateUser([FromBody] RegisterRequestFromAdminDto dto)
-        {
-            var result = await this.authService.RegisterDoctorAndManagerAsync(dto);
-            return this.Ok(result);
-        }
+        //// [Authorize(Roles = "Admin")]
+        //[HttpPost("create-user")]
+        //public async Task<IActionResult> CreateUser([FromBody] RegisterRequestFromAdminDto dto)
+        //{
+        //    var result = await this.authService.RegisterDoctorAndManagerAsync(dto);
+        //    return this.Ok(result);
+        //}
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace infertility_system.Controllers
 {
     using AutoMapper;
+    using infertility_system.Dtos.Admin;
     using infertility_system.Dtos.User;
     using infertility_system.Interfaces;
     using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,14 @@
     public class UserController : ControllerBase
     {
         private readonly IUserRepository userRepository;
+        private readonly IAuthService authService;
         private readonly IMapper mapper;
 
-        public UserController(IUserRepository userRepository, IMapper mapper)
+        public UserController(IUserRepository userRepository, IMapper mapper, IAuthService authService)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
+            this.authService = authService;
         }
 
         [HttpGet("GetUserAfterLogin")]
@@ -72,6 +75,18 @@
 
             var userDtos = this.mapper.Map<List<UserToManagementDto>>(users);
             return this.Ok(userDtos);
+        }
+
+        [HttpPost("CreateDoctorByManager")]
+        public async Task<bool> CreateDoctorByManager([FromBody] RegisterRequestFromManagernDto userDto)
+        {
+            if (userDto == null)
+            {
+                return false;
+            }
+
+            var result = authService.RegisterDoctorAsync(userDto);
+            return await result;
         }
     }
 }
