@@ -8,6 +8,7 @@
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
     using infertility_system.Dtos.OrderDetail;
+    using infertility_system.Dtos.Payment;
     using infertility_system.Dtos.User;
     using infertility_system.Interfaces;
     using infertility_system.Models;
@@ -23,6 +24,7 @@
         private readonly IEmbryoRepository embryoRepository;
         private readonly ICustomerRepository customerRepository;
         private readonly IUserRepository userRepository;
+        private readonly IPaymentRepository paymentRepository;
         private readonly IMapper mapper;
 
         public CustomerController(
@@ -30,13 +32,15 @@
             IMapper mapper,
             IMedicalRecordDetailRepository medicalRecordDetailRepository,
             IEmbryoRepository embryoRepository,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            IPaymentRepository paymentRepository)
         {
             this.customerRepository = customerRepository;
             this.mapper = mapper;
             this.medicalRecordDetailRepository = medicalRecordDetailRepository;
             this.embryoRepository = embryoRepository;
             this.userRepository = userRepository;
+            this.paymentRepository = paymentRepository;
         }
 
         [HttpGet]
@@ -209,6 +213,23 @@
             var orderDetail = await this.customerRepository.GetListAppointmentAsync(bookingId);
             var result = this.mapper.Map<List<ListAppointmentDto>>(orderDetail);
             return this.Ok(result);
+        }
+
+        [HttpGet("GetCustomerWithPayment")]
+        public async Task<IActionResult> GetCustomerWithPayment()
+        {
+            var customers = await this.customerRepository.GetAllCustomer();
+            var listCustomer = this.mapper.Map<List<CustomerWithListPaymentDto>>(customers);
+            foreach (var customer in listCustomer) 
+            {
+                var listPayment = await this.paymentRepository.GetListPaymentByUserId(customer.UserId);
+                customer.ListPayment = this.mapper.Map<List<HistoryPaymentDto>>(listPayment);
+                foreach (var payment in listPayment)
+                {
+                    customer.TotalPayment += payment.PriceByTreatement;
+                }
+            }
+            return Ok(listCustomer);
         }
     }
 }

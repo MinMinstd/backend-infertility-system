@@ -13,5 +13,7 @@ namespace infertility_system.Interfaces
         Task<Payment> GetPaymentByOrderId(int orderId);
 
         Task UpdateStatusPayment(int paymentId);
+
+        Task<List<Payment>> GetListPaymentByMonthYearandIdTreatement(int month, int year, int id);
     }
 }

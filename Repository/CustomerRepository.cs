@@ -110,5 +110,10 @@
             await this.context.SaveChangesAsync();
             return existingCustomer;
         }
+
+        public async Task<List<Customer>> GetAllCustomer()
+        {
+            return await this.context.Customers.ToListAsync();
+        }
     }
 }

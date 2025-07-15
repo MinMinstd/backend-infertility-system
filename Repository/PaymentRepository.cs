@@ -61,5 +61,10 @@ namespace infertility_system.Repository
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<Payment>> GetListPaymentByMonthYearandIdTreatement(int month, int year, int id)
+        {
+            return await _context.Payments.Where(x => x.Date.Month == month && x.Date.Year == year && x.TreatmentRoadmapId == id).ToListAsync();
+        }
     }
 }
