@@ -99,16 +99,15 @@ CREATE TABLE [dbo].[Services] (
     [ServiceDBId] INT             IDENTITY (1, 1) NOT NULL,
     [Name]        NVARCHAR (MAX)  NULL,
     [Description] NVARCHAR (MAX)  NULL,
-    [Price]       DECIMAL (18, 2) NOT NULL,
     [ManagerId]   INT             NOT NULL,
     CONSTRAINT [PK_Services] PRIMARY KEY CLUSTERED ([ServiceDBId] ASC),
     CONSTRAINT [FK_Services_Managers_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Managers] ([ManagerId]) ON DELETE CASCADE
 );
 
-INSERT INTO [Services] ([Name], [Description], [Price], [ManagerId])
+INSERT INTO [Services] ([Name], [Description], [ManagerId])
 VALUES 
-(N'IVF', N'Gói điều trị IVF cơ bản', 50000000, 1),
-(N'IUI', N'Gói điều trị IUI tiêu chuẩn', 20000000, 1);
+(N'IVF', N'Gói điều trị IVF cơ bản', 1),
+(N'IUI', N'Gói điều trị IUI tiêu chuẩn', 1);
 
 -- Doctor table
 CREATE TABLE [dbo].[Doctors] (

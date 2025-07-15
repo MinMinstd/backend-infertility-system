@@ -8,8 +8,6 @@
 
         public string? Description { get; set; }
 
-        public decimal Price { get; set; }
-
         // Service 1-N OrderDetail
         public List<OrderDetail>? OrderDetails { get; set; }
 
