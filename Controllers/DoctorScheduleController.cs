@@ -1,10 +1,10 @@
 ﻿namespace infertility_system.Controllers
 {
-    using System.Security.Claims;
     using AutoMapper;
     using infertility_system.Dtos.DoctorSchedule;
     using infertility_system.Interfaces;
     using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -91,6 +91,44 @@
             var doctorSchedules = await this.doctorScheduleRepository.GetFullScheduleAsync(doctorIdClaims);
             var result = this.mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedules);
             return this.Ok(result);
+        }
+
+        [HttpPost("CreateSchedule")]
+        public async Task<IActionResult> CreateSchedule(int doctorId, [FromBody] CreateDoctorScheduleDto createDoctorScheduleDto)
+        {
+            if (createDoctorScheduleDto == null)
+            {
+                return this.BadRequest("Invalid schedule data.");
+            }
+
+            if (createDoctorScheduleDto.WorkDate < DateOnly.FromDateTime(DateTime.Now))
+            {
+                return this.BadRequest("Work date cannot be in the past.");
+            }
+
+            if (createDoctorScheduleDto.StartTime >= createDoctorScheduleDto.EndTime)
+            {
+                return this.BadRequest("Start time must be earlier than end time.");
+            }
+
+            // Check if the schedule already exists for the given date and time
+            var existingSchedule = await this.doctorScheduleRepository.GetScheduleByDateTime(
+                createDoctorScheduleDto.WorkDate,
+                createDoctorScheduleDto.StartTime,
+                createDoctorScheduleDto.EndTime);
+
+            if (existingSchedule != null)
+            {
+                return this.BadRequest("A schedule already exists for the specified date and time.");
+            }
+
+            var doctorSchedule = this.mapper.Map<Models.DoctorSchedule>(createDoctorScheduleDto);
+            doctorSchedule.DoctorId = doctorId;
+            doctorSchedule.ManagerId = 1;
+            doctorSchedule.Status = "Available";
+
+            await this.doctorScheduleRepository.AddScheduleAsync(doctorSchedule);
+            return this.Ok("Schedule created successfully.");
         }
     }
 }

@@ -173,6 +173,7 @@ namespace infertility_system.Helpers
             this.CreateMap<UpdateTreatmentRoadmapDto, TreatmentRoadmap>();
             this.CreateMap<ServiceDB, RequestServiceDto>();
             this.CreateMap<TreatmentRoadmap, UpdateTreatmentRoadmapDto>();
+            this.CreateMap<CreateDoctorScheduleDto, DoctorSchedule>();
         }
 
         private static int CalculateAge(DateOnly birthday)

@@ -15,5 +15,7 @@ namespace infertility_system.Interfaces
         Task<List<DoctorSchedule>> GetListScheduleForDoctorAsync(int userId, DateOnly date);
 
         Task<List<DoctorSchedule>> GetFullScheduleAsync(int userId);
+
+        Task AddScheduleAsync(DoctorSchedule schedule);
     }
 }
