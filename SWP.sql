@@ -513,6 +513,8 @@ CREATE TABLE [dbo].[Payments] (
 
 INSERT INTO [Payments] ([TreatmentRoadmapId], [OrderId], [PriceByTreatement], [Method], [Date], [Status])
 VALUES 
+
+(1, 3, 30000000, N'Chuyển khoản', '2025-06-02', N'Đã thanh toán'),
 (1, 1, 30000000, N'Chuyển khoản', '2025-06-02', N'Đã thanh toán'),
 (2, 2, 10000000, N'Tiền mặt', '2025-06-03', N'Đã thanh toán');
 

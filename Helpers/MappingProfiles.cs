@@ -40,6 +40,7 @@ namespace infertility_system.Helpers
             this.CreateMap<BookingConsulantDto, Booking>();
             this.CreateMap<DoctorSchedule, DoctorScheduleToBookingDto>();
             this.CreateMap<Customer, CustomerDto>();
+            this.CreateMap<Customer, CustomerWithListPaymentDto>();
             this.CreateMap<Feedback, FeedbackResponseDto>();
             this.CreateMap<ConsulationResultRequest, ConsulationResult>();
 
@@ -149,6 +150,7 @@ namespace infertility_system.Helpers
 
             this.CreateMap<TreatmentRoadmap, ListTreatmentRoadMapDto>()
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name));
+            this.CreateMap<TreatmentRoadmap, TreamentRoadmapWithPaymentDto>();
 
             this.CreateMap<Payment, HistoryPaymentDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
