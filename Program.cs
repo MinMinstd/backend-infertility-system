@@ -55,6 +55,7 @@
             builder.Services.AddScoped<IDoctorRepository, Repository.DoctorRepository>();
             builder.Services.AddScoped<IServiceRepository, Repository.ServiceRepository>();
             builder.Services.AddScoped<IPaymentRepository, Repository.PaymentRepository>();
+            builder.Services.AddScoped<IBlogPostRepository, Repository.BlogPostRepository>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
 

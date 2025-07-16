@@ -1,6 +1,7 @@
 namespace infertility_system.Helpers
 {
     using AutoMapper;
+    using infertility_system.Dtos.BlogPost;
     using infertility_system.Dtos.Booking;
     using infertility_system.Dtos.ConsulationResult;
     using infertility_system.Dtos.Customer;
@@ -167,6 +168,8 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TreatmentRoadmap.Price))
                 .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => src.PaymentId));
+
+            this.CreateMap<BlogPostDto, BlogPost>();
 
             this.CreateMap<RequestServiceDto, ServiceDB>();
             this.CreateMap<CreateTreatmentRoadmapDto, TreatmentRoadmap>();

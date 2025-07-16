@@ -1,4 +1,5 @@
-﻿﻿DROP DATABASE InfertilitySystem;
+﻿
+DROP DATABASE InfertilitySystem;
 CREATE DATABASE InfertilitySystem
 USE InfertilitySystem
 
@@ -514,7 +515,6 @@ CREATE TABLE [dbo].[Payments] (
 INSERT INTO [Payments] ([TreatmentRoadmapId], [OrderId], [PriceByTreatement], [Method], [Date], [Status])
 VALUES 
 
-(1, 3, 30000000, N'Chuyển khoản', '2025-06-02', N'Đã thanh toán'),
 (1, 1, 30000000, N'Chuyển khoản', '2025-06-02', N'Đã thanh toán'),
 (2, 2, 10000000, N'Tiền mặt', '2025-06-03', N'Đã thanh toán');
 
@@ -528,6 +528,7 @@ CREATE TABLE [dbo].[BlogPosts] (
     [TreatmentType] NVARCHAR (MAX) NULL,
     [Date]          DATETIME2 (7)  NOT NULL,
     [Image]         NVARCHAR (MAX) NULL,
+    [Status]        NVARCHAR (MAX) NULL,
     [CustomerId]    INT            NOT NULL,
     [ManagerId]     INT            NOT NULL,
     CONSTRAINT [PK_BlogPosts] PRIMARY KEY CLUSTERED ([BlogPostId] ASC),
@@ -535,10 +536,10 @@ CREATE TABLE [dbo].[BlogPosts] (
     CONSTRAINT [FK_BlogPosts_Managers_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Managers] ([ManagerId]) ON DELETE CASCADE
 );
 
-INSERT INTO [BlogPosts] ([CustomerId], [ManagerId], [Title], [Story], [TreatmentType], [Date], [Image])
+INSERT INTO [BlogPosts] ([CustomerId], [ManagerId], [Title], [Story], [TreatmentType], [Date], [Image], [Status])
 VALUES 
-(1, 1, N'Hành trình IVF', N'Kể lại quá trình IVF', N'IVF', '2025-06-01', N'ivf1.jpg'),
-(2, 1, N'Kinh nghiệm IUI', N'Chia sẻ sau điều trị', N'IUI', '2025-06-02', N'iui1.jpg');
+(1, 1, N'Hành trình IVF', N'Kể lại quá trình IVF', N'IVF', '2025-06-01', N'ivf1.jpg', 'Pending'),
+(2, 1, N'Kinh nghiệm IUI', N'Chia sẻ sau điều trị', N'IUI', '2025-06-02', N'iui1.jpg', 'Pending');
 
 
 -- Embryo table
