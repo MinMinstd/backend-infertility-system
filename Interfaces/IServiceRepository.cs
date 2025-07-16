@@ -11,9 +11,9 @@
 
         Task<List<ServiceDB>> GetServicesForManagement();
 
-        Task AddServiceAsync(ServiceDB service);
-
         Task<ServiceDB?> GetServiceByIdAsync(int serviceDBId);
+
+        Task AddServiceAsync(ServiceDB service);
 
         Task<bool> UpdateServiceAsync(int serviceDBId, ServiceDB service);
     }
