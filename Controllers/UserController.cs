@@ -36,35 +36,35 @@
             return this.Ok(userDto);
         }
 
-        [HttpGet("CountTotalAccounts")]
+        [HttpGet("statistics/total")]
         public async Task<IActionResult> CountTotalAccounts()
         {
             var totalAccounts = await this.userRepository.CountTotalAccounts();
             return this.Ok(totalAccounts);
         }
 
-        [HttpGet("CountDoctorsAccount")]
+        [HttpGet("statistics/doctors")]
         public async Task<IActionResult> CountDoctorsAccount()
         {
             var totalDoctors = await this.userRepository.CountDoctorsAccount();
             return this.Ok(totalDoctors);
         }
 
-        [HttpGet("CountCustomerAccount")]
+        [HttpGet("statistics/customers")]
         public async Task<IActionResult> CountCustomerAccount()
         {
             var totalCustomers = await this.userRepository.CountCustomerAccount();
             return this.Ok(totalCustomers);
         }
 
-        [HttpGet("CountNewAccount")]
+        [HttpGet("statistics/new")]
         public async Task<IActionResult> CountNewAccount()
         {
             var totalNewAccounts = await this.userRepository.CountNewAccount();
             return this.Ok(totalNewAccounts);
         }
 
-        [HttpGet("GetAllUsersForManagement")]
+        [HttpGet]
         public async Task<IActionResult> GetAllUsersForManagement()
         {
             var users = await this.userRepository.GetAllUsersForManagement();
@@ -77,16 +77,18 @@
             return this.Ok(userDtos);
         }
 
-        [HttpPost("CreateDoctorByManager")]
-        public async Task<bool> CreateDoctorByManager([FromBody] RegisterRequestFromManagernDto userDto)
+        [HttpPost("doctor")]
+        public async Task<IActionResult> CreateDoctorByManager([FromBody] RegisterRequestFromManagernDto userDto)
         {
             if (userDto == null)
             {
-                return false;
+                return this.BadRequest("User data is required.");
             }
 
             var result = authService.RegisterDoctorAsync(userDto);
-            return await result;
+            return result.IsCompletedSuccessfully
+                ? this.Ok("Doctor registered successfully.")
+                : this.BadRequest("Failed to register doctor.");
         }
     }
 }

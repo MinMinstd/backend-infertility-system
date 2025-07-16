@@ -93,7 +93,7 @@
             return this.Ok(result);
         }
 
-        [HttpPost("CreateSchedule")]
+        [HttpPost("{doctorId}")]
         public async Task<IActionResult> CreateSchedule(int doctorId, [FromBody] CreateDoctorScheduleDto createDoctorScheduleDto)
         {
             if (createDoctorScheduleDto == null)

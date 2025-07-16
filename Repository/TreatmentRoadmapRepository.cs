@@ -40,6 +40,14 @@ namespace infertility_system.Repository
                 .FirstOrDefaultAsync(x => x.TreatmentRoadmapId == treatmentRoadmapId);
         }
 
+        public async Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsByServiceIdAsync(int serviceDBId)
+        {
+            return await _context.TreatmentRoadmaps
+                .Where(x => x.ServiceId == serviceDBId)
+                .Include(x => x.Service)
+                .ToListAsync();
+        }
+
         public async Task<bool> UpdateTreatmentRoadmapAsync(int treatmentRoadmapId, TreatmentRoadmap treatmentRoadmap)
         {
             if (treatmentRoadmap == null)

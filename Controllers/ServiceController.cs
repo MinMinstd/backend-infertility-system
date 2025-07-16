@@ -36,7 +36,7 @@
             return this.Ok(servicesDto);
         }
 
-        [HttpGet("GetServicesForManagement")]
+        [HttpGet("for-management")]
         public async Task<IActionResult> GetServicesForManagement()
         {
             var services = await this.serviceRepository.GetServicesForManagement();
@@ -44,7 +44,20 @@
             return this.Ok(servicesDto);
         }
 
-        [HttpPost("AddService")]
+        [HttpGet("{serviceDBId}")]
+        public async Task<IActionResult> GetServiceById(int serviceDBId)
+        {
+            var service = await this.serviceRepository.GetServiceByIdAsync(serviceDBId);
+            if (service == null)
+            {
+                return NotFound("Service not found.");
+            }
+
+            var serviceDto = this.mapper.Map<RequestServiceDto>(service);
+            return this.Ok(serviceDto);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AddService([FromBody] RequestServiceDto serviceDto)
         {
             if (serviceDto == null)
@@ -63,20 +76,7 @@
             return this.Ok("Service added successfully.");
         }
 
-        [HttpGet("GetServiceById/{serviceDBId}")]
-        public async Task<IActionResult> GetServiceById(int serviceDBId)
-        {
-            var service = await this.serviceRepository.GetServiceByIdAsync(serviceDBId);
-            if (service == null)
-            {
-                return NotFound("Service not found.");
-            }
-
-            var serviceDto = this.mapper.Map<RequestServiceDto>(service);
-            return this.Ok(serviceDto);
-        }
-
-        [HttpPut("UpdateService")]
+        [HttpPut("{serviceDBId}")]
         public async Task<IActionResult> UpdateService(int serviceDBId, [FromBody] RequestServiceDto serviceDto)
         {
             if (serviceDto == null)

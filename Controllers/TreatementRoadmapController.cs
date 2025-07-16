@@ -23,23 +23,15 @@ namespace infertility_system.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("GetAllTreatmentRoadMap")]
-        public async Task<IActionResult> GetAllTreatmentRoadMap()
-        {
-            var listTreatmentRoadMap = await _treatmentRoadmapRepository.GetAllTreatmentRoadmapAsync();
-            return Ok(_mapper.Map<List<ListTreatmentRoadMapDto>>(listTreatmentRoadMap));
-        }
-
-
         [HttpGet("GetTreatementRoadmapWithPayment")]
         public async Task<IActionResult> GetTreatementRoadmapWithPayment(int month, int year)
         {
             var TreatementRoadmaps = _mapper.Map<List<TreamentRoadmapWithPaymentDto>>(await _treatmentRoadmapRepository.GetAllTreatmentRoadmapAsync());
-            foreach (var treatement in TreatementRoadmaps) 
+            foreach (var treatement in TreatementRoadmaps)
             {
                 var payments = await _paymentRepository.GetListPaymentByMonthYearandIdTreatement(month, year, treatement.TreatmentRoadmapId);
                 treatement.ListPayment = _mapper.Map<List<HistoryPaymentDto>>(payments);
-                foreach(var payment in payments)
+                foreach (var payment in payments)
                 {
                     treatement.Total += payment.PriceByTreatement;
                     treatement.Count += 1;
@@ -48,7 +40,36 @@ namespace infertility_system.Controllers
             return Ok(TreatementRoadmaps);
         }
 
-        [HttpPost("AddTreatmentRoadMap")]
+        [HttpGet("{serviceId}")]
+        public async Task<IActionResult> GetTreatmentRoadMapByServiceId(int serviceId)
+        {
+            if (serviceId <= 0)
+            {
+                return BadRequest("Invalid service ID.");
+            }
+
+            var treatmentRoadmaps = await _treatmentRoadmapRepository.GetTreatmentRoadmapsByServiceIdAsync(serviceId);
+            if (treatmentRoadmaps == null || !treatmentRoadmaps.Any())
+            {
+                return NotFound("No treatment roadmaps found for the specified service ID.");
+            }
+
+            return Ok(_mapper.Map<List<ListTreatmentRoadMapDto>>(treatmentRoadmaps));
+        }
+
+        [HttpGet("GetTreatmentRoadMapById/{treatmentRoadmapId}")]
+        public async Task<IActionResult> GetTreatmentRoadMapById(int treatmentRoadmapId)
+        {
+            var treatmentRoadmap = await _treatmentRoadmapRepository.GetTreatmentRoadmapByIdAsync(treatmentRoadmapId);
+            if (treatmentRoadmap == null)
+            {
+                return NotFound("Treatment roadmap not found.");
+            }
+
+            return Ok(_mapper.Map<UpdateTreatmentRoadmapDto>(treatmentRoadmap));
+        }
+
+        [HttpPost]
         public async Task<IActionResult> AddTreatmentRoadMap([FromBody] CreateTreatmentRoadmapDto requestTreatmentRoadmapDto)
         {
             if (requestTreatmentRoadmapDto == null)
@@ -70,19 +91,7 @@ namespace infertility_system.Controllers
             return this.Ok("Treatment roadmap added successfully.");
         }
 
-        [HttpGet("GetTreatmentRoadMapById/{treatmentRoadmapId}")]
-        public async Task<IActionResult> GetTreatmentRoadMapById(int treatmentRoadmapId)
-        {
-            var treatmentRoadmap = await _treatmentRoadmapRepository.GetTreatmentRoadmapByIdAsync(treatmentRoadmapId);
-            if (treatmentRoadmap == null)
-            {
-                return NotFound("Treatment roadmap not found.");
-            }
-
-            return Ok(_mapper.Map<UpdateTreatmentRoadmapDto>(treatmentRoadmap));
-        }
-
-        [HttpPut("UpdateTreatmentRoadMap")]
+        [HttpPut("{treatmentRoadmapId}")]
         public async Task<IActionResult> UpdateTreatmentRoadMap(int treatmentRoadmapId, [FromBody] UpdateTreatmentRoadmapDto requestTreatmentRoadmapDto)
         {
             if (requestTreatmentRoadmapDto == null)
