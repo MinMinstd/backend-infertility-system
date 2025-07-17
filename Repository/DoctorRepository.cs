@@ -64,19 +64,24 @@
         public async Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
-            if(doctor == null)
+            if (doctor == null)
             {
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
             }
 
-            var doctorSchedule = await this.context.DoctorSchedules.FirstOrDefaultAsync(x => x.DoctorId == doctor.DoctorId);
+            var doctorSchedule = await this.context.DoctorSchedules
+                .Where(x => x.DoctorId == doctor.DoctorId)
+                .ToListAsync();
+
             if (doctorSchedule == null)
             {
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor schedule not found.");
             }
 
+            var doctorScheduleIds = doctorSchedule.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
+
             var bookings = await this.context.Bookings
-                    .Where(x => x.DoctorScheduleId == doctorSchedule.DoctorScheduleId)
+                    .Where(b => doctorScheduleIds.Contains((int)b.DoctorScheduleId))
                     .ToListAsync();
 
             var customerIds = bookings.Select(x => x.CustomerId).Distinct().ToList();
