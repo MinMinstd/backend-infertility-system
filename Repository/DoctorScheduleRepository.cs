@@ -68,5 +68,11 @@ namespace infertility_system.Repository
                         .ToListAsync();
             return doctorSchedules;
         }
+
+        public async Task AddScheduleAsync(DoctorSchedule schedule)
+        {
+            await this.context.DoctorSchedules.AddAsync(schedule);
+            await this.context.SaveChangesAsync();
+        }
     }
 }

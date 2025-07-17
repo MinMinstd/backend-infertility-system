@@ -10,5 +10,11 @@
         Task<List<ServiceDB>> GetAllServiceToBooking();
 
         Task<List<ServiceDB>> GetServicesForManagement();
+
+        Task<ServiceDB?> GetServiceByIdAsync(int serviceDBId);
+
+        Task AddServiceAsync(ServiceDB service);
+
+        Task<bool> UpdateServiceAsync(int serviceDBId, ServiceDB service);
     }
 }

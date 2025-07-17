@@ -10,9 +10,11 @@
 
         public string? TreatmentType { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now; // Default to current date
 
         public string? Image { get; set; }
+
+        public string Status { get; set; } = "Pending"; // Default status
 
         // BlogPost N-1 Customer
         public int CustomerId { get; set; }

@@ -1,6 +1,7 @@
 namespace infertility_system.Helpers
 {
     using AutoMapper;
+    using infertility_system.Dtos.BlogPost;
     using infertility_system.Dtos.Booking;
     using infertility_system.Dtos.ConsulationResult;
     using infertility_system.Dtos.Customer;
@@ -40,6 +41,7 @@ namespace infertility_system.Helpers
             this.CreateMap<BookingConsulantDto, Booking>();
             this.CreateMap<DoctorSchedule, DoctorScheduleToBookingDto>();
             this.CreateMap<Customer, CustomerDto>();
+            this.CreateMap<Customer, CustomerWithListPaymentDto>();
             this.CreateMap<Feedback, FeedbackResponseDto>();
             this.CreateMap<ConsulationResultRequest, ConsulationResult>();
 
@@ -149,6 +151,7 @@ namespace infertility_system.Helpers
 
             this.CreateMap<TreatmentRoadmap, ListTreatmentRoadMapDto>()
                 .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name));
+            this.CreateMap<TreatmentRoadmap, TreamentRoadmapWithPaymentDto>();
 
             this.CreateMap<Payment, HistoryPaymentDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Order.Customer.FullName))
@@ -165,6 +168,15 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
                 .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TreatmentRoadmap.Price))
                 .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => src.PaymentId));
+
+            this.CreateMap<BlogPostDto, BlogPost>();
+
+            this.CreateMap<RequestServiceDto, ServiceDB>();
+            this.CreateMap<CreateTreatmentRoadmapDto, TreatmentRoadmap>();
+            this.CreateMap<UpdateTreatmentRoadmapDto, TreatmentRoadmap>();
+            this.CreateMap<ServiceDB, RequestServiceDto>();
+            this.CreateMap<TreatmentRoadmap, UpdateTreatmentRoadmapDto>();
+            this.CreateMap<CreateDoctorScheduleDto, DoctorSchedule>();
         }
 
         private static int CalculateAge(DateOnly birthday)
