@@ -212,6 +212,38 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
+        [HttpGet("amountCustomer")]
+        public async Task<IActionResult> AmountCustomer()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await this.doctorRepository.AmountCustomerAsync(doctorIdClaims);
+            return this.Ok(result);
+        }
+
+        [HttpGet("amountMedicalRecord")]
+        public async Task<IActionResult> AmountMedicalRecord()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await this.doctorRepository.AmountMedicalRecordAsync(doctorIdClaims);
+            return this.Ok(result);
+        }
+
+        [HttpGet("amountMedicalRecordWithStatusComplete")]
+        public async Task<IActionResult> AmountMedicalRecordWithStatusComplete()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await this.doctorRepository.AmountMedicalRecordWithStatusCompleteAsync(doctorIdClaims);
+            return this.Ok(result);
+        }
+
+        [HttpGet("amountBookingCustomer")]
+        public async Task<IActionResult> AmountBookingCustomer()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await this.doctorRepository.AmountBookingCustomerAsync(doctorIdClaims);
+            return this.Ok(result);
+        }
+
         // [Authorize(Roles = "Doctor")]
         [HttpPost("CreateMedicalRecord/{customerId}")]
         public async Task<IActionResult> CreateMedicalRecord(

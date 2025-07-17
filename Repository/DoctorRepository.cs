@@ -753,5 +753,68 @@
             customerLists = customerLists.Where(x => x.FullName.ToLower().Contains(name.ToLower())).ToList();
             return customerLists;
         }
+
+        public async Task<int> AmountCustomerAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            var medicalRecords = await this.context.MedicalRecords
+                    .Where(mr => mr.DoctorId == doctor.DoctorId)
+                    .ToListAsync();
+
+            var customerId = medicalRecords.Select(mr => mr.CustomerId).Distinct().ToList();
+            return customerId.Count;
+        }
+
+        public async Task<int> AmountMedicalRecordAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            return await this.context.MedicalRecords
+                .Where(mr => mr.DoctorId == doctor.DoctorId)
+                .Select(mr => mr.MedicalRecordId)
+                .CountAsync();
+        }
+
+        public async Task<int> AmountMedicalRecordWithStatusCompleteAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            return await this.context.MedicalRecords
+                .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status == "Thành công")
+                .Select(mr => mr.MedicalRecordId)
+                .CountAsync();
+        }
+
+        public async Task<int> AmountBookingCustomerAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            var doctorScheduleId = await this.context.DoctorSchedules
+                    .Where(ds => ds.DoctorId == doctor.DoctorId)
+                    .Select(ds => ds.DoctorScheduleId)
+                    .ToListAsync();
+
+            var booking = await this.context.Bookings
+                    .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
+                    .ToListAsync();
+            return booking.Count;
+        }
     }
 }
