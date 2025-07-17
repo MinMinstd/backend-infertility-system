@@ -10,6 +10,6 @@ namespace infertility_system.Dtos.TreatmentResult
 
         public string? Result { get; set; }
 
-        public List<UpdateTypeTestDto> TypeTest { get; set; }
+        public List<UpdateTypeTestDto>? TypeTest { get; set; }
     }
 }

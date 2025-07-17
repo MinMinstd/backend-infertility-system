@@ -28,8 +28,11 @@ namespace infertility_system.Controllers
     using infertility_system.Dtos.TypeTests;
     using infertility_system.Helpers;
     using infertility_system.Interfaces;
+    using infertility_system.Middleware;
     using infertility_system.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System.Net;
     using System.Security.Claims;
 
     [ApiController]
@@ -165,6 +168,7 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
+        [Authorize(Roles = "Doctor")]
         [HttpGet("GetMedicalRecordDetail/{medicalRecordId}")]
         public async Task<IActionResult> GetMedicalRecordDetail(int medicalRecordId)
         {
@@ -246,9 +250,6 @@ namespace infertility_system.Controllers
         [HttpPost("typeTest-treatmentResult/{customerId}/{treatmentResultId}")]
         public async Task<IActionResult> CreateTypeTestTreatmentResult([FromBody] CreateTypeTestDto dto, int customerId, int treatmentResultId)
         {
-            if (dto == null)
-                return BadRequest("DTO binding failed: dto is null. Check your JSON format and Content-Type.");
-
             var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var typetTest = this.mapper.Map<TypeTest>(dto);
 
@@ -304,7 +305,7 @@ namespace infertility_system.Controllers
             var medicalRecordDetail = this.mapper.Map<MedicalRecordDetail>(dto);
             medicalRecordDetail.MedicalRecordDetailId = medicalRecordDetailId;
 
-            var result = await this.doctorRepository.UpdateMedicalRecordDetailDtoAsync(medicalRecordDetail, doctorIdClaims, customerId, medicalRecordDetailId);
+            var result = await this.doctorRepository.UpdateMedicalRecordDetailAsync(medicalRecordDetail, doctorIdClaims, customerId, medicalRecordDetailId);
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 

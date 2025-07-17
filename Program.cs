@@ -5,6 +5,7 @@
     using infertility_system.Dtos.Admin;
     using infertility_system.Dtos.User;
     using infertility_system.Interfaces;
+    using infertility_system.Middleware;
     using infertility_system.Repository;
     using infertility_system.Service;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +14,7 @@
     using Microsoft.OpenApi.Models;
     using System.Security.Claims;
     using System.Text;
+    using System.Text.Json;
 
     public class Program
     {
@@ -87,6 +89,39 @@
                     IssuerSigningKey = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Secret"])),
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnChallenge = context =>
+                    {
+                        context.HandleResponse();
+
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+
+                        var result = JsonSerializer.Serialize(new
+                        {
+                            status = 401,
+                            message = "Unauthorized access",
+                        });
+
+                        return context.Response.WriteAsync(result);
+                    },
+
+                    OnForbidden = context =>
+                    {
+                        context.Response.StatusCode = 403;
+                        context.Response.ContentType = "application/json";
+
+                        var result = JsonSerializer.Serialize(new
+                        {
+                            status = 403,
+                            message = "Forbidden: You do not have permission to access this resource",
+                        });
+
+                        return context.Response.WriteAsync(result);
+                    },
+                };
             });
 
             builder.Services.AddAuthorization();
@@ -146,6 +181,8 @@
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseCors();
 
