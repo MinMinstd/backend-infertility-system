@@ -68,5 +68,13 @@
         Task<bool> UpdateStatusBookingAfterCompleteAsync(int bookingId, string status);
 
         Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim);
+
+        Task<int> AmountCustomerAsync(int doctorIdClaim);
+
+        Task<int> AmountMedicalRecordAsync(int doctorIdClaim);
+
+        Task<int> AmountMedicalRecordWithStatusCompleteAsync(int doctorIdClaim);
+
+        Task<int> AmountBookingCustomerAsync(int doctorIdClaim);
     }
 }
