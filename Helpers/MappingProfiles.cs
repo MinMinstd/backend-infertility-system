@@ -119,6 +119,7 @@ namespace infertility_system.Helpers
             this.CreateMap<CreateConsultatioResultAndTypeTestDto, ConsulationResult>();
             this.CreateMap<CreateBookingCustomerDto, Booking>();
             this.CreateMap<OrderDetail, ListAppointmentDto>();
+            this.CreateMap<DoctorSchedule, DoctorSchedulesDto>();
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();
