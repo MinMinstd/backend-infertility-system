@@ -1,7 +1,9 @@
 namespace infertility_system.Repository
 {
+    using System.Net;
     using infertility_system.Data;
     using infertility_system.Interfaces;
+    using infertility_system.Middleware;
     using infertility_system.Models;
     using Microsoft.EntityFrameworkCore;
 
@@ -52,6 +54,10 @@ namespace infertility_system.Repository
         public async Task<List<DoctorSchedule>> GetListScheduleForDoctorAsync(int userId, DateOnly date)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == userId);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
 
             var doctorSchedules = await this.context.DoctorSchedules
                         .Where(ds => ds.DoctorId == doctor.DoctorId && ds.Status == "Available" && ds.WorkDate == date)
