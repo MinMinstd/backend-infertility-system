@@ -38,6 +38,7 @@
             return await this.context.Bookings.AnyAsync(x => x.DoctorSchedule.DoctorId == doctorId);
         }
 
+        //tạo medicalRecord cho customer
         public async Task<bool> CreateMedicalRecordAsync(MedicalRecord medicalRecord, int doctorIdClaim)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);

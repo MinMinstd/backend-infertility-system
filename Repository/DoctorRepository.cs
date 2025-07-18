@@ -61,6 +61,18 @@
                 .ToListAsync();
         }
 
+        public async Task<List<Doctor>> GetDoctorsByServiceIdForBookingConsulation(int serviceId)
+        {
+            return await this.context.Doctors
+                .Where(x => x.ServiceDBId == serviceId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Doctor>> GetDoctosForManagement()
+        {
+            return await this.context.Doctors.Include(x => x.DoctorDegrees).ToListAsync();
+        }
+
         public async Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
@@ -93,48 +105,6 @@
                     .ThenInclude(d => d.ServiceDB)
                     .ToListAsync();
             return customers;
-        }
-
-        public async Task<List<MedicalRecordDetail>> GetMedicalRecordDetailAsync(int doctorIdClaim, int medicalRecordId)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
-            }
-
-            var medicalRecord = await this.context.MedicalRecords
-                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
-                                                    && mr.MedicalRecordId == medicalRecordId);
-
-            if (medicalRecord == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this doctor.");
-            }
-
-            var medicalRecordDetails = await this.context.MedicalRecordDetails
-                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
-                            .Include(tr => tr.TreatmentRoadmap)
-                            .ToListAsync();
-
-            return medicalRecordDetails;
-        }
-
-        public async Task<List<Doctor>> GetDoctorsByServiceIdForBookingConsulation(int serviceId)
-        {
-            return await this.context.Doctors
-                .Where(x => x.ServiceDBId == serviceId)
-                .ToListAsync();
-        }
-
-        public async Task<List<Doctor>> GetDoctosForManagement()
-        {
-            return await this.context.Doctors.Include(x => x.DoctorDegrees).ToListAsync();
-        }
-
-        public Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId)
@@ -195,6 +165,7 @@
             {
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Patient not found.");
             }
+
             return customer;
         }
 
@@ -284,6 +255,31 @@
             return treatmentResult;
         }
 
+        public async Task<List<MedicalRecordDetail>> GetMedicalRecordDetailAsync(int doctorIdClaim, int medicalRecordId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.MedicalRecordId == medicalRecordId);
+
+            if (medicalRecord == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this doctor.");
+            }
+
+            var medicalRecordDetails = await this.context.MedicalRecordDetails
+                            .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                            .Include(tr => tr.TreatmentRoadmap)
+                            .ToListAsync();
+
+            return medicalRecordDetails;
+        }
+
         public async Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int bookingId, int customerId)
         {
             var booking = await this.context.Bookings
@@ -303,39 +299,137 @@
             return consultationResult;
         }
 
-        public async Task<bool> UpdateDetailTreatmentRoadmapAsync(TreatmentRoadmap updateTreamentRoadmap, string status, 
-                                                int treatmentRoadmapId, int customerId)
+        public async Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId)
         {
-            var treatmentRoadmap = await this.context.TreatmentRoadmaps.
-                                        FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == treatmentRoadmapId);
-
-            if (treatmentRoadmap == null)
+            var bookings = await this.context.Bookings
+                        .Where(b => b.CustomerId == customerId)
+                        .ToListAsync();
+            if (bookings == null)
             {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Treatment roadmap not found.");
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Bookings not found for this customer.");
             }
 
-            var medicalRecord = await this.context.MedicalRecords.FirstOrDefaultAsync(mr => mr.CustomerId == customerId);
-
-            if (medicalRecord == null)
+            var medicalRecords = await this.context.MedicalRecords
+                        .Where(mr => mr.CustomerId == customerId)
+                        .ToListAsync();
+            if (medicalRecords == null)
             {
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this customer.");
             }
 
-            var medicalRecordDetail = await this.context.MedicalRecordDetails
-                                .FirstOrDefaultAsync(mrd => mrd.TreatmentRoadmapId == treatmentRoadmapId
-                                                         && mrd.MedicalRecordId == medicalRecord.MedicalRecordId);
+            var result = new List<MedicalRecordWithBookingDto>();
 
-            treatmentRoadmap.Date = updateTreamentRoadmap.Date;
-            treatmentRoadmap.DurationDay = updateTreamentRoadmap.DurationDay;
-            treatmentRoadmap.Description = updateTreamentRoadmap.Description;
-
-            if (medicalRecordDetail != null && !string.IsNullOrEmpty(status))
+            for (int i = 0; i < medicalRecords.Count; i++)
             {
-                medicalRecordDetail.Status = status;
+                var record = medicalRecords[i];
+                var booking = bookings.ElementAtOrDefault(i); // ánh xạ theo index hoặc logic khác
+
+                result.Add(new MedicalRecordWithBookingDto
+                {
+                    BookingId = booking.BookingId,
+                    MedicalRecordId = record.MedicalRecordId,
+                    StartDate = record.StartDate,
+                    EndDate = record.EndDate,
+                    Stage = record.Stage,
+                    Diagnosis = record.Diagnosis,
+                    Status = record.Status,
+                    Attempt = record.Attempt
+                });
             }
 
-            await this.context.SaveChangesAsync();
-            return true;
+            return result;
+        }
+
+        public async Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId)
+        {
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
+
+            var orderDetail = await this.context.OrderDetails
+                    .Where(od => od.OrderId == order.OrderId)
+                    .ToListAsync();
+            return orderDetail;
+        }
+
+        public async Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim)
+        {
+            var customerLists = await this.GetListCustomerAsync(doctorIdClaim);
+            if (customerLists == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "List customer not found.");
+            }
+
+            customerLists = customerLists.Where(x => x.FullName.ToLower().Contains(name.ToLower())).ToList();
+            return customerLists;
+        }
+
+        public Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> AmountCustomerAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            var medicalRecords = await this.context.MedicalRecords
+                    .Where(mr => mr.DoctorId == doctor.DoctorId)
+                    .ToListAsync();
+
+            var customerId = medicalRecords.Select(mr => mr.CustomerId).Distinct().ToList();
+            return customerId.Count;
+        }
+
+        public async Task<int> AmountMedicalRecordAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            return await this.context.MedicalRecords
+                .Where(mr => mr.DoctorId == doctor.DoctorId)
+                .Select(mr => mr.MedicalRecordId)
+                .CountAsync();
+        }
+
+        public async Task<int> AmountMedicalRecordWithStatusCompleteAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            return await this.context.MedicalRecords
+                .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status == "Thành công")
+                .Select(mr => mr.MedicalRecordId)
+                .CountAsync();
+        }
+
+        public async Task<int> AmountBookingCustomerAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            var doctorScheduleId = await this.context.DoctorSchedules
+                    .Where(ds => ds.DoctorId == doctor.DoctorId)
+                    .Select(ds => ds.DoctorScheduleId)
+                    .ToListAsync();
+
+            var booking = await this.context.Bookings
+                    .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
+                    .ToListAsync();
+            return booking.Count;
         }
 
         public async Task<bool> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail, int doctorIdClaim, int medicalRecordId)
@@ -358,38 +452,6 @@
 
             medicalRecordDetail.MedicalRecordId = medicalRecord.MedicalRecordId;
             this.context.MedicalRecordDetails.Add(medicalRecordDetail);
-            await this.context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> UpdateMedicalRecordDetailAsync(MedicalRecordDetail update, int doctorIdClaim, int customerId, int medicalRecordDetailId)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
-            }
-
-            var medicalRecord = await this.context.MedicalRecords
-                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
-                                                    && mr.CustomerId == customerId);
-
-            if (medicalRecord == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this customer.");
-            }
-
-            var medicalRecordDetail = await this.context.MedicalRecordDetails
-                            .FirstOrDefaultAsync(mrd => mrd.MedicalRecordDetailId == medicalRecordDetailId);
-
-            if (medicalRecordDetail.MedicalRecordId == medicalRecord.MedicalRecordId)
-            {
-                medicalRecordDetail.Date = update.Date;
-                medicalRecordDetail.TestResult = update.TestResult;
-                medicalRecordDetail.Note = update.Note;
-                medicalRecordDetail.Status = update.Status;
-            }
             await this.context.SaveChangesAsync();
             return true;
         }
@@ -461,48 +523,6 @@
             return true;
         }
 
-        public async Task<bool> UpdateTreatmentResultAndTypeTestAsync(UpdateTreatmentResultAndTypetestDto dto, int treatmentResultId)
-        {
-            var treatmentResult = await this.context.TreatmentResults
-                        .Include(tr => tr.TypeTest)
-                        .FirstOrDefaultAsync(tr => tr.TreatmentResultId == treatmentResultId);
-
-            if (treatmentResult == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "TreatmentResult not found.");
-            }
-
-            treatmentResult.DateTreatmentResult = dto.DateTreatmentResult;
-            treatmentResult.Description = dto.Description;
-            treatmentResult.Result = dto.Result;
-
-            var listTypeTest = treatmentResult.TypeTest.ToList();
-
-            foreach (var typeTestDto in dto.TypeTest)
-            {
-                if (typeTestDto.TypeTestId == 0)
-                {
-                    treatmentResult.TypeTest.Add(new TypeTest
-                    {
-                        Name = typeTestDto.Name,
-                        Description = typeTestDto.Description,
-                    });
-                }
-                else
-                {
-                    var existing = listTypeTest.FirstOrDefault(t => t.TypeTestId == typeTestDto.TypeTestId);
-                    if (existing != null)
-                    {
-                        existing.Name = typeTestDto.Name;
-                        existing.Description = typeTestDto.Description;
-                    }
-                }
-            }
-
-            await this.context.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int bookingId, int customerId)
         {
             var booking = await this.context.Bookings
@@ -566,6 +586,151 @@
             return true;
         }
 
+        public async Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int bookingId)
+        {
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+            if (booking == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Bookings not found.");
+            }
+
+            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
+
+            var orderDetailOld = await this.context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == order.OrderId);
+
+            var treatmentRoadmap = await this.context.TreatmentRoadmaps.FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == dto.TreatmentRoadmapId);
+
+            var orderDetail = new OrderDetail()
+            {
+                OrderId = order.OrderId,
+                ServiceId = orderDetailOld.ServiceId,
+                DoctorName = orderDetailOld.DoctorName,
+                ServiceName = orderDetailOld.ServiceName,
+                StageName = treatmentRoadmap.Stage,
+                DateTreatment = dto.DateTreatment,
+                TimeTreatment = dto.TimeTreatment,
+            };
+
+            await this.doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
+
+            this.context.OrderDetails.Add(orderDetail);
+            await this.context.SaveChangesAsync();
+
+            //tích hợp tạo luôn payment phía sau đó
+            await this.CreatePaymentForCustomerAsync(bookingId, dto.TreatmentRoadmapId);
+            return true;
+        }
+
+        public async Task<bool> UpdateMedicalRecordDetailAsync(MedicalRecordDetail update, int doctorIdClaim, int customerId, int medicalRecordDetailId)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            var medicalRecord = await this.context.MedicalRecords
+                            .FirstOrDefaultAsync(mr => mr.DoctorId == doctor.DoctorId
+                                                    && mr.CustomerId == customerId);
+
+            if (medicalRecord == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this customer.");
+            }
+
+            var medicalRecordDetail = await this.context.MedicalRecordDetails
+                            .FirstOrDefaultAsync(mrd => mrd.MedicalRecordDetailId == medicalRecordDetailId);
+
+            if (medicalRecordDetail.MedicalRecordId == medicalRecord.MedicalRecordId)
+            {
+                medicalRecordDetail.Date = update.Date;
+                medicalRecordDetail.TestResult = update.TestResult;
+                medicalRecordDetail.Note = update.Note;
+                medicalRecordDetail.Status = update.Status;
+            }
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateDetailTreatmentRoadmapAsync(TreatmentRoadmap updateTreamentRoadmap, string status,
+                                                int treatmentRoadmapId, int customerId)
+        {
+            var treatmentRoadmap = await this.context.TreatmentRoadmaps.
+                                        FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == treatmentRoadmapId);
+
+            if (treatmentRoadmap == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Treatment roadmap not found.");
+            }
+
+            var medicalRecord = await this.context.MedicalRecords.FirstOrDefaultAsync(mr => mr.CustomerId == customerId);
+
+            if (medicalRecord == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this customer.");
+            }
+
+            var medicalRecordDetail = await this.context.MedicalRecordDetails
+                                .FirstOrDefaultAsync(mrd => mrd.TreatmentRoadmapId == treatmentRoadmapId
+                                                         && mrd.MedicalRecordId == medicalRecord.MedicalRecordId);
+
+            treatmentRoadmap.Date = updateTreamentRoadmap.Date;
+            treatmentRoadmap.DurationDay = updateTreamentRoadmap.DurationDay;
+            treatmentRoadmap.Description = updateTreamentRoadmap.Description;
+
+            if (medicalRecordDetail != null && !string.IsNullOrEmpty(status))
+            {
+                medicalRecordDetail.Status = status;
+            }
+
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateTreatmentResultAndTypeTestAsync(UpdateTreatmentResultAndTypetestDto dto, int treatmentResultId)
+        {
+            var treatmentResult = await this.context.TreatmentResults
+                        .Include(tr => tr.TypeTest)
+                        .FirstOrDefaultAsync(tr => tr.TreatmentResultId == treatmentResultId);
+
+            if (treatmentResult == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "TreatmentResult not found.");
+            }
+
+            treatmentResult.DateTreatmentResult = dto.DateTreatmentResult;
+            treatmentResult.Description = dto.Description;
+            treatmentResult.Result = dto.Result;
+
+            var listTypeTest = treatmentResult.TypeTest.ToList();
+
+            foreach (var typeTestDto in dto.TypeTest)
+            {
+                if (typeTestDto.TypeTestId == 0)
+                {
+                    treatmentResult.TypeTest.Add(new TypeTest
+                    {
+                        Name = typeTestDto.Name,
+                        Description = typeTestDto.Description,
+                    });
+                }
+                else
+                {
+                    var existing = listTypeTest.FirstOrDefault(t => t.TypeTestId == typeTestDto.TypeTestId);
+                    if (existing != null)
+                    {
+                        existing.Name = typeTestDto.Name;
+                        existing.Description = typeTestDto.Description;
+                    }
+                }
+            }
+
+            await this.context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> UpdateConsultationResultAndTypeTestAsync(UpdateConsultationResultAndTypetestDto dto, int consultationResultId)
         {
             var consultationResult = await this.context.ConsulationResults
@@ -608,94 +773,21 @@
             return true;
         }
 
-        public async Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId)
-        {
-            var bookings = await this.context.Bookings
-                        .Where(b => b.CustomerId == customerId)
-                        .ToListAsync();
-            if (bookings == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Bookings not found for this customer.");
-            }
-
-            var medicalRecords = await this.context.MedicalRecords
-                        .Where(mr => mr.CustomerId == customerId)
-                        .ToListAsync();
-            if (medicalRecords == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this customer.");
-            }
-
-            var result = new List<MedicalRecordWithBookingDto>();
-
-            for (int i = 0; i < medicalRecords.Count; i++)
-            {
-                var record = medicalRecords[i];
-                var booking = bookings.ElementAtOrDefault(i); // ánh xạ theo index hoặc logic khác
-
-                result.Add(new MedicalRecordWithBookingDto
-                {
-                    BookingId = booking.BookingId,
-                    MedicalRecordId = record.MedicalRecordId,
-                    StartDate = record.StartDate,
-                    EndDate = record.EndDate,
-                    Stage = record.Stage,
-                    Diagnosis = record.Diagnosis,
-                    Status = record.Status,
-                    Attempt = record.Attempt
-                });
-            }
-
-            return result;
-        }
-
-        public async Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int bookingId)
+        public async Task<bool> UpdateStatusBookingAfterCompleteAsync(int bookingId, string status)
         {
             var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
-
             if (booking == null)
             {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Bookings not found.");
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Booking not found");
             }
 
-            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
-
-            var orderDetailOld = await this.context.OrderDetails.FirstOrDefaultAsync(od => od.OrderId == order.OrderId);
-
-            var treatmentRoadmap = await this.context.TreatmentRoadmaps.FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == dto.TreatmentRoadmapId);
-
-            var orderDetail = new OrderDetail()
-            {
-                OrderId = order.OrderId,
-                ServiceId = orderDetailOld.ServiceId,
-                DoctorName = orderDetailOld.DoctorName,
-                ServiceName = orderDetailOld.ServiceName,
-                StageName = treatmentRoadmap.Stage,
-                DateTreatment = dto.DateTreatment,
-                TimeTreatment = dto.TimeTreatment,
-            };
-
-            await this.doctorScheduleRepository.UpdateScheduleStatus(dto.DoctorScheduleId, "Unavailable");
-
-            this.context.OrderDetails.Add(orderDetail);
+            if (booking == null) return false;
+            booking.Status = status;
             await this.context.SaveChangesAsync();
-
-            //tích hợp tạo luôn payment phía sau đó
-            await this.CreatePaymentForCustomerAsync(bookingId, dto.TreatmentRoadmapId);
             return true;
         }
 
-        public async Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId)
-        {
-            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
-
-            var order = await this.context.Orders.FirstOrDefaultAsync(o => o.BookingId == booking.BookingId);
-
-            var orderDetail = await this.context.OrderDetails
-                    .Where(od => od.OrderId == order.OrderId)
-                    .ToListAsync();
-            return orderDetail;
-        }
+        
 
         public async Task<bool> CreatePaymentForCustomerAsync(int bookingId, int treamentRoadmapId)
         {
@@ -731,95 +823,6 @@
             await this.context.SaveChangesAsync();
 
             return true;
-        }
-
-        public async Task<bool> UpdateStatusBookingAfterCompleteAsync(int bookingId, string status)
-        {
-            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
-            if (booking == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Booking not found");
-            }
-
-            if (booking == null) return false;
-            booking.Status = status;
-            await this.context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim)
-        {
-            var customerLists = await this.GetListCustomerAsync(doctorIdClaim);
-            if (customerLists == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "List customer not found.");
-            }
-
-            customerLists = customerLists.Where(x => x.FullName.ToLower().Contains(name.ToLower())).ToList();
-            return customerLists;
-        }
-
-        public async Task<int> AmountCustomerAsync(int doctorIdClaim)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
-            }
-
-            var medicalRecords = await this.context.MedicalRecords
-                    .Where(mr => mr.DoctorId == doctor.DoctorId)
-                    .ToListAsync();
-
-            var customerId = medicalRecords.Select(mr => mr.CustomerId).Distinct().ToList();
-            return customerId.Count;
-        }
-
-        public async Task<int> AmountMedicalRecordAsync(int doctorIdClaim)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
-            }
-
-            return await this.context.MedicalRecords
-                .Where(mr => mr.DoctorId == doctor.DoctorId)
-                .Select(mr => mr.MedicalRecordId)
-                .CountAsync();
-        }
-
-        public async Task<int> AmountMedicalRecordWithStatusCompleteAsync(int doctorIdClaim)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
-            }
-
-            return await this.context.MedicalRecords
-                .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status == "Thành công")
-                .Select(mr => mr.MedicalRecordId)
-                .CountAsync();
-        }
-
-        public async Task<int> AmountBookingCustomerAsync(int doctorIdClaim)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
-            }
-
-            var doctorScheduleId = await this.context.DoctorSchedules
-                    .Where(ds => ds.DoctorId == doctor.DoctorId)
-                    .Select(ds => ds.DoctorScheduleId)
-                    .ToListAsync();
-
-            var booking = await this.context.Bookings
-                    .Where(b => doctorScheduleId.Contains((int)b.DoctorScheduleId))
-                    .ToListAsync();
-            return booking.Count;
         }
     }
 }
