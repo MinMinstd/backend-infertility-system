@@ -191,7 +191,8 @@ namespace infertility_system.Controllers
         [HttpGet("medicalRecord/{customerId}")]
         public async Task<IActionResult> GetMedicalRecord(int customerId)
         {
-            var medicalRecords = await this.doctorRepository.GetMedicalRecordsCustomerAsync(customerId);
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var medicalRecords = await this.doctorRepository.GetMedicalRecordsCustomerAsync(customerId, doctorIdClaims);
             return this.Ok(medicalRecords);
         }
 
