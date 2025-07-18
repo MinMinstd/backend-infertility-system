@@ -111,16 +111,16 @@
                 return this.BadRequest("Start time must be earlier than end time.");
             }
 
-            // Check if the schedule already exists for the given date and time
-            var existingSchedule = await this.doctorScheduleRepository.GetScheduleByDateTime(
-                createDoctorScheduleDto.WorkDate,
-                createDoctorScheduleDto.StartTime,
-                createDoctorScheduleDto.EndTime);
+            //// Check if the schedule already exists for the given date and time
+            //var existingSchedule = await this.doctorScheduleRepository.GetScheduleByDateTime(
+            //    createDoctorScheduleDto.WorkDate,
+            //    createDoctorScheduleDto.StartTime,
+            //    createDoctorScheduleDto.EndTime);
 
-            if (existingSchedule != null)
-            {
-                return this.BadRequest("A schedule already exists for the specified date and time.");
-            }
+            //if (existingSchedule != null)
+            //{
+            //    return this.BadRequest("A schedule already exists for the specified date and time.");
+            //}
 
             var doctorSchedule = this.mapper.Map<Models.DoctorSchedule>(createDoctorScheduleDto);
             doctorSchedule.DoctorId = doctorId;
