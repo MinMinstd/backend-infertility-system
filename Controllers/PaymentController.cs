@@ -59,5 +59,38 @@ namespace infertility_system.Controllers
             await _paymentRepository.UpdateStatusPayment(paymentId);
             return this.Ok("Payment status updated successfully.");
         }
+
+        [HttpGet("report/total-revenue/{month}/{year}")]
+        public async Task<IActionResult> GetTotalRevenueByMonthAndYear(int month, int year)
+        {
+            var totalRevenue = await _paymentRepository.GetTotalRevenue(month, year);
+            if (totalRevenue < 0)
+            {
+                return NotFound("No revenue found for the specified month and year.");
+            }
+            return this.Ok(new { TotalRevenue = totalRevenue });
+        }
+
+        [HttpGet("report/total-transaction/{month}/{year}")]
+        public async Task<IActionResult> GetTotalTransactionByMonthAndYear(int month, int year)
+        {
+            var totalTransactions = await _paymentRepository.GetTotalTransactions(month, year);
+            if (totalTransactions < 0)
+            {
+                return NotFound("No transactions found for the specified month and year.");
+            }
+            return this.Ok(new { TotalTransactions = totalTransactions });
+        }
+
+        [HttpGet("report/total-customer/{month}/{year}")]
+        public async Task<IActionResult> GetTotalCustomerByMonthAndYear(int month, int year)
+        {
+            var totalCustomers = await _paymentRepository.GetTotalCustomers(month, year);
+            if (totalCustomers < 0)
+            {
+                return NotFound("No customers found for the specified month and year.");
+            }
+            return this.Ok(new { TotalCustomers = totalCustomers });
+        }
     }
 }
