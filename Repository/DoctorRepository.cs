@@ -299,7 +299,7 @@
             return consultationResult;
         }
 
-        public async Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId)
+        public async Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId, int doctorIdClaim)
         {
             var bookings = await this.context.Bookings
                         .Where(b => b.CustomerId == customerId)
@@ -309,9 +309,12 @@
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Bookings not found for this customer.");
             }
 
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.DoctorId == doctorIdClaim);
+
             var medicalRecords = await this.context.MedicalRecords
-                        .Where(mr => mr.CustomerId == customerId)
+                        .Where(mr => mr.CustomerId == customerId && mr.DoctorId == doctor.DoctorId)
                         .ToListAsync();
+
             if (medicalRecords == null)
             {
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Medical record not found for this customer.");
@@ -824,5 +827,33 @@
 
             return true;
         }
+
+        public async Task<List<MedicalRecord>> GetListMedicalRecordWithStartDateAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
+            }
+
+            return await this.context.MedicalRecords
+                .Where(mr => mr.DoctorId == doctorIdClaim)
+                .ToListAsync();
+        }
+
+        //public async Task<List<MedicalRecord>> GetMedicalRecordsWithCustomerNameAndStatusAsync(int doctorIdClaim)
+        //{
+        //    var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+
+        //    var medicalRecord = await this.context.MedicalRecords
+        //        .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status == "Thành công")
+        //        .Include(mr => mr.Customer)
+        //            .ThenInclude(c => c.Bookings)
+        //                .ThenInclude(b => b.Order)
+        //                    .ThenInclude(o => o.OrderDetails)
+        //                        .ToListAsync();
+        //    return medicalRecord;
+        //}
     }
 }

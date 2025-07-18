@@ -120,6 +120,11 @@ namespace infertility_system.Helpers
             this.CreateMap<CreateBookingCustomerDto, Booking>();
             this.CreateMap<OrderDetail, ListAppointmentDto>();
             this.CreateMap<DoctorSchedule, DoctorSchedulesDto>();
+            this.CreateMap<MedicalRecord, MedicalRecordWithStartDateDto>();
+            this.CreateMap<MedicalRecord, MRCustomerNameAndStatusDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Customer.Bookings.FirstOrDefault()
+                .Order.OrderDetails.FirstOrDefault().ServiceName));
 
             this.CreateMap<CustomerProfileDto, Customer>();
             this.CreateMap<CustomerProfileDto, User>();

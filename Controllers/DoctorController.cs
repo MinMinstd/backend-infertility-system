@@ -244,6 +244,24 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
+        [HttpGet("medicalRecordWithStartDate")]
+        public async Task<IActionResult> GetMedicalRecordWithStartDate()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var medicalRecord = await this.doctorRepository.GetListMedicalRecordWithStartDateAsync(doctorIdClaims);
+            var result = this.mapper.Map<List<MedicalRecordWithStartDateDto>>(medicalRecord);
+            return this.Ok(result);
+        }
+
+        //[HttpGet("medicalRecordWithCustomerNameAndStatus")]
+        //public async Task<IActionResult> GetMedicalRecordWithCustomerNameAndStatus()
+        //{
+        //    var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        //    var medicalRecord = await this.doctorRepository.GetMedicalRecordsWithCustomerNameAndStatusAsync(doctorIdClaims);
+        //    var result = this.mapper.Map<List<MRCustomerNameAndStatusDto>>(medicalRecord);
+        //    return this.Ok(result);
+        //}
+
         // [Authorize(Roles = "Doctor")]
         [HttpPost("CreateMedicalRecord/{customerId}")]
         public async Task<IActionResult> CreateMedicalRecord(

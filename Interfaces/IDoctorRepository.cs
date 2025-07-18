@@ -39,7 +39,7 @@
 
         Task<List<Doctor>> GetDoctorsByServiceIdForBookingConsulation(int serviceId);
 
-        Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId);
+        Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId, int doctorIdClaim);
 
         Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId);
 
@@ -76,5 +76,9 @@
         Task<int> AmountMedicalRecordWithStatusCompleteAsync(int doctorIdClaim);
 
         Task<int> AmountBookingCustomerAsync(int doctorIdClaim);
+
+        Task<List<MedicalRecord>> GetListMedicalRecordWithStartDateAsync(int doctorIdClaim);
+
+        //Task<List<MedicalRecord>> GetMedicalRecordsWithCustomerNameAndStatusAsync(int doctorIdClaim);
     }
 }
