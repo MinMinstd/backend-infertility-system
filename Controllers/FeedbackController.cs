@@ -1,11 +1,11 @@
 ﻿namespace infertility_system.Controllers
 {
-    using System.Security.Claims;
     using AutoMapper;
     using infertility_system.Dtos.Feedback;
     using infertility_system.Interfaces;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -21,7 +21,6 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetFeedbacks()
         {
             var feedbacks = await this.feedbackRepository.GetFeedbacksAsync();

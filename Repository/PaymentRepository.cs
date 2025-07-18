@@ -69,5 +69,28 @@ namespace infertility_system.Repository
                         .ThenInclude(o => o.Customer)
                 .ToListAsync();
         }
+
+        public async Task<decimal> GetTotalRevenue(int month, int year)
+        {
+            return await _context.Payments
+                .Where(x => x.Date.Month == month && x.Date.Year == year && x.Status == "Đã Thanh Toán")
+                .SumAsync(x => x.PriceByTreatement);
+        }
+
+        public async Task<int> GetTotalTransactions(int month, int year)
+        {
+            return await _context.Payments
+                .Where(x => x.Date.Month == month && x.Date.Year == year && x.Status == "Đã Thanh Toán")
+                .CountAsync();
+        }
+
+        public async Task<int> GetTotalCustomers(int month, int year)
+        {
+            return await _context.Payments
+                .Where(x => x.Date.Month == month && x.Date.Year == year && x.Status == "Đã Thanh Toán")
+                .Select(x => x.Order.CustomerId)
+                .Distinct()
+                .CountAsync();
+        }
     }
 }

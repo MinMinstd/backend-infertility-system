@@ -76,7 +76,7 @@
 
         public async Task<List<Order>> GetAllOrders()
         {
-            return await this.context.Orders.ToListAsync();
+            return await this.context.Orders.Where(x => x.Wife != null).ToListAsync();
         }
 
         public async Task<Order> GetOrderCurrent(int customerId)

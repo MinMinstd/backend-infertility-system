@@ -183,7 +183,10 @@
                 app.UseSwaggerUI();
             }
 
+            app.UseStaticFiles(); // Enable serving static files (e.g., images)
+
             app.UseMiddleware<ExceptionMiddleware>();
+
 
             app.UseCors();
 
