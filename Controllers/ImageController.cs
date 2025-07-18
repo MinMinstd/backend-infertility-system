@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using infertility_system.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace infertility_system.Controllers
@@ -7,10 +8,12 @@ namespace infertility_system.Controllers
     [Route("api/[controller]")]
     public class ImageController : ControllerBase
     {
+        private readonly IImageService _imageService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ImageController(IWebHostEnvironment webHostEnvironment)
+        public ImageController(IWebHostEnvironment webHostEnvironment, IImageService imageService)
         {
             _webHostEnvironment = webHostEnvironment;
+            _imageService = imageService;
         }
 
         [HttpPost("upload")]

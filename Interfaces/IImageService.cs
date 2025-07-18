@@ -2,9 +2,8 @@
 {
     public interface IImageService
     {
-        Task UploadImageAsync(IFormFile imageFile);
+        Task<string> UploadImageAsync(IFormFile imageFile);
 
-        Task<string> GetImageUrlAsync(string fileName);
-
+        Task<byte[]> GetImageAsync(string imagePath);
     }
 }
