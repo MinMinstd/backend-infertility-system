@@ -1,4 +1,6 @@
-﻿namespace infertility_system.Dtos.BlogPost
+﻿using Microsoft.AspNetCore.Http;
+
+namespace infertility_system.Dtos.BlogPost
 {
     public class BlogPostDto
     {
@@ -10,5 +12,6 @@
 
         public string? Image { get; set; }
 
+        public IFormFile? ImageFile { get; set; }
     }
 }
