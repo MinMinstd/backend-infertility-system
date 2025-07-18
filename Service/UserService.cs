@@ -17,7 +17,7 @@ namespace infertility_system.Service
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await this.context.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
+                .FirstOrDefaultAsync(u => u.Email == email && u.IsActive == true);
         }
     }
 }
