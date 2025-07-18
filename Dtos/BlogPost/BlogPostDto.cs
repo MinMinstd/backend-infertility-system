@@ -10,8 +10,6 @@ namespace infertility_system.Dtos.BlogPost
 
         public string? TreatmentType { get; set; }
 
-        public string? Image { get; set; }
-
         public IFormFile? ImageFile { get; set; }
     }
 }
