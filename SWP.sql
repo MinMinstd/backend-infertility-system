@@ -67,6 +67,7 @@ select * from BlogPosts
 select * from Payments
 select * from Embryos
 
+update OrderDetails set ServiceId = 2 where OrderDetailId = 3
 select b.CustomerId, b.BookingId from MedicalRecords mr left join Customers c on mr.CustomerId = c.CustomerId
 left join Bookings b on c.CustomerId = b.CustomerId where b.CustomerId = 1
 
@@ -269,19 +270,19 @@ VALUES
 INSERT INTO [TreatmentRoadmaps] ([ServiceId], [Date], [Stage], [Description], [DurationDay], [Price])
 VALUES
 -- Quy trình IVF (ServiceId = 1)
-(1, '2025-06-03', N'Kích thích buồng trứng', N'Mô tả bước Kích thích buồng trứng', 1, 808.38),
-(1, '2025-06-06', N'Chọc hút trứng', N'Mô tả bước Chọc hút trứng', 3, 4364.78),
-(1, '2025-06-09', N'Chọn lọc tinh trùng', N'Mô tả bước Chọn lọc tinh trùng', 5, 3831.91),
-(1, '2025-06-12', N'Tạo phôi', N'Mô tả bước Tạo phôi', 2, 646.21),
-(1, '2025-06-15', N'Chuyển phôi', N'Mô tả bước Chuyển phôi', 4, 2421.77),
-(1, '2025-06-16', N'Thử thai', N'Mô tả bước Thử thai', 1, 4373.81),
+(1, '2025-06-03', N'Kích thích buồng trứng', N'Mô tả bước Kích thích buồng trứng', 1, 10000000),
+(1, '2025-06-06', N'Chọc hút trứng', N'Mô tả bước Chọc hút trứng', 3, 20000000),
+(1, '2025-06-09', N'Chọn lọc tinh trùng', N'Mô tả bước Chọn lọc tinh trùng', 5, 30000000),
+(1, '2025-06-12', N'Tạo phôi', N'Mô tả bước Tạo phôi', 2, 20000000),
+(1, '2025-06-15', N'Chuyển phôi', N'Mô tả bước Chuyển phôi', 4, 40000000),
+(1, '2025-06-16', N'Thử thai', N'Mô tả bước Thử thai', 1, 30000000),
 
 -- Quy trình IUI (ServiceId = 2)
-(2, '2025-06-01', N'Kiểm tra sức khỏe sinh sản', N'Mô tả bước Kiểm tra sức khỏe sinh sản', 3, 2987.92),
-(2, '2025-06-05', N'Kích thích buồng trứng', N'Mô tả bước Kích thích buồng trứng', 3, 2850.30),
-(2, '2025-06-07', N'Chọn lọc tinh trùng', N'Mô tả bước Chọn lọc tinh trùng', 3, 4585.54),
-(2, '2025-06-10', N'Bơm tinh trùng vào buồng tử cung', N'Mô tả bước Bơm tinh trùng vào buồng tử cung', 1, 4486.73),
-(2, '2025-06-14', N'Thử thai', N'Mô tả bước Thử thai', 5, 3388.51);
+(2, '2025-06-01', N'Kiểm tra sức khỏe sinh sản', N'Mô tả bước Kiểm tra sức khỏe sinh sản', 3, 10000000),
+(2, '2025-06-05', N'Kích thích buồng trứng', N'Mô tả bước Kích thích buồng trứng', 3, 10000000),
+(2, '2025-06-07', N'Chọn lọc tinh trùng', N'Mô tả bước Chọn lọc tinh trùng', 3, 20000000),
+(2, '2025-06-10', N'Bơm tinh trùng vào buồng tử cung', N'Mô tả bước Bơm tinh trùng vào buồng tử cung', 1, 20000000),
+(2, '2025-06-14', N'Thử thai', N'Mô tả bước Thử thai', 5, 10000000);
 
 
 -- Treatment_result table
