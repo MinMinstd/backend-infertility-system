@@ -15,5 +15,11 @@ namespace infertility_system.Interfaces
         Task UpdateStatusPayment(int paymentId);
 
         Task<List<Payment>> GetListPaymentByMonthYearandIdTreatement(int month, int year, int id);
+
+        Task<decimal> GetTotalRevenue(int month, int year);
+
+        Task<int> GetTotalTransactions(int month, int year);
+
+        Task<int> GetTotalCustomers(int month, int year);
     }
 }
