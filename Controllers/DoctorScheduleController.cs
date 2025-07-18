@@ -79,7 +79,7 @@
             var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
             var doctorSchedules = await this.doctorScheduleRepository.GetListScheduleForDoctorAsync(doctorIdClaims, date);
-            var result = this.mapper.Map<List<DoctorScheduleRespondDto>>(doctorSchedules);
+            var result = this.mapper.Map<List<DoctorSchedulesDto>>(doctorSchedules);
             return this.Ok(result);
         }
 

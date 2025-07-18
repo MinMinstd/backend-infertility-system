@@ -29,24 +29,6 @@
 
         Task<List<ConsulationResult>> GetConsultationResultAndTypeTestsAsync(int bookingId, int customerId);
 
-        Task<bool> UpdateDetailTreatmentRoadmapAsync(TreatmentRoadmap updateTreamentRoadmap, string status, int treatmentRoadmapId, int customerId);
-
-        Task<bool> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail, int doctorIdClaim, int medicalRecordId);
-
-        Task<bool> UpdateMedicalRecordDetailDtoAsync(MedicalRecordDetail update, int doctorIdClaim, int customerId, int medicalRecordDetailId);
-
-        Task<bool> CreateTreatmentResultAndTypeTestAsync(CreateTreatmentResultAndTypeTestDto dto, int doctorIdClaim, int customerId);
-
-        Task<bool> CreateTypeTestTreatementResultAsync(TypeTest create, int doctorIdClaim, int customerId, int treatmentResultId);
-
-        Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int bookingId, int customerId);
-
-        Task<bool> CreateTypeTestConsultationResultAsync(TypeTest create, int doctorIdClaim, int customerId, int consultationResultId);
-
-        Task<bool> UpdateTreatmentResultAndTypeTestAsync(UpdateTreatmentResultAndTypetestDto dto, int treatmentResultId);
-
-        Task<bool> UpdateConsultationResultAndTypeTestAsync(UpdateConsultationResultAndTypetestDto dto, int consultationResultId);
-
         Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int bookingId, int customerId);
 
         Task<List<Booking>> GetBookingsCustomerAsync(int customerId);
@@ -59,14 +41,40 @@
 
         Task<List<MedicalRecordWithBookingDto>> GetMedicalRecordsCustomerAsync(int customerId);
 
+        Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId);
+
+        Task<bool> CreateMedicalRecordDetailAsync(MedicalRecordDetail medicalRecordDetail, int doctorIdClaim, int medicalRecordId);
+
+        Task<bool> CreateTreatmentResultAndTypeTestAsync(CreateTreatmentResultAndTypeTestDto dto, int doctorIdClaim, int customerId);
+
+        Task<bool> CreateTypeTestTreatementResultAsync(TypeTest create, int doctorIdClaim, int customerId, int treatmentResultId);
+
+        Task<bool> CreateConsultationAndTypeTestAsync(CreateConsultatioResultAndTypeTestDto dto, int bookingId, int customerId);
+
+        Task<bool> CreateTypeTestConsultationResultAsync(TypeTest create, int doctorIdClaim, int customerId, int consultationResultId);
+
         Task<bool> CreateBookingForCustomerAsync(CreateBookingCustomerDto dto, int bookingId);
 
         Task<bool> CreatePaymentForCustomerAsync(int bookingId, int treamentRoadmapId);
 
-        Task<List<OrderDetail>> GetListAppointmentCustomerAsync(int bookingId);
+        Task<bool> UpdateDetailTreatmentRoadmapAsync(TreatmentRoadmap updateTreamentRoadmap, string status, int treatmentRoadmapId, int customerId);
+
+        Task<bool> UpdateMedicalRecordDetailAsync(MedicalRecordDetail update, int doctorIdClaim, int customerId, int medicalRecordDetailId);
+
+        Task<bool> UpdateTreatmentResultAndTypeTestAsync(UpdateTreatmentResultAndTypetestDto dto, int treatmentResultId);
+
+        Task<bool> UpdateConsultationResultAndTypeTestAsync(UpdateConsultationResultAndTypetestDto dto, int consultationResultId);
 
         Task<bool> UpdateStatusBookingAfterCompleteAsync(int bookingId, string status);
 
         Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim);
+
+        Task<int> AmountCustomerAsync(int doctorIdClaim);
+
+        Task<int> AmountMedicalRecordAsync(int doctorIdClaim);
+
+        Task<int> AmountMedicalRecordWithStatusCompleteAsync(int doctorIdClaim);
+
+        Task<int> AmountBookingCustomerAsync(int doctorIdClaim);
     }
 }
