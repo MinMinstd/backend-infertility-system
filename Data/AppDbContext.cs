@@ -40,10 +40,6 @@
 
         public DbSet<Models.Payment> Payments { get; set; }
 
-        public DbSet<Models.Prescription> Prescriptions { get; set; }
-
-        public DbSet<Models.PrescriptionDetail> PrescriptionDetails { get; set; }
-
         public DbSet<Models.ServiceDB> Services { get; set; }
 
         public DbSet<Models.TreatmentResult> TreatmentResults { get; set; }
@@ -361,33 +357,11 @@
                 .HasForeignKey(mrd => mrd.TreatmentResultId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // PrescriptionDetail
-            modelBuilder.Entity<PrescriptionDetail>()
-                .HasOne(pd => pd.Prescription)
-                .WithMany(p => p.PrescriptionDetails)
-                .HasForeignKey(pd => pd.PrescriptionId);
-
-            // Prescription
-            modelBuilder.Entity<Prescription>()
-                .HasMany(p => p.PrescriptionDetails)
-                .WithOne(pd => pd.Prescription)
-                .HasForeignKey(pd => pd.PrescriptionId);
-
-            modelBuilder.Entity<Prescription>()
-                .HasOne(p => p.TreatmentResult)
-                .WithMany(mrd => mrd.Prescriptions)
-                .HasForeignKey(p => p.TreatmentResultId);
-
             // TreatmentResult
             modelBuilder.Entity<TreatmentResult>()
                 .HasMany(tr => tr.MedicalRecordDetails)
                 .WithOne(mrd => mrd.TreatmentResult)
                 .HasForeignKey(mrd => mrd.TreatmentResultId);
-
-            modelBuilder.Entity<TreatmentResult>()
-                .HasMany(tr => tr.Prescriptions)
-                .WithOne(p => p.TreatmentResult)
-                .HasForeignKey(p => p.TreatmentResultId);
 
             modelBuilder.Entity<TreatmentResult>()
                 .HasOne(tr => tr.TreatmentRoadmap)

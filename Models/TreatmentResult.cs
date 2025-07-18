@@ -22,9 +22,6 @@
         // TreatmentResult 1-N TypeTest
         public List<TypeTest>? TypeTest { get; set; }
 
-        // TreatmentResult 1-N Prescription
-        public List<Prescription>? Prescriptions { get; set; }
-
         // TreatmentResult 1-N MedicalRecordDetail
         public List<MedicalRecordDetail>? MedicalRecordDetails { get; set; }
     }
