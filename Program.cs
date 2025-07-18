@@ -148,6 +148,13 @@
                 app.UseSwaggerUI();
             }
 
+<<<<<<< Updated upstream
+=======
+            app.UseStaticFiles(); // Enable serving static files (e.g., images)
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
+>>>>>>> Stashed changes
             app.UseCors();
 
             app.UseHttpsRedirection();
