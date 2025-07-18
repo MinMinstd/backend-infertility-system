@@ -90,5 +90,12 @@
                 ? this.Ok("Doctor registered successfully.")
                 : this.BadRequest("Failed to register doctor.");
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            await this.userRepository.DeleteUser(id);
+            return this.Ok("User deleted successfully.");
+        }
     }
 }

@@ -17,5 +17,7 @@
         Task<int> CountNewAccount();
 
         Task<List<User>> GetAllUsersForManagement();
+
+        Task DeleteUser(int userId);
     }
 }

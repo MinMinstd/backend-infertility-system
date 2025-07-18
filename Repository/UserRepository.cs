@@ -17,32 +17,42 @@
         public async Task<int> CountCustomerAccount()
         {
             return await this.context.Users
-                .CountAsync(u => u.Role == "Customer");
+                .CountAsync(u => u.Role == "Customer" && u.IsActive == true);
         }
 
         public async Task<int> CountDoctorsAccount()
         {
             return await this.context.Users
-                .CountAsync(u => u.Role == "Doctor");
+                .CountAsync(u => u.Role == "Doctor" && u.IsActive == true);
         }
 
         public async Task<int> CountNewAccount()
         {
             var fromDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-30)); // Assuming "new" means created in the last 30 days
             return await this.context.Users
-                .Where(u => u.CreatedAt >= fromDate && (u.Role == "Customer" || u.Role == "Doctor"))
+                .Where(u => u.CreatedAt >= fromDate && (u.Role == "Customer" || u.Role == "Doctor") && u.IsActive == true)
                 .CountAsync();
         }
 
         public async Task<int> CountTotalAccounts()
         {
-            return await this.context.Users.CountAsync(u => u.Role == "Customer" || u.Role == "Doctor");
+            return await this.context.Users.CountAsync(u => (u.Role == "Customer" || u.Role == "Doctor") && u.IsActive == true);
+        }
+
+        public async Task DeleteUser(int userId)
+        {
+            var user = await this.context.Users.FindAsync(userId);
+            if (user != null)
+            {
+                user.IsActive = false;
+                await this.context.SaveChangesAsync();
+            }
         }
 
         public async Task<List<User>> GetAllUsersForManagement()
         {
             return await this.context.Users
-                .Where(u => u.Role == "Customer" || u.Role == "Doctor")
+                .Where(u => (u.Role == "Customer" || u.Role == "Doctor") && u.IsActive == true)
                 .Include(u => u.Customer)
                 .Include(u => u.Doctor)
                 .ToListAsync();
