@@ -1,5 +1,4 @@
-﻿
-DROP DATABASE InfertilitySystem;
+﻿DROP DATABASE InfertilitySystem;
 CREATE DATABASE InfertilitySystem
 USE InfertilitySystem
 
@@ -163,24 +162,24 @@ CREATE TABLE [dbo].[DoctorSchedules] (
 
 INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Status], [DoctorId], [ManagerId]) VALUES
 -- cũng có IDENTITY, có thể không ghi DoctorScheduleId
-( '2025-07-01', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
-( '2025-07-01', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
-( '2025-07-01', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
-( '2025-07-04', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
-( '2025-07-04', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
-( '2025-07-04', '14:00:00', '16:30:00', N'Available', 1, 1), --5 6
-( '2025-07-02', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
-( '2025-07-02', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
-( '2025-07-02', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
-( '2025-07-05', '08:00:00', '10:30:00', N'Available', 2, 1), --6
-( '2025-07-05', '11:00:00', '13:30:00', N'Available', 2, 1), --6
-( '2025-07-05', '14:00:00', '16:30:00', N'Available', 2, 1), --6
-( '2025-07-03', '08:00:00', '10:30:00', N'Available', 3, 1), --4
-( '2025-07-03', '11:00:00', '13:30:00', N'Available', 3, 1), --4
-( '2025-07-03', '14:00:00', '16:30:00', N'Available', 3, 1), --4
-( '2025-07-06', '08:00:00', '10:30:00', N'Available', 3, 1), --7
-( '2025-07-06', '11:00:00', '13:30:00', N'Available', 3, 1), --7
-( '2025-07-06', '14:00:00', '16:30:00', N'Available', 3, 1); --7
+( '2025-09-01', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
+( '2025-09-01', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
+( '2025-09-01', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
+( '2025-09-04', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
+( '2025-09-04', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
+( '2025-09-04', '14:00:00', '16:30:00', N'Available', 1, 1), --5 6
+( '2025-09-02', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
+( '2025-09-02', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
+( '2025-09-02', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
+( '2025-09-05', '08:00:00', '10:30:00', N'Available', 2, 1), --6
+( '2025-09-05', '11:00:00', '13:30:00', N'Available', 2, 1), --6
+( '2025-09-05', '14:00:00', '16:30:00', N'Available', 2, 1), --6
+( '2025-09-03', '08:00:00', '10:30:00', N'Available', 3, 1), --4
+( '2025-09-03', '11:00:00', '13:30:00', N'Available', 3, 1), --4
+( '2025-09-03', '14:00:00', '16:30:00', N'Available', 3, 1), --4
+( '2025-09-06', '08:00:00', '10:30:00', N'Available', 3, 1), --7
+( '2025-09-06', '11:00:00', '13:30:00', N'Available', 3, 1), --7
+( '2025-09-06', '14:00:00', '16:30:00', N'Available', 3, 1); --7
 
 
 -- Consultation_registration table
@@ -205,7 +204,6 @@ CREATE TABLE [dbo].[Bookings] (
     [Type]             NVARCHAR (MAX) NULL,
     [Status]           NVARCHAR (MAX) NULL,
     [Note]             NVARCHAR (MAX) NULL,
-    [Description]      NVARCHAR (MAX) NULL,
     [CustomerId]       INT            NULL,
     [DoctorScheduleId] INT            NULL,
     CONSTRAINT [PK_Bookings] PRIMARY KEY CLUSTERED ([BookingId] ASC),
@@ -214,10 +212,10 @@ CREATE TABLE [dbo].[Bookings] (
 );
 select * from Customers
 select * from Bookings
-INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, Status, Date, Time, Note, Type, Description)
+INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, Status, Date, Time, Note, Type)
 VALUES
-(1, 1,  N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF', N'Service', null),
-(2, 7,  N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI', N'Service', null);
+(1, 1,  N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF', N'Service'),
+(2, 7,  N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI', N'Service');
 
 
 -- Consultation_result table
@@ -327,45 +325,6 @@ INSERT INTO [TypeTests] ([ConsulationResultId], [TreatmentResultId], [Name], [De
 VALUES 
 (1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
 (2, 2, N'Siêu âm', N'Theo dõi nang trứng')
-
--- Prescription table
-CREATE TABLE [dbo].[Prescriptions] (
-    [PrescriptionId]    INT            IDENTITY (1, 1) NOT NULL,
-    [Date]              DATE           NOT NULL,
-    [Name]              NVARCHAR (MAX) NULL,
-    [Note]              NVARCHAR (MAX) NULL,
-    [TreatmentResultId] INT            NOT NULL,
-    CONSTRAINT [PK_Prescriptions] PRIMARY KEY CLUSTERED ([PrescriptionId] ASC),
-    CONSTRAINT [FK_Prescriptions_TreatmentResults_TreatmentResultId] FOREIGN KEY ([TreatmentResultId]) REFERENCES [dbo].[TreatmentResults] ([TreatmentResultId]) ON DELETE CASCADE
-);
-
-INSERT INTO [Prescriptions] ([TreatmentResultId], [Date], [Name], [Note])
-VALUES 
-(1, '2025-06-01', N'Thuốc kích trứng', N'Uống hàng ngày'),
-(2, '2025-06-02', N'Thuốc hỗ trợ IUI', N'Theo chỉ định'),
-(3, '2025-06-03', N'Thuốc nội tiết', N'Sáng – Tối'),
-(4, '2025-06-04', N'Hỗ trợ tử cung', N'Đúng giờ'),
-(5, '2025-06-05', N'Thuốc sau chọc hút', N'Kết hợp ăn uống');
-
--- Prescription_detail table
-CREATE TABLE [dbo].[PrescriptionDetails] (
-    [PrescriptionDetailId] INT            IDENTITY (1, 1) NOT NULL,
-    [MedicineName]         NVARCHAR (MAX) NULL,
-    [Dosage]               NVARCHAR (MAX) NULL,
-    [DurationDay]          NVARCHAR (MAX) NULL,
-    [Instruction]          NVARCHAR (MAX) NULL,
-    [PrescriptionId]       INT            NOT NULL,
-    CONSTRAINT [PK_PrescriptionDetails] PRIMARY KEY CLUSTERED ([PrescriptionDetailId] ASC),
-    CONSTRAINT [FK_PrescriptionDetails_Prescriptions_PrescriptionId] FOREIGN KEY ([PrescriptionId]) REFERENCES [dbo].[Prescriptions] ([PrescriptionId]) ON DELETE CASCADE
-);
-
-INSERT INTO [PrescriptionDetails] ([PrescriptionId], [MedicineName], [Dosage], [DurationDay], [Instruction])
-VALUES 
-(1, N'Clomiphene', '50mg', '5', N'Uống trước ăn sáng'),
-(2, N'Letrozole', '2.5mg', '5', N'Uống 1 viên mỗi tối'),
-(3, N'Progesterone', '100mg', '10', N'Uống sau bữa tối'),
-(4, N'Estrogen', '1mg', '7', N'Buổi sáng và tối'),
-(5, N'Duphaston', '10mg', '10', N'Sau ăn trưa');
 
 -- Medical_record table
 
