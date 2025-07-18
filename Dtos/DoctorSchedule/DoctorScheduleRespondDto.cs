@@ -2,6 +2,8 @@
 {
     public class DoctorScheduleRespondDto
     {
+        public int DoctorScheduleId { get; set; }
+
         public DateOnly WorkDate { get; set; }
 
         public TimeOnly StartTime { get; set; }

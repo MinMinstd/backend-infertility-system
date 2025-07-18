@@ -1,6 +1,5 @@
 ﻿namespace infertility_system.Repository
 {
-    using System.Net;
     using AutoMapper;
     using infertility_system.Data;
     using infertility_system.Dtos.Booking;
@@ -12,6 +11,7 @@
     using infertility_system.Middleware;
     using infertility_system.Models;
     using Microsoft.EntityFrameworkCore;
+    using System.Net;
 
     public class DoctorRepository : IDoctorRepository
     {
@@ -70,7 +70,10 @@
 
         public async Task<List<Doctor>> GetDoctosForManagement()
         {
-            return await this.context.Doctors.Include(x => x.DoctorDegrees).ToListAsync();
+            return await this.context.Doctors
+                .Include(x => x.DoctorDegrees)
+                .Include(x => x.User)
+                .ToListAsync();
         }
 
         public async Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim)
@@ -786,8 +789,6 @@
             await this.context.SaveChangesAsync();
             return true;
         }
-
-        
 
         public async Task<bool> CreatePaymentForCustomerAsync(int bookingId, int treamentRoadmapId)
         {
