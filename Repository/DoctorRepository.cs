@@ -309,7 +309,7 @@
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Bookings not found for this customer.");
             }
 
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.DoctorId == doctorIdClaim);
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
 
             var medicalRecords = await this.context.MedicalRecords
                         .Where(mr => mr.CustomerId == customerId && mr.DoctorId == doctor.DoctorId)
