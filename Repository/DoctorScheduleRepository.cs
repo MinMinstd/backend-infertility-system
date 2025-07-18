@@ -1,11 +1,11 @@
 namespace infertility_system.Repository
 {
-    using System.Net;
     using infertility_system.Data;
     using infertility_system.Interfaces;
     using infertility_system.Middleware;
     using infertility_system.Models;
     using Microsoft.EntityFrameworkCore;
+    using System.Net;
 
     public class DoctorScheduleRepository : IDoctorScheduleRepository
     {
@@ -79,6 +79,13 @@ namespace infertility_system.Repository
         {
             await this.context.DoctorSchedules.AddAsync(schedule);
             await this.context.SaveChangesAsync();
+        }
+
+        public async Task DeleteScheduleAsync(int doctorId, int scheduleId)
+        {
+            await this.context.Database.ExecuteSqlRawAsync(
+                "DELETE FROM DoctorSchedules WHERE DoctorId = {0} AND DoctorScheduleId = {1}",
+                doctorId, scheduleId);
         }
     }
 }
