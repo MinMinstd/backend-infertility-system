@@ -17,5 +17,7 @@ namespace infertility_system.Interfaces
         Task<List<DoctorSchedule>> GetFullScheduleAsync(int userId);
 
         Task AddScheduleAsync(DoctorSchedule schedule);
+
+        Task DeleteScheduleAsync(int doctorId, int scheduleId);
     }
 }

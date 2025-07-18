@@ -130,5 +130,23 @@
             await this.doctorScheduleRepository.AddScheduleAsync(doctorSchedule);
             return this.Ok("Schedule created successfully.");
         }
+
+        [HttpDelete("{doctorId}/{scheduleId}")]
+        public async Task<IActionResult> DeleteSchedule(int doctorId, int scheduleId)
+        {
+            if (doctorId <= 0 || scheduleId <= 0)
+            {
+                return this.BadRequest("Invalid doctor or schedule ID.");
+            }
+
+            var existingSchedule = await this.doctorScheduleRepository.GetScheduleByDoctorId(doctorId);
+            if (existingSchedule == null || !existingSchedule.Any(s => s.DoctorScheduleId == scheduleId))
+            {
+                return this.NotFound("Schedule not found.");
+            }
+
+            await this.doctorScheduleRepository.DeleteScheduleAsync(doctorId, scheduleId);
+            return this.Ok("Schedule deleted successfully.");
+        }
     }
 }
