@@ -52,7 +52,7 @@
         public async Task<List<User>> GetAllUsersForManagement()
         {
             return await this.context.Users
-                .Where(u => (u.Role == "Customer" || u.Role == "Doctor") && u.IsActive == true)
+                .Where(u => u.Role == "Customer" || u.Role == "Doctor")
                 .Include(u => u.Customer)
                 .Include(u => u.Doctor)
                 .ToListAsync();

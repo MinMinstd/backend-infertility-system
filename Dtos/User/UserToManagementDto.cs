@@ -15,5 +15,7 @@
         public DateOnly LastActiveAt { get; set; }
 
         public int TotalActiveDays { get; set; } // Optional, for tracking active days
+
+        public bool IsActive { get; set; } // Indicates if the user is currently active
     }
 }
