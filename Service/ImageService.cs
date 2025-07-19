@@ -10,13 +10,7 @@ namespace infertility_system.Service
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<byte[]> GetImageAsync(string imagePath)
-        {
-            if (!File.Exists(imagePath))
-                throw new FileNotFoundException("Image not found.", imagePath);
 
-            return await File.ReadAllBytesAsync(imagePath);
-        }
 
         public async Task<string> UploadImageAsync(IFormFile imageFile)
         {
