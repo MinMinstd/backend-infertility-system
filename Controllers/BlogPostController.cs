@@ -36,30 +36,6 @@ namespace infertility_system.Controllers
             return Ok(blogPosts);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBlogPostById(int id)
-        {
-            var blogPosts = await this.blogPostRepository.GetAllBlogPostsAsync();
-            var blogPost = blogPosts.FirstOrDefault(x => x.BlogPostId == id);
-            if (blogPost == null)
-            {
-                return NotFound("Blog post not found.");
-            }
-
-            try
-            {
-                var fileBytes = await imageService.GetImageAsync(blogPost.Image);
-
-                var contentType = "image/jpeg"; // hoặc xác định theo đuôi file
-                var fileName = Path.GetFileName(blogPost.Image);
-
-                return File(fileBytes, contentType, fileName);
-            }
-            catch (FileNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
 
         [HttpPost]
         [Authorize]
