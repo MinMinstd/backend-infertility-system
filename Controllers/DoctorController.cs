@@ -186,7 +186,6 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-
         [HttpGet("medicalRecord/{customerId}")]
         public async Task<IActionResult> GetMedicalRecord(int customerId)
         {
