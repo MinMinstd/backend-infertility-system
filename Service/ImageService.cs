@@ -1,4 +1,7 @@
 ﻿using infertility_system.Interfaces;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace infertility_system.Service
 {
@@ -10,7 +13,15 @@ namespace infertility_system.Service
             _webHostEnvironment = webHostEnvironment;
         }
 
+        public async Task<byte[]> LoadImageAsync(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Image not found", filePath);
 
+            }
+            return await File.ReadAllBytesAsync(filePath);
+        }
 
         public async Task<string> UploadImageAsync(IFormFile imageFile)
         {
@@ -23,13 +34,38 @@ namespace infertility_system.Service
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
             var filePath = Path.Combine(imageFolderPath, fileName);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            // ✅ Resize và giảm chất lượng ảnh bằng ImageSharp
+            using (var image = await Image.LoadAsync(imageFile.OpenReadStream()))
             {
-                await imageFile.CopyToAsync(stream);
+                // Tuỳ chỉnh kích thước tối đa, ví dụ: 1024x1024
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Size = new Size(1024, 1024),
+                    Mode = ResizeMode.Max
+                }));
+
+                // Giảm chất lượng JPEG (75%)
+                var encoder = new JpegEncoder
+                {
+                    Quality = 75 // bạn có thể chỉnh từ 50–90 tuỳ nhu cầu
+                };
+
+                await image.SaveAsync(filePath, encoder);
             }
-            return filePath;
+
+            return fileName;
         }
 
-
+        public string GetContentType(string fileName)
+        {
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            return ext switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                _ => "application/octet-stream"
+            };
+        }
     }
 }
