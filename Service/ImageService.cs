@@ -10,7 +10,15 @@ namespace infertility_system.Service
             _webHostEnvironment = webHostEnvironment;
         }
 
+        public async Task<byte[]> LoadImageAsync(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Image not found", filePath);
 
+            }
+            return await File.ReadAllBytesAsync(filePath);
+        }
 
         public async Task<string> UploadImageAsync(IFormFile imageFile)
         {
@@ -27,9 +35,19 @@ namespace infertility_system.Service
             {
                 await imageFile.CopyToAsync(stream);
             }
-            return filePath;
+            return fileName;
         }
 
-
+        public string GetContentType(string fileName)
+        {
+            var ext = Path.GetExtension(fileName).ToLowerInvariant();
+            return ext switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                _ => "application/octet-stream"
+            };
+        }
     }
 }

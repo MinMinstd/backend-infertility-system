@@ -2,7 +2,9 @@
 using infertility_system.Dtos.BlogPost;
 using infertility_system.Interfaces;
 using infertility_system.Models;
+using infertility_system.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -12,17 +14,19 @@ namespace infertility_system.Controllers
     [ApiController]
     public class BlogPostController : ControllerBase
     {
+        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IBlogPostRepository blogPostRepository;
         private readonly ICustomerRepository customerRepository;
         private readonly IImageService imageService;
         private readonly IMapper mapper;
 
-        public BlogPostController(IBlogPostRepository blogPostRepository, ICustomerRepository customerRepository, IImageService imageService, IMapper mapper)
+        public BlogPostController( IBlogPostRepository blogPostRepository, ICustomerRepository customerRepository, IImageService imageService, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             this.blogPostRepository = blogPostRepository;
             this.customerRepository = customerRepository;
             this.imageService = imageService;
             this.mapper = mapper;
+            this.webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -66,6 +70,28 @@ namespace infertility_system.Controllers
             }
             var result = await this.blogPostRepository.UppdateBlogPostAsync(id, status);
             return result ? Ok("Blog post updated successfully.") : NotFound("Blog post not found.");
+        }
+
+        [HttpGet("Image/{blogPostId}")]
+        public async Task<IActionResult> GetImageByBlogPostId(int blogPostId)
+        {
+            var blogPost = await this.blogPostRepository.GetBlogPostByIdAsync(blogPostId);
+            if (blogPost == null)
+            {
+                return NotFound("Blog post not found.");
+            }
+            var imageName = blogPost.Image;
+            var imageFolderPath = Path.Combine(this.webHostEnvironment.WebRootPath, "images");
+            if (!Directory.Exists(imageFolderPath))
+            {
+                throw new FileNotFoundException("Folder not found");
+            }
+
+            var filePath = Path.Combine(imageFolderPath, imageName);
+
+            var imageByte = await this.imageService.LoadImageAsync(filePath);
+            var contentType = this.imageService.GetContentType(filePath);
+            return File(imageByte, contentType, Path.GetFileName(filePath));
         }
     }
 }

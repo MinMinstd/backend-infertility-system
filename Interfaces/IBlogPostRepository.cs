@@ -8,5 +8,7 @@ namespace infertility_system.Interfaces
         Task<bool> CreateBlogPostAsync(BlogPost blogPost);
 
         Task<bool> UppdateBlogPostAsync(int id, string status);
+
+        Task<BlogPost?> GetBlogPostByIdAsync(int id);
     }
 }
