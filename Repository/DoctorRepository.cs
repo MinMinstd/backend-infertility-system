@@ -903,53 +903,5 @@
 
             return true;
         }
-
-        public async Task<List<MedicalRecord>> GetListMedicalRecordWithStartDateAsync(int doctorIdClaim)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
-            }
-
-            return await this.context.MedicalRecords
-                .Where(mr => mr.DoctorId == doctorIdClaim)
-                .ToListAsync();
-        }
-
-        public async Task<List<MedicalRecord>> GetMedicalRecordsCompleteAsync(int doctorIdClaim)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found");
-            }
-
-            var medicalRecord = await this.context.MedicalRecords
-                .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status == "Thành công")
-                .Include(mr => mr.Customer)
-                    .Include(mr => mr.Doctor)
-                        .ThenInclude(d => d.ServiceDB)
-                            .ToListAsync();
-            return medicalRecord;
-        }
-
-        public async Task<List<MedicalRecord>> GetMedicalRecordsInProgressAsync(int doctorIdClaim)
-        {
-            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
-            if (doctor == null)
-            {
-                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found");
-            }
-
-            var medicalRecord = await this.context.MedicalRecords
-                .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status != "Thành công")
-                .Include(mr => mr.Customer)
-                    .Include(mr => mr.Doctor)
-                        .ThenInclude(d => d.ServiceDB)
-                            .ToListAsync();
-            return medicalRecord;
-        }
     }
 }
