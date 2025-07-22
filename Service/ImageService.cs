@@ -1,4 +1,7 @@
 ﻿using infertility_system.Interfaces;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace infertility_system.Service
 {
@@ -31,10 +34,25 @@ namespace infertility_system.Service
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
             var filePath = Path.Combine(imageFolderPath, fileName);
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            // ✅ Resize và giảm chất lượng ảnh bằng ImageSharp
+            using (var image = await Image.LoadAsync(imageFile.OpenReadStream()))
             {
-                await imageFile.CopyToAsync(stream);
+                // Tuỳ chỉnh kích thước tối đa, ví dụ: 1024x1024
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Size = new Size(1024, 1024),
+                    Mode = ResizeMode.Max
+                }));
+
+                // Giảm chất lượng JPEG (75%)
+                var encoder = new JpegEncoder
+                {
+                    Quality = 75 // bạn có thể chỉnh từ 50–90 tuỳ nhu cầu
+                };
+
+                await image.SaveAsync(filePath, encoder);
             }
+
             return fileName;
         }
 

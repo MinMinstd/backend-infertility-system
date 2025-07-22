@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\Image\**" />
+    <Content Remove="Dtos\Image\**" />
+    <EmbeddedResource Remove="Dtos\Image\**" />
+    <None Remove="Dtos\Image\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
@@ -22,6 +29,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MimeKit" Version="4.12.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.10" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -31,7 +39,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Image\" />
     <Folder Include="Migrations\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
