@@ -1,11 +1,11 @@
 ﻿namespace infertility_system.Controllers
 {
-    using System.Security.Claims;
     using AutoMapper;
     using infertility_system.Dtos.Booking;
     using infertility_system.Dtos.Email;
     using infertility_system.Interfaces;
     using Microsoft.AspNetCore.Mvc;
+    using System.Security.Claims;
 
     [Route("api/[controller]")]
     [ApiController]
@@ -75,6 +75,19 @@
             var bookings = await this.bookingRepository.GetListBooking();
 
             return this.Ok(this.mapper.Map<List<BookingForListDto>>(bookings));
+        }
+
+        [HttpPut("Delete/{bookingId}")]
+        public async Task<IActionResult> DeleteBooking(int bookingId)
+        {
+            var booking = await this.bookingRepository.GetListBooking();
+            if (booking == null || !booking.Any(b => b.BookingId == bookingId))
+            {
+                return this.NotFound("Booking not found");
+            }
+
+            await this.bookingRepository.DeleteBookingAsync(bookingId);
+            return this.Ok("Delete success");
         }
     }
 }
