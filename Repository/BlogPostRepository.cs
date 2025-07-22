@@ -30,6 +30,11 @@ namespace infertility_system.Repository
             return this.context.BlogPosts.ToListAsync();
         }
 
+        public Task<BlogPost?> GetBlogPostByIdAsync(int id)
+        {
+            return this.context.BlogPosts.FirstOrDefaultAsync(x => x.BlogPostId == id);
+        }
+
         public async Task<bool> UppdateBlogPostAsync(int id, string status)
         {
             var existingBlogPost = await this.context.BlogPosts.FirstOrDefaultAsync(x => x.BlogPostId == id);
