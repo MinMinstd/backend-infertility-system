@@ -118,13 +118,12 @@ namespace infertility_system.Controllers
         }
 
         [HttpGet("GetListCustomer")]
-        public async Task<IActionResult> GetListFullInforCustomer()
+        public async Task<IActionResult> GetListCustomer()
         {
             var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
             var customers = await this.doctorRepository.GetListCustomerAsync(doctorIdClaims);
-            var result = this.mapper.Map<List<ListCustomerInDoctorDto>>(customers);
-            return this.Ok(result);
+            return this.Ok(customers);
         }
 
         [HttpGet("GetListTreatmentRoadmapForCustomer/{customerId}")]
@@ -254,14 +253,23 @@ namespace infertility_system.Controllers
             return this.Ok(result);
         }
 
-        //[HttpGet("medicalRecordWithCustomerNameAndStatus")]
-        //public async Task<IActionResult> GetMedicalRecordWithCustomerNameAndStatus()
-        //{
-        //    var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        //    var medicalRecord = await this.doctorRepository.GetMedicalRecordsWithCustomerNameAndStatusAsync(doctorIdClaims);
-        //    var result = this.mapper.Map<List<MRCustomerNameAndStatusDto>>(medicalRecord);
-        //    return this.Ok(result);
-        //}
+        [HttpGet("medicalRecordComplete")]
+        public async Task<IActionResult> GetMedicalRecordComplete()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var medicalRecord = await this.doctorRepository.GetMedicalRecordsCompleteAsync(doctorIdClaims);
+            var result = this.mapper.Map<List<MRCustomerNameAndStatusDto>>(medicalRecord);
+            return this.Ok(result);
+        }
+
+        [HttpGet("medicalRecordInProcess")]
+        public async Task<IActionResult> GetMedicalRecordInProcess()
+        {
+            var doctorIdClaims = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var medicalRecord = await this.doctorRepository.GetMedicalRecordsInProgressAsync(doctorIdClaims);
+            var result = this.mapper.Map<List<MRCustomerNameAndStatusDto>>(medicalRecord);
+            return this.Ok(result);
+        }
 
         // [Authorize(Roles = "Doctor")]
         [HttpPost("CreateMedicalRecord/{customerId}")]
@@ -282,8 +290,7 @@ namespace infertility_system.Controllers
         [HttpPost("CreateMedicalRecordDetail/{medicalRecordId}")]
         public async Task<IActionResult> CreateMedicalRecordDetail([FromBody] CreateMedicalRecordDetailDto dto, int medicalRecordId)
         {
-            var doctorIdClaims = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            
+            var doctorIdClaims = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var medicalRecordDetail = this.mapper.Map<MedicalRecordDetail>(dto);
             var result = await this.doctorRepository.CreateMedicalRecordDetailAsync(medicalRecordDetail, doctorIdClaims, medicalRecordId);
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
@@ -361,8 +368,7 @@ namespace infertility_system.Controllers
         }
 
         [HttpPut("updateDetailTreatmentRoadmap/{customerId}/{treatmentRoadmapId}")]
-        public async Task<IActionResult> UpdateDetailTreatmentRoadmap(int treatmentRoadmapId, int customerId
-                            ,[FromBody] UpdateDetailTreatmentRoadmapDto dto)
+        public async Task<IActionResult> UpdateDetailTreatmentRoadmap(int treatmentRoadmapId, int customerId, [FromBody] UpdateDetailTreatmentRoadmapDto dto)
         {
             var updateTreatmentRoadmap = this.mapper.Map<TreatmentRoadmap>(dto);
 
