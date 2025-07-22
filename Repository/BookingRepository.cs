@@ -104,6 +104,30 @@ namespace infertility_system.Repository
                 .ToListAsync();
         }
 
-        
+        public Task DeleteBookingAsync(int bookingId)
+        {
+            var booking = this.context.Bookings.Find(bookingId);
+            if (booking != null)
+            {
+                booking.Status = "Cancell";
+                this.context.Bookings.Update(booking);
+            }
+
+            var order = this.context.Orders.Find(bookingId);
+            if (order != null)
+            {
+                order.Status = "Cancell";
+                this.context.Orders.Update(order);
+            }
+
+            var doctorSchedule = this.context.DoctorSchedules.Find(booking.DoctorScheduleId);
+            if (doctorSchedule != null)
+            {
+                doctorSchedule.Status = "Available";
+                this.context.DoctorSchedules.Update(doctorSchedule);
+            }
+
+            return this.context.SaveChangesAsync();
+        }
     }
 }
