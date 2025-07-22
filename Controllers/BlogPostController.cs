@@ -61,7 +61,7 @@ namespace infertility_system.Controllers
             return result ? Ok("Blog post created successfully.") : BadRequest("Failed to create blog post.");
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Status/{id}")]
         public async Task<IActionResult> UpdateBlogPost(int id, [FromBody] string status)
         {
             if (string.IsNullOrEmpty(status))
