@@ -2,6 +2,7 @@
 {
     using infertility_system.Dtos.Booking;
     using infertility_system.Dtos.ConsulationResult;
+    using infertility_system.Dtos.Customer;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Helpers;
@@ -17,7 +18,7 @@
 
         Task<List<Doctor>> GetDoctorsByServiceIdAsync(int serviceId);
 
-        Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim);
+        Task<List<ListCustomerInDoctorDto>> GetListCustomerAsync(int doctorIdClaim);
 
         Task<Customer> GetPatientInformationAsync(int customerId);
 
@@ -67,7 +68,7 @@
 
         Task<bool> UpdateStatusBookingAfterCompleteAsync(int bookingId, string status);
 
-        Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim);
+        Task<List<ListCustomerInDoctorDto>> FindCustomerByNameAsync(string name, int doctorIdClaim);
 
         Task<int> AmountCustomerAsync(int doctorIdClaim);
 
@@ -79,6 +80,8 @@
 
         Task<List<MedicalRecord>> GetListMedicalRecordWithStartDateAsync(int doctorIdClaim);
 
-        //Task<List<MedicalRecord>> GetMedicalRecordsWithCustomerNameAndStatusAsync(int doctorIdClaim);
+        Task<List<MedicalRecord>> GetMedicalRecordsCompleteAsync(int doctorIdClaim);
+
+        Task<List<MedicalRecord>> GetMedicalRecordsInProgressAsync(int doctorIdClaim);
     }
 }

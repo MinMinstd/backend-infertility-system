@@ -10,10 +10,8 @@
 
         public int? Age { get; set; }
 
-        public string? Status { get; set; }
-
-        public DateOnly StartDate { get; set; }
-
         public string? ServiceName { get; set; }
+
+        public string? DescriptionService { get; set; }
     }
 }

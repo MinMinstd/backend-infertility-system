@@ -4,6 +4,7 @@
     using infertility_system.Data;
     using infertility_system.Dtos.Booking;
     using infertility_system.Dtos.ConsulationResult;
+    using infertility_system.Dtos.Customer;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.TreatmentResult;
     using infertility_system.Helpers;
@@ -24,6 +25,14 @@
             this.context = context;
             this.mapper = mapper;
             this.doctorScheduleRepository = doctorScheduleRepository;
+        }
+
+        private static int CalculateAge(DateOnly birthday)
+        {
+            var birthDate = birthday.ToDateTime(TimeOnly.MinValue);
+            var today = DateTime.Today;
+            int age = today.Year - birthDate.Year;
+            return age;
         }
 
         public async Task<List<Doctor>> GetListDoctorsAsync(QueryDoctor? query)
@@ -76,13 +85,16 @@
                 .ToListAsync();
         }
 
-        public async Task<List<Customer>> GetListCustomerAsync(int doctorIdClaim)
+        public async Task<List<ListCustomerInDoctorDto>> GetListCustomerAsync(int doctorIdClaim)
         {
             var doctor = await this.context.Doctors.FirstOrDefaultAsync(x => x.UserId == doctorIdClaim);
+
             if (doctor == null)
             {
                 throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found.");
             }
+
+            var service = await this.context.Services.FirstOrDefaultAsync(s => s.ServiceDBId == doctor.ServiceDBId);
 
             var doctorSchedule = await this.context.DoctorSchedules
                 .Where(x => x.DoctorId == doctor.DoctorId)
@@ -95,19 +107,33 @@
 
             var doctorScheduleIds = doctorSchedule.Select(ds => ds.DoctorScheduleId).Distinct().ToList();
 
-            var bookings = await this.context.Bookings
+            //lấy mã customerId trong booking
+            var customerIds = await this.context.Bookings
                     .Where(b => doctorScheduleIds.Contains((int)b.DoctorScheduleId))
+                    .Select(b => b.CustomerId)
+                    .Distinct()
                     .ToListAsync();
 
-            var customerIds = bookings.Select(x => x.CustomerId).Distinct().ToList();
-
-            var customers = await this.context.Customers
-                    .Where(x => customerIds.Contains(x.CustomerId))
-                    .Include(x => x.MedicalRecord)
-                    .ThenInclude(m => m.Doctor)
-                    .ThenInclude(d => d.ServiceDB)
+            var customer = await this.context.Customers
+                    .Where(c => customerIds.Contains(c.CustomerId))
                     .ToListAsync();
-            return customers;
+
+            var listCustomers = new List<ListCustomerInDoctorDto>();
+
+            foreach (var c in customer)
+            {
+                var dto = new ListCustomerInDoctorDto
+                {
+                    CustomerId = c.CustomerId,
+                    FullName = c.FullName,
+                    Birthday = c.Birthday,
+                    Age = CalculateAge(c.Birthday),
+                    ServiceName = service.Name,
+                    DescriptionService = service.Description,
+                };
+                listCustomers.Add(dto);
+            }
+            return listCustomers;
         }
 
         public async Task<List<TreatmentRoadmap>> GetTreatmentRoadmapsAsync(int doctorIdClaim, int customerId)
@@ -358,7 +384,7 @@
             return orderDetail;
         }
 
-        public async Task<List<Customer>> FindCustomerByNameAsync(string name, int doctorIdClaim)
+        public async Task<List<ListCustomerInDoctorDto>> FindCustomerByNameAsync(string name, int doctorIdClaim)
         {
             var customerLists = await this.GetListCustomerAsync(doctorIdClaim);
             if (customerLists == null)
@@ -843,18 +869,38 @@
                 .ToListAsync();
         }
 
-        //public async Task<List<MedicalRecord>> GetMedicalRecordsWithCustomerNameAndStatusAsync(int doctorIdClaim)
-        //{
-        //    var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+        public async Task<List<MedicalRecord>> GetMedicalRecordsCompleteAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found");
+            }
 
-        //    var medicalRecord = await this.context.MedicalRecords
-        //        .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status == "Thành công")
-        //        .Include(mr => mr.Customer)
-        //            .ThenInclude(c => c.Bookings)
-        //                .ThenInclude(b => b.Order)
-        //                    .ThenInclude(o => o.OrderDetails)
-        //                        .ToListAsync();
-        //    return medicalRecord;
-        //}
+            var medicalRecord = await this.context.MedicalRecords
+                .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status == "Thành công")
+                .Include(mr => mr.Customer)
+                    .Include(mr => mr.Doctor)
+                        .ThenInclude(d => d.ServiceDB)
+                            .ToListAsync();
+            return medicalRecord;
+        }
+
+        public async Task<List<MedicalRecord>> GetMedicalRecordsInProgressAsync(int doctorIdClaim)
+        {
+            var doctor = await this.context.Doctors.FirstOrDefaultAsync(d => d.UserId == doctorIdClaim);
+            if (doctor == null)
+            {
+                throw new CustomHttpException(HttpStatusCode.NotFound, "Doctor not found");
+            }
+
+            var medicalRecord = await this.context.MedicalRecords
+                .Where(mr => mr.DoctorId == doctor.DoctorId && mr.Status != "Thành công")
+                .Include(mr => mr.Customer)
+                    .Include(mr => mr.Doctor)
+                        .ThenInclude(d => d.ServiceDB)
+                            .ToListAsync();
+            return medicalRecord;
+        }
     }
 }
