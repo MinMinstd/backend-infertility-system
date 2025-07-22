@@ -50,7 +50,7 @@
             return order;
         }
 
-        public async Task CreateOrderDetail(int orderId, int doctorId, int serviceId)
+        public async Task CreateOrderDetail(int orderId, int doctorId, int serviceId, DateOnly date, string time, string type)
         {
             // var doctorName = await _context.Doctors
             //    .Where(d => d.DoctorId == doctorId)
@@ -67,6 +67,9 @@
                     .Where(s => s.ServiceDBId == serviceId)
                     .Select(s => s.Name)
                     .FirstOrDefault(),
+                StageName = (type == "Consulation") ? "Gặp tư vấn với bác sĩ" : "Gặp và trao đổi với bác sĩ về các quy trình dịch vụ",
+                DateTreatment = date,
+                TimeTreatment = time,
             };
 
             // _context.OrderDetails.Add(orderDetail);

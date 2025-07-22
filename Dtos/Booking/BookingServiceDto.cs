@@ -2,9 +2,9 @@
 {
     public class BookingServiceDto
     {
-        public DateOnly? Date { get; set; }
+        public DateOnly Date { get; set; }
 
-        public string? Time { get; set; }
+        public string Time { get; set; }
 
         public string? Wife { get; set; }
 

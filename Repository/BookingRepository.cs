@@ -53,7 +53,7 @@ namespace infertility_system.Repository
             await this.context.SaveChangesAsync();
 
             var order = await this.orderRepository.CreateOrder(booking.BookingId, customer.CustomerId, null, null);
-            await this.orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId);
+            await this.orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId, dto.Date, dto.Time, booking.Type);
 
             return true;
         }
@@ -77,7 +77,7 @@ namespace infertility_system.Repository
             await this.context.SaveChangesAsync();
 
             var order = await this.orderRepository.CreateOrder(booking.BookingId, customer.CustomerId, dto.Wife, dto.Husband);
-            await this.orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId);
+            await this.orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId, dto.Date, dto.Time, booking.Type);
 
             return true;
         }
