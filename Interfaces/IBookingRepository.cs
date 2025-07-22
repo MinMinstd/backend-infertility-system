@@ -16,5 +16,7 @@
         Task UpdateBookingStatusAsync(int bookingId);
 
         Task<List<Booking>> GetListBooking();
+
+        Task DeleteBookingAsync(int bookingId);
     }
 }
