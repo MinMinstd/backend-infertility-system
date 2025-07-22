@@ -1,4 +1,6 @@
-﻿namespace infertility_system.Models
+﻿using System.Text.Json.Serialization;
+
+namespace infertility_system.Models
 {
     public class Customer
     {
@@ -25,6 +27,7 @@
         public List<Feedback>? Feedbacks { get; set; }
 
         // Customer 1-N BlogPost
+
         public List<BlogPost>? BlogPosts { get; set; }
 
         // Customer 1-N MedicalRecord

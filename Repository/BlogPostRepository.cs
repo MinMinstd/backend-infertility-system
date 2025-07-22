@@ -27,7 +27,7 @@ namespace infertility_system.Repository
 
         public Task<List<BlogPost>> GetAllBlogPostsAsync()
         {
-            return this.context.BlogPosts.ToListAsync();
+            return this.context.BlogPosts.Include(x => x.Customer).ToListAsync();
         }
 
         public Task<BlogPost?> GetBlogPostByIdAsync(int id)

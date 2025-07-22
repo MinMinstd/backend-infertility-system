@@ -37,7 +37,9 @@ namespace infertility_system.Controllers
             {
                 return NotFound("No blog posts found.");
             }
-            return Ok(blogPosts);
+            var blogPostsDto = this.mapper.Map<List<BlogPostCustomerDto>>(blogPosts);
+
+            return Ok(blogPostsDto);
         }
 
 

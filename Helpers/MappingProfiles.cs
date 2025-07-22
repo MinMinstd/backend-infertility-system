@@ -173,7 +173,8 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => src.PaymentId));
 
             this.CreateMap<BlogPostDto, BlogPost>();
-            //this.CreateMap<BlogPost, BlogPostDto>();
+            this.CreateMap<BlogPost, BlogPostCustomerDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName));
 
             this.CreateMap<RequestServiceDto, ServiceDB>();
             this.CreateMap<CreateTreatmentRoadmapDto, TreatmentRoadmap>();
