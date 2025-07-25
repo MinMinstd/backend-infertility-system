@@ -55,7 +55,12 @@ namespace infertility_system.Controllers
             {
                 return BadRequest("Blog post data is invalid.");
             }
-            blogPost.Image = await this.imageService.UploadImageAsync(blogPostDto.ImageFile);
+
+            if (blogPost.Image != null)
+            {
+                blogPost.Image = await this.imageService.UploadImageAsync(blogPostDto.ImageFile);
+            }
+           
             blogPost.CustomerId = customer.CustomerId;
             blogPost.ManagerId = 1;
 
