@@ -51,12 +51,12 @@ namespace infertility_system.Controllers
             var userId = int.Parse(this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var customer = await this.customerRepository.GetCustomersAsync(userId);
             var blogPost = this.mapper.Map<BlogPost>(blogPostDto);
-            if (blogPost == null)
+            if (blogPostDto == null)
             {
                 return BadRequest("Blog post data is invalid.");
             }
 
-            if (blogPost.Image != null)
+            if (blogPostDto.ImageFile != null)
             {
                 blogPost.Image = await this.imageService.UploadImageAsync(blogPostDto.ImageFile);
             }
