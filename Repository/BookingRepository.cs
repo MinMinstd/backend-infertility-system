@@ -52,7 +52,7 @@ namespace infertility_system.Repository
             this.context.Bookings.Add(booking);
             await this.context.SaveChangesAsync();
 
-            var order = await this.orderRepository.CreateOrder(booking.BookingId, customer.CustomerId, null, null);
+            var order = await this.orderRepository.CreateOrder(booking.BookingId, customer.CustomerId, dto.Wife, dto.Husband);
             await this.orderRepository.CreateOrderDetail(order.OrderId, dto.DoctorId, dto.ServiceId, dto.Date, dto.Time, booking.Type);
 
             return true;
@@ -109,14 +109,14 @@ namespace infertility_system.Repository
             var booking = this.context.Bookings.Find(bookingId);
             if (booking != null)
             {
-                booking.Status = "Cancell";
+                booking.Status = "Cancel";
                 this.context.Bookings.Update(booking);
             }
 
             var order = this.context.Orders.Find(bookingId);
             if (order != null)
             {
-                order.Status = "Cancell";
+                order.Status = "Cancel";
                 this.context.Orders.Update(order);
             }
 

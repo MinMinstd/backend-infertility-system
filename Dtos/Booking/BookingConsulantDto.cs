@@ -2,6 +2,10 @@
 {
     public class BookingConsulantDto
     {
+        public string? Husband { get; set; }
+
+        public string? Wife { get; set; }
+
         public DateOnly Date { get; set; }
 
         public string Time { get; set; }
