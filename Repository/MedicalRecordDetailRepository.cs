@@ -41,6 +41,7 @@
 
             var medicalRecordDetails = await this.context.MedicalRecordDetails
                             .Where(mrd => mrd.MedicalRecordId == medicalRecord.MedicalRecordId)
+                            .Include(mrd => mrd.TreatmentRoadmap)
                             .Include(mrd => mrd.TreatmentResult)
                             .ThenInclude(tr => tr.TypeTest)
                             .ToListAsync();
