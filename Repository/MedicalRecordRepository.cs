@@ -1,8 +1,10 @@
 ﻿namespace infertility_system.Repository
 {
+    using System.Net;
     using AutoMapper;
     using infertility_system.Data;
     using infertility_system.Interfaces;
+    using infertility_system.Middleware;
     using infertility_system.Models;
     using Microsoft.EntityFrameworkCore;
 
@@ -91,7 +93,7 @@
             }
             else
             {
-                throw new ArgumentException("Ngày kết thúc phải sau ngày bắt đầu.");
+                throw new CustomHttpException(HttpStatusCode.BadRequest, "Ngày kết thúc phải sau ngày bắt đầu.");
             }
             medicalRecord.Stage = updateRecord.Stage;
             medicalRecord.Diagnosis = updateRecord.Diagnosis;

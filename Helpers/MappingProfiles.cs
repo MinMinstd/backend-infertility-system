@@ -83,6 +83,7 @@ namespace infertility_system.Helpers
                 .ForMember(dest => dest.Stage, opt => opt.MapFrom(src => src.TreatmentResult.Stage))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.TreatmentResult.Description))
                 .ForMember(dest => dest.TypeTest, opt => opt.MapFrom(src => src.TreatmentResult.TypeTest))
+                .ForMember(dest => dest.StageName, opt => opt.MapFrom(src => src.TreatmentRoadmap.Stage))
                 .ForMember(dest => dest.DurationDay, opt => opt.MapFrom(src => src.TreatmentResult.DurationDay));
 
 

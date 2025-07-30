@@ -15,6 +15,8 @@
 
         public string? Status { get; set; }
 
+        public string? StageName { get; set; }
+
         public int? TreatmentResultId { get; set; }
 
         //public DateOnly DateTreatmentResult { get; set; }

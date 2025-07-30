@@ -78,7 +78,7 @@ WHERE d.MedicalRecordId = 1;
 
 INSERT INTO [dbo].[Customers] ([UserId], [FullName], [Email], [Phone], [Gender], [Birthday], [Address]) VALUES
 (5, N'Vũ Trần Bình Minh', 'customer1@gmail.com', '0903544878', N'Nam', '1990-01-01', N'Hanoi'),
-(6, N'Tran Thi B', 'customer2@gmail.com', '0903544878', N'Nữ', '1992-02-02', N'HCMC');
+(6, N'Tran Thi B', 'customer2@gmail.com', '0903544878', N'Nữ', '1992-02-02', N'HCMCity');
 
 
 -- Manager table
@@ -93,7 +93,7 @@ CREATE TABLE [dbo].[Managers] (
 );
 
 INSERT INTO [dbo].[Managers] ([UserId], [FullName], [Email], [Phone], [Address]) VALUES
-(7, N'Manager 1', 'huy@gmail.com', '0903456789', N'Address 1');
+(7, N'Manager 1', 'huy@gmail.com', '0903456789', N'Hồ Chí Minh City');
 
 -- Service table
 CREATE TABLE [dbo].[Services] (
@@ -127,7 +127,7 @@ INSERT INTO [dbo].[Doctors] ([UserId], [FullName], [Email], [Phone], [Experience
 (2, N'Doctor 1', 'doctor1@gmail.com', '0903456789', 6, 1),
 (3, N'Doctor 2', 'doctor2@gmail.com', '0903544878', 7, 1),
 (4, N'Doctor 3', 'doctor3@gmail.com', '0903544878', 8, 2);
-
+select * from Doctors
 
 -- Doctor_Degree table
 CREATE TABLE [dbo].[DoctorDegrees] (
@@ -140,9 +140,9 @@ CREATE TABLE [dbo].[DoctorDegrees] (
 );
 
 INSERT INTO [DoctorDegrees] ([DegreeName], [GraduationYear], [DoctorId]) VALUES
-(N'IUI', 2001, 1),
+(N'IVF', 2001, 1),
 (N'IVF', 2002, 2),
-(N'IVF', 2003, 3);
+(N'IUI', 2003, 3);
 
 
 
@@ -160,27 +160,53 @@ CREATE TABLE [dbo].[DoctorSchedules] (
     CONSTRAINT [FK_DoctorSchedules_Managers_ManagerId] FOREIGN KEY ([ManagerId]) REFERENCES [dbo].[Managers] ([ManagerId]) ON DELETE CASCADE
 );
 
-
 INSERT INTO [dbo].[DoctorSchedules] ( [WorkDate], [StartTime], [EndTime], [Status], [DoctorId], [ManagerId]) VALUES
 -- cũng có IDENTITY, có thể không ghi DoctorScheduleId
-( '2025-09-01', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
+( '2025-09-01', '08:00:00', '10:30:00', N'Unavailable', 1, 1), --2 1
 ( '2025-09-01', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
 ( '2025-09-01', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
 ( '2025-09-04', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
 ( '2025-09-04', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
 ( '2025-09-04', '14:00:00', '16:30:00', N'Available', 1, 1), --5 6
+( '2025-09-07', '08:00:00', '10:30:00', N'Available', 1, 1), --2 1
+( '2025-09-07', '11:00:00', '13:30:00', N'Available', 1, 1), --2 2
+( '2025-09-07', '14:00:00', '16:30:00', N'Available', 1, 1), --2 3
+( '2025-09-09', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
+( '2025-09-09', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
+( '2025-09-09', '14:00:00', '16:30:00', N'Available', 1, 1),
+( '2025-09-12', '08:00:00', '10:30:00', N'Available', 1, 1), --5 4
+( '2025-09-12', '11:00:00', '13:30:00', N'Available', 1, 1), --5 5
+( '2025-09-12', '14:00:00', '16:30:00', N'Available', 1, 1),
 ( '2025-09-02', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
 ( '2025-09-02', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
 ( '2025-09-02', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
 ( '2025-09-05', '08:00:00', '10:30:00', N'Available', 2, 1), --6
 ( '2025-09-05', '11:00:00', '13:30:00', N'Available', 2, 1), --6
 ( '2025-09-05', '14:00:00', '16:30:00', N'Available', 2, 1), --6
-( '2025-09-03', '08:00:00', '10:30:00', N'Available', 3, 1), --4
+( '2025-09-08', '08:00:00', '10:30:00', N'Available', 2, 1), --3 7
+( '2025-09-08', '11:00:00', '13:30:00', N'Available', 2, 1), --3 8
+( '2025-09-08', '14:00:00', '16:30:00', N'Available', 2, 1), --3 9
+( '2025-09-10', '08:00:00', '10:30:00', N'Available', 2, 1), --6
+( '2025-09-10', '11:00:00', '13:30:00', N'Available', 2, 1), --6
+( '2025-09-10', '14:00:00', '16:30:00', N'Available', 2, 1),
+( '2025-09-14', '08:00:00', '10:30:00', N'Available', 2, 1), --6
+( '2025-09-14', '11:00:00', '13:30:00', N'Available', 2, 1), --6
+( '2025-09-14', '14:00:00', '16:30:00', N'Available', 2, 1),
+( '2025-09-03', '08:00:00', '10:30:00', N'Unavailable', 3, 1), --4
 ( '2025-09-03', '11:00:00', '13:30:00', N'Available', 3, 1), --4
 ( '2025-09-03', '14:00:00', '16:30:00', N'Available', 3, 1), --4
 ( '2025-09-06', '08:00:00', '10:30:00', N'Available', 3, 1), --7
 ( '2025-09-06', '11:00:00', '13:30:00', N'Available', 3, 1), --7
-( '2025-09-06', '14:00:00', '16:30:00', N'Available', 3, 1); --7
+( '2025-09-06', '14:00:00', '16:30:00', N'Available', 3, 1),
+( '2025-09-10', '08:00:00', '10:30:00', N'Available', 3, 1), --4
+( '2025-09-10', '11:00:00', '13:30:00', N'Available', 3, 1), --4
+( '2025-09-10', '14:00:00', '16:30:00', N'Available', 3, 1), --4
+( '2025-09-15', '08:00:00', '10:30:00', N'Available', 3, 1), --7
+( '2025-09-15', '11:00:00', '13:30:00', N'Available', 3, 1), --7
+( '2025-09-15', '14:00:00', '16:30:00', N'Available', 3, 1),
+( '2025-09-17', '08:00:00', '10:30:00', N'Available', 3, 1), --4
+( '2025-09-17', '11:00:00', '13:30:00', N'Available', 3, 1), --4
+( '2025-09-17', '14:00:00', '16:30:00', N'Available', 3, 1); --7
 
 
 -- Consultation_registration table
@@ -215,8 +241,8 @@ select * from Customers
 select * from Bookings
 INSERT INTO [Bookings] (CustomerId, DoctorScheduleId, Status, Date, Time, Note, Type)
 VALUES
-(1, 1,  N'Pending', '2025-07-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF', N'Service'),
-(2, 7,  N'Pending', '2025-06-02', '08:00:00 - 10:30:00', N'Dịch vụ IUI', N'Service');
+(1, 1,  N'Pending', '2025-09-01', '08:00:00 - 10:30:00', N'Dịch vụ IVF', N'Service'),
+(2, 31,  N'Pending', '2025-09-03', '08:00:00 - 10:30:00', N'Dịch vụ IUI', N'Service');
 
 
 -- Consultation_result table
@@ -231,8 +257,8 @@ CREATE TABLE [dbo].[ConsulationResults] (
 );
 
 INSERT INTO [dbo].[ConsulationResults] ([Date], [ResultValue], [Note], [BookingId]) VALUES
-('2025-06-01', N'Ổn định', N'Không cần can thiệp', 1),
-('2025-06-02', N'Theo dõi thêm', N'Xem lại sau 1 tuần', 2);
+('2025-09-01', N'Ổn định', N'Không cần can thiệp', 1),
+('2025-09-03', N'Theo dõi thêm', N'Xem lại sau 1 tuần', 2);
 
 
 
@@ -259,10 +285,9 @@ INSERT INTO [dbo].[MedicalRecords]
 ([StartDate], [EndDate], [Stage], [Diagnosis], [Status], [Attempt], [CustomerId], [DoctorId])
 VALUES
 -- Khách hàng 1 - IVF, thành công
-('2025-07-01', '2025-08-01', N'Đã thử thai', N'Hiếm muộn do buồng trứng', N'Thành công', 1, 1, 1),
-
+('2025-09-01', '2025-09-30', N'Đã thử thai', N'Hiếm muộn do buồng trứng', N'Thành công', 1, 1, 1),
 -- Khách hàng 2 - IVF lần 2, đang điều trị
-('2025-07-02', '2025-08-02', N'Chuyển phôi', N'Hiếm muộn không rõ nguyên nhân', N'Đang điều trị', 1, 2, 2);
+('2025-09-03', '2025-09-30', N'Chuyển phôi', N'Hiếm muộn không rõ nguyên nhân', N'Đang điều trị', 1, 2, 3);
 
 
 
@@ -302,11 +327,17 @@ CREATE TABLE [dbo].[TreatmentResults] (
 INSERT INTO [TreatmentResults] 
     ([TreatmentRoadmapId], [DurationDay], [Stage], [DateTreatmentResult], [Description], [Result])
 VALUES 
-    (1, 1, 'IVF', '2025-06-01', N'Bắt đầu tốt', N'Đang theo dõi'),
-    (2, 2, 'IUI', '2025-06-02', N'Theo dõi sát', N'Cần theo dõi tiếp'),
-    (3, 3, 'IVF', '2025-06-03', N'Trứng phát triển', N'Hiệu quả tốt'),
-    (4, 4, 'IUI', '2025-06-04', N'Chuẩn bị tốt', N'Đạt yêu cầu'),
-    (5, 5, 'IVF', '2025-06-05', N'Thành công', N'Hoàn thành');
+    (1, 1, N'IVF', '2025-06-03', N'Bắt đầu kích thích buồng trứng, đáp ứng tốt', N'Đang theo dõi'),
+    (2, 3, N'IVF', '2025-06-06', N'Chọc hút trứng thành công, thu được nhiều trứng đạt chuẩn', N'Đạt yêu cầu'),
+    (3, 5, N'IVF', '2025-06-09', N'Đã chọn lọc tinh trùng chất lượng cao', N'Hiệu quả tốt'),
+    (4, 2, N'IVF', '2025-06-12', N'Tạo phôi thành công, số lượng phôi đạt chuẩn', N'Đạt yêu cầu'),
+    (5, 4, N'IVF', '2025-06-15', N'Chuyển phôi thuận lợi, không biến chứng', N'Đang theo dõi'),
+    (6, 1, N'IVF', '2025-06-16', N'Xét nghiệm beta HCG dương tính', N'Thành công'),
+	(7, 1, 'IUI', '2025-09-06', N'Bắt đầu tiêm thuốc', N'Đang theo dõi'),
+    (8, 2, 'IUI', '2025-09-07', N'Đáp ứng tốt với thuốc', N'Hiệu quả tốt'),
+    (9, 3, 'IUI', '2025-09-08', N'Canh trứng chính xác', N'Cần theo dõi tiếp'),
+    (10, 4, 'IUI', '2025-09-09', N'Tiêm tinh trùng thành công', N'Đạt yêu cầu'),
+    (11, 5, 'IUI', '2025-09-10', N'Xét nghiệm beta HCG dương tính', N'Thành công');
 
 
 -- Type_test table
@@ -323,9 +354,22 @@ CREATE TABLE [dbo].[TypeTests] (
 
 select * from ConsulationResults
 INSERT INTO [TypeTests] ([ConsulationResultId], [TreatmentResultId], [Name], [Description])
-VALUES 
-(1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết'),
-(2, 2, N'Siêu âm', N'Theo dõi nang trứng')
+VALUES
+-- IVF
+(1, 1, N'Xét nghiệm máu', N'Kiểm tra nội tiết trước khi kích thích buồng trứng'),
+(1, 2, N'Siêu âm đầu dò', N'Theo dõi nang trứng trước khi chọc hút'),
+(1, 3, N'Phân tích tinh dịch', N'Đánh giá chất lượng tinh trùng'),
+(1, 4, N'Kiểm tra phôi', N'Đánh giá số lượng và chất lượng phôi tạo thành'),
+(1, 5, N'Siêu âm tử cung', N'Đánh giá niêm mạc tử cung trước khi chuyển phôi'),
+(1, 6, N'Xét nghiệm beta HCG', N'Xác nhận kết quả mang thai'),
+
+-- IUI
+(2, 7, N'Xét nghiệm máu', N'Kiểm tra nội tiết trước khi tiêm thuốc'),
+(2, 8, N'Siêu âm', N'Theo dõi nang trứng trong quá trình tiêm thuốc'),
+(2, 9, N'Xét nghiệm LH', N'Xác định thời điểm rụng trứng'),
+(2, 10, N'Xét nghiệm tinh dịch', N'Đánh giá mẫu tinh trùng trước IUI'),
+(2, 11, N'Xét nghiệm beta HCG', N'Xác nhận kết quả mang thai sau IUI');
+
 
 -- Medical_record table
 
@@ -352,24 +396,25 @@ CREATE TABLE [dbo].[MedicalRecordDetails] (
 );
 select * from TreatmentRoadmaps
 select * from MedicalRecordDetails
+select * from TreatmentResults
+select * from Bookings
 -- INSERT hợp lệ cho MedicalRecordDetails
 -- Hồ sơ bệnh nhân 1 - IVF
 INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [TypeName], [Status], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
 ('2025-06-03', N'Bình thường', N'Tư vấn khởi đầu IVF', N'Consultation', N'Complete', 1, 1, 1, 1),
 ('2025-06-06', N'15 trứng được lấy', N'Không biến chứng', N'Treatment', N'Complete', 1, NULL, 2, 2),
-('2025-06-09', N'Tinh trùng đạt chuẩn', N'Sẵn sàng tạo phôi', N'Treatment', N'Complete', 1, NULL, 1, 3),
-('2025-06-12', N'Tạo 5 phôi tốt', N'Đánh giá phôi ok', N'Treatment', N'Complete', 1, NULL, 1, 4),
-('2025-06-15', N'Chuyển 2 phôi', N'Tiến hành thành công', N'Treatment', N'Complete', 1, NULL, 2, 5),
-('2025-06-16', N'HCG dương tính', N'Thành công', N'Result', N'Complete', 1, NULL, 1, 6);
+('2025-06-09', N'Tinh trùng đạt chuẩn', N'Sẵn sàng tạo phôi', N'Treatment', N'Complete', 1, NULL, 3, 3),
+('2025-06-12', N'Tạo 5 phôi tốt', N'Đánh giá phôi ok', N'Treatment', N'Complete', 1, NULL, 4, 4),
+('2025-06-15', N'Chuyển 2 phôi', N'Tiến hành thành công', N'Treatment', N'Complete', 1, NULL, 5, 5),
+('2025-06-16', N'HCG dương tính', N'Thành công', N'Result', N'Complete', 1, NULL, 6, 6);
 
 -- Hồ sơ bệnh nhân 2 - IVF lần 2
 INSERT INTO MedicalRecordDetails ([Date], [TestResult], [Note], [TypeName], [Status], [MedicalRecordId], [ConsulationResultId], [TreatmentResultId], [TreatmentRoadmapId]) VALUES
-('2025-05-15', N'Bắt đầu lại chu kỳ', N'IVF lần 2', N'Consultation', N'Complete', 2, 2, 1, 1),
-('2025-05-18', N'16 trứng được lấy', N'Sẵn sàng tạo phôi', N'Treatment', N'Complete', 2, NULL, 1, 2),
-('2025-05-21', N'Tạo được 4 phôi', N'Phôi trung bình', N'Treatment', N'Complete', 2, NULL, 1, 3),
-('2025-05-24', N'Chuyển 1 phôi', N'Chờ kết quả', N'Treatment', N'Complete', 2, NULL, 2, 4),
-('2025-05-27', N'Ổn định', N'Không phản ứng phụ', N'Treatment', N'Complete', 2, NULL, 1, 5),
-('2025-06-10', N'HCG âm tính', N'Thất bại', N'Result', N'Complete', 2, NULL, 2, 6);
+('2025-06-01', N'Khám tổng quát', N'IUI lần 1 - kiểm tra sức khỏe sinh sản', N'Consultation', N'Complete', 2, 2, 7, 7),
+('2025-06-05', N'Kích thích buồng trứng', N'Đáp ứng tốt, sẵn sàng bơm tinh trùng', N'Treatment', N'Complete', 2, NULL, 8, 8),
+('2025-06-07', N'Chọn lọc tinh trùng', N'Tinh trùng đạt chuẩn', N'Treatment', N'Complete', 2, NULL, 9, 9),
+('2025-06-10', N'Bơm tinh trùng', N'Thực hiện thuận lợi', N'Treatment', N'Complete', 2, NULL, 10, 10),
+('2025-06-14', N'HCG dương tính', N'Thành công', N'Result', N'Complete', 2, NULL, 11, 11);
 
 
 
@@ -395,8 +440,8 @@ CREATE TABLE [dbo].[Orders] (
 select * from Orders
 INSERT INTO [Orders] ([BookingId], [CustomerId], [ManagerId], [Date], [Time], [Status], [Wife], [Husband])
 VALUES 
-(1, 1, 1, '2025-07-01', '08:00:00', N'Pending', N'Đoàn Ngọc Khánh', N'Nguyen Van B'),
-(2, 2, 1, '2025-07-02', '08:00:00', N'Pending', N'Vũ Trần Bình Minh', N'Tran Van D');
+(1, 1, 1, '2025-09-01', '08:00:00', N'Pending', N'Đoàn Ngọc Khánh', N'Nguyen Van B'),
+(2, 2, 1, '2025-09-03', '08:00:00', N'Pending', N'Vũ Trần Bình Minh', N'Tran Van D');
 
 
 
@@ -427,7 +472,7 @@ INSERT INTO [dbo].[OrderDetails]
 )
 VALUES
 (1, 1, N'Doctor 1', N'IVF', null, null, null),
-(2, 2, N'Doctor 2', N'IVF', null, null, null);
+(2, 2, N'Doctor 3', N'IUI', null, null, null);
 
 
 
@@ -452,8 +497,8 @@ CREATE TABLE [dbo].[Feedbacks] (
 
 INSERT INTO [Feedbacks] ([CustomerId], [ManagerId], [Date], [FullName], [Comments], [Rating], [Status])
 VALUES 
-(1, 1, '2025-08-08', N'Vũ Trần Bình Minh', N'Dịch vụ tốt', 5, N'Confirm'),
-(2, 1, '2025-08-10', 'Tran Thi B', N'Tư vấn nhiệt tình', 4, N'Confirm');
+(1, 1, '2025-09-30', N'Vũ Trần Bình Minh', N'Dịch vụ tốt', 5, N'Confirm'),
+(2, 1, '2025-09-29', 'Tran Thi B', N'Tư vấn nhiệt tình', 4, N'Confirm');
 
 
 
@@ -473,10 +518,22 @@ CREATE TABLE [dbo].[Payments] (
 
 
 INSERT INTO [Payments] ([TreatmentRoadmapId], [OrderId], [PriceByTreatement], [Method], [Date], [Status])
-VALUES 
+VALUES
+-- IVF
+(1, 1, 10000000, N'Chuyển khoản', '2025-06-03', N'Đã thanh toán'),
+(2, 1, 20000000, N'Tiền mặt', '2025-06-06', N'Đã thanh toán'),
+(3, 1, 30000000, N'Chuyển khoản', '2025-06-09', N'Đã thanh toán'),
+(4, 1, 20000000, N'Tiền mặt', '2025-06-12', N'Đã thanh toán'),
+(5, 1, 40000000, N'Chuyển khoản', '2025-06-15', N'Đã thanh toán'),
+(6, 1, 30000000, N'Tiền mặt', '2025-06-16', N'Đã thanh toán'),
 
-(1, 1, 30000000, N'Chuyển khoản', '2025-06-02', N'Đã thanh toán'),
-(2, 2, 10000000, N'Tiền mặt', '2025-06-03', N'Đã thanh toán');
+-- IUI
+(7, 2, 10000000, N'Chuyển khoản', '2025-06-01', N'Đã thanh toán'),
+(8, 2, 10000000, N'Tiền mặt', '2025-06-05', N'Đã thanh toán'),
+(9, 2, 20000000, N'Chuyển khoản', '2025-06-07', N'Đã thanh toán'),
+(10, 2, 20000000, N'Tiền mặt', '2025-06-10', N'Đã thanh toán'),
+(11, 2, 10000000, N'Chuyển khoản', '2025-06-14', N'Đã thanh toán');
+
 
 
 
