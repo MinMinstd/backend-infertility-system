@@ -1,4 +1,4 @@
-
+﻿
 using AutoMapper;
 using infertility_system.Dtos.Booking;
 using infertility_system.Dtos.Customer;
@@ -19,6 +19,7 @@ namespace infertility_system.Controllers
     using infertility_system.Dtos.ConsulationResult;
     using infertility_system.Dtos.Customer;
     using infertility_system.Dtos.Doctor;
+    using infertility_system.Dtos.Email;
     using infertility_system.Dtos.MedicalRecord;
     using infertility_system.Dtos.MedicalRecordDetail;
     using infertility_system.Dtos.OrderDetail;
@@ -30,9 +31,11 @@ namespace infertility_system.Controllers
     using infertility_system.Interfaces;
     using infertility_system.Middleware;
     using infertility_system.Models;
+    using MailKit;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Net;
+    using System.Runtime.CompilerServices;
     using System.Security.Claims;
 
     [ApiController]
@@ -43,15 +46,21 @@ namespace infertility_system.Controllers
         private readonly IMedicalRecordRepository medicalRecordRepository;
         private readonly IMedicalRecordDetailRepository medicalRecordDetailRepository;
         private readonly IBookingRepository bookingRepository;
+        private readonly IEmailService emailService;
+        private readonly ICustomerRepository customerRepository;
+        private readonly ITreatementRoadmapRepository treatementRoadmapRepository;
         private readonly IMapper mapper;
 
-        public DoctorController(IDoctorRepository doctorRepository, IMapper mapper, IMedicalRecordRepository medicalRecordRepository, IMedicalRecordDetailRepository medicalRecordDetailRepository, IBookingRepository bookingRepository)
+        public DoctorController(IDoctorRepository doctorRepository, IMapper mapper, IMedicalRecordRepository medicalRecordRepository, IMedicalRecordDetailRepository medicalRecordDetailRepository, IBookingRepository bookingRepository, IEmailService emailService, ICustomerRepository customerRepository, ITreatementRoadmapRepository treatementRoadmapRepository)
         {
             this.doctorRepository = doctorRepository;
             this.mapper = mapper;
             this.medicalRecordRepository = medicalRecordRepository;
             this.medicalRecordDetailRepository = medicalRecordDetailRepository;
             this.bookingRepository = bookingRepository;
+            this.emailService = emailService;
+            this.customerRepository = customerRepository;
+            this.treatementRoadmapRepository = treatementRoadmapRepository;
         }
 
         [HttpGet("GetListDoctors")]
@@ -335,6 +344,20 @@ namespace infertility_system.Controllers
         public async Task<IActionResult> CreateBookingForCustomer([FromBody] CreateBookingCustomerDto dto, int bookingId)
         {
             var result = await this.doctorRepository.CreateBookingForCustomerAsync(dto, bookingId);
+            var stageName = await this.treatementRoadmapRepository.GetStageNameTreatmentRoadmapById(dto.TreatmentRoadmapId);
+            var customer = await this.customerRepository.GetCustomerByBookingIdAsync(bookingId);
+            var userEmail = customer.Email;
+            if (result)
+            {
+                var emailMessage = new EmailMessage(
+                    new List<string> { userEmail },
+                    "Thông báo lịch hẹn điều trị.",
+                    $"<p>Bạn có lịch hẹn về quy trình <strong>{stageName}</strong> vào ngày <strong>{dto.DateTreatment} lúc {dto.TimeTreatment}.</p>");
+
+                await this.emailService.SendEmail(emailMessage);
+
+                return this.Ok("Success");
+            }
             return result ? this.Ok("Successfully") : this.BadRequest("Fail");
         }
 

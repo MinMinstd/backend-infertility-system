@@ -13,5 +13,7 @@ namespace infertility_system.Interfaces
         Task AddTreatmentRoadmapAsync(TreatmentRoadmap treatmentRoadmap);
 
         Task<bool> UpdateTreatmentRoadmapAsync(int treatmentRoadmapId, TreatmentRoadmap treatmentRoadmap);
+
+        Task<string> GetStageNameTreatmentRoadmapById(int treatmentRoadmapId);
     }
 }

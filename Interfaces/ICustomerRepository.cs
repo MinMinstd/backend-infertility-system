@@ -26,5 +26,7 @@
         Task<List<OrderDetail>> GetListAppointmentAsync(int bookingId);
 
         Task<List<Customer>> GetAllCustomer();
+
+        Task<Customer> GetCustomerByBookingIdAsync(int bookingId);
     }
 }

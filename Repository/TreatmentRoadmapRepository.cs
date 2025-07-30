@@ -33,6 +33,12 @@ namespace infertility_system.Repository
                 .ToListAsync();
         }
 
+        public async Task<string> GetStageNameTreatmentRoadmapById(int treatmentRoadmapId)
+        {
+            var treatmentRoadmap = await _context.TreatmentRoadmaps.FirstOrDefaultAsync(tr => tr.TreatmentRoadmapId == treatmentRoadmapId);
+            return treatmentRoadmap.Stage;
+        }
+
         public async Task<TreatmentRoadmap> GetTreatmentRoadmapByIdAsync(int treatmentRoadmapId)
         {
             return await _context.TreatmentRoadmaps
