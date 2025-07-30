@@ -295,19 +295,23 @@ VALUES
 INSERT INTO [TreatmentRoadmaps] ([ServiceId], [Date], [Stage], [Description], [DurationDay], [Price])
 VALUES
 -- Quy trình IVF (ServiceId = 1)
-(1, '2025-06-03', N'Kích thích buồng trứng', N'Mô tả bước Kích thích buồng trứng', 1, 10000000),
-(1, '2025-06-06', N'Chọc hút trứng', N'Mô tả bước Chọc hút trứng', 3, 20000000),
-(1, '2025-06-09', N'Chọn lọc tinh trùng', N'Mô tả bước Chọn lọc tinh trùng', 5, 30000000),
-(1, '2025-06-12', N'Tạo phôi', N'Mô tả bước Tạo phôi', 2, 20000000),
-(1, '2025-06-15', N'Chuyển phôi', N'Mô tả bước Chuyển phôi', 4, 40000000),
-(1, '2025-06-16', N'Thử thai', N'Mô tả bước Thử thai', 1, 30000000),
+(1, '2025-06-03', N'Kích thích buồng trứng', N'Bác sĩ tiêm thuốc kích buồng trứng trong 10–12 ngày, người vợ được xét nghiệm máu và siêu âm theo dõi. Khi nang đạt chuẩn, tiêm thuốc kích rụng trứng đúng giờ để trứng trưởng thành.', 1, 10000000),
+(1, '2025-06-06', N'Chọc hút trứng', N'Sau 36 giờ tiêm kích rụng trứng, người vợ được gây mê để chọc hút trứng qua âm đạo trong 10–15 phút, sau đó nằm viện theo dõi 2–3 giờ.', 3, 20000000),
+(1, '2025-06-09', N'Chọn lọc tinh trùng', N'Trong lúc vợ chọc hút trứng, chồng sẽ chuẩn bị tinh trùng: mẫu đông lạnh được rã đông, còn không thì lấy mẫu tươi, lọc rửa và chọn tinh trùng khỏe.', 5, 30000000),
+(1, '2025-06-12', N'Tạo phôi', N'Tinh trùng được tiêm trực tiếp vào trứng để tạo phôi, sau đó nuôi cấy 2–5 ngày trước khi chuyển vào tử cung. Bác sĩ sẽ cập nhật tình trạng phôi cho vợ chồng.', 2, 20000000),
+(1, '2025-06-15', N'Chuyển phôi', N'Chuyển phôi gồm 2 loại: phôi đông lạnh (trữ và chuyển ở chu kỳ sau) và phôi tươi (chuyển ngay sau tạo phôi). Quá trình chuyển phôi diễn ra nhanh (5–10 phút), không cần nằm viện, và vợ dùng thuốc nội tiết 2 tuần theo hướng dẫn bác sĩ.', 4, 40000000),
+(1, '2025-06-16', N'Thử thai', N'Bước cuối cùng là thử thai bằng xét nghiệm máu. Beta HCG > 25 IU/L nghĩa là đậu thai, < 25 IU/L là thất bại. Nếu còn phôi trữ đông, có thể chuyển phôi ở chu kỳ sau mà không cần kích trứng hay chọc hút lại.
+', 1, 30000000),
 
 -- Quy trình IUI (ServiceId = 2)
-(2, '2025-06-01', N'Kiểm tra sức khỏe sinh sản', N'Mô tả bước Kiểm tra sức khỏe sinh sản', 3, 10000000),
-(2, '2025-06-05', N'Kích thích buồng trứng', N'Mô tả bước Kích thích buồng trứng', 3, 10000000),
-(2, '2025-06-07', N'Chọn lọc tinh trùng', N'Mô tả bước Chọn lọc tinh trùng', 3, 20000000),
-(2, '2025-06-10', N'Bơm tinh trùng vào buồng tử cung', N'Mô tả bước Bơm tinh trùng vào buồng tử cung', 1, 20000000),
-(2, '2025-06-14', N'Thử thai', N'Mô tả bước Thử thai', 5, 10000000);
+(2, '2025-06-01', N'Kiểm tra sức khỏe sinh sản', N'Vợ chồng được khám và xét nghiệm chuyên sâu để đánh giá đủ điều kiện làm IUI.
+', 3, 10000000),
+(2, '2025-06-05', N'Kích thích buồng trứng', N'Người bệnh dùng thuốc từ ngày 2–3 chu kỳ, siêu âm 2–3 lần theo dõi nang noãn. Khi nang trưởng thành, tiêm hCG kích rụng trứng và bơm tinh trùng sau 36–38 giờ.
+', 3, 10000000),
+(2, '2025-06-07', N'Chọn lọc tinh trùng', N'Người chồng lấy tinh trùng trước bơm 2 giờ, tinh trùng được lọc rửa bằng môi trường IVF chuẩn để chọn tinh trùng khỏe.', 3, 20000000),
+(2, '2025-06-10', N'Bơm tinh trùng vào buồng tử cung', N'Tinh trùng sau lọc rửa được bơm vào tử cung tại 2 thời điểm: 24h trước và 48h sau rụng trứng, bằng ống thông mềm, an toàn và không đau.
+', 1, 20000000),
+(2, '2025-06-14', N'Thử thai', N'Sau quy trình IUI khoảng 14 ngày, người vợ sẽ được thử thai và siêu âm thai để xác định kết quả thụ thai có thành công hay không. Nếu kết quả có thai, người vợ cần dưỡng thai theo lời khuyên của bác sĩ, cũng như tuân thủ chỉ định khám thai định kỳ để quá trình mang thai an toàn, khỏe mạnh.', 5, 10000000);
 
 
 -- Treatment_result table
