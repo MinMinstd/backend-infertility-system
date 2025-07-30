@@ -28,12 +28,12 @@
    - Quản lý thông tin cá nhân, lịch sử điều trị, hồ sơ y tế của bệnh nhân.
    - Quản lý lịch sử đơn đặt dịch vụ, quá trình điều trị.
 
-7. **Nhắc nhở & lịch trình**
+6. **Nhắc nhở & lịch trình**
    - Hệ thống nhắc nhở lịch hẹn khám cho bệnh nhân qua email.
 
-8. **Đánh giá & phản hồi**
+7. **Đánh giá & phản hồi**
    - Quản lý rating, feedback của bệnh nhân
 
-9. **Dashboard & Báo cáo**
+8. **Dashboard & Báo cáo**
    - Thống kê số lượng bệnh nhân, ca điều trị, doanh thu, dịch vụ.
 
