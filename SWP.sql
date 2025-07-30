@@ -107,8 +107,9 @@ CREATE TABLE [dbo].[Services] (
 
 INSERT INTO [Services] ([Name], [Description], [ManagerId])
 VALUES 
-(N'IVF', N'Gói điều trị IVF cơ bản', 1),
-(N'IUI', N'Gói điều trị IUI tiêu chuẩn', 1);
+(N'IVF', N'IVF là viết tắt của cụm từ In vitro fertilization, tức là thụ tinh trong ống nghiệm. Đây là một trong những phương pháp hỗ trợ sinh sản bằng cách kết hợp tinh trùng và trứng với nhau trong ống nghiệm tại phòng thí nghiệm để tạo phôi. Sau khi phôi thai này được nuôi cấy khoảng 3 – 5 ngày thì sẽ được đưa trở lại buồng tử cung của người phụ nữ.', 1),
+(N'IUI', N'IUI là phương pháp bơm tinh trùng đã lọc rửa vào tử cung, giúp chọn tinh trùng tốt, rút ngắn quãng đường đến trứng, tăng khả năng đậu thai. Đây là phương pháp điều trị hiếm muộn ngắn và gần giống thụ thai tự nhiên.
+', 1);
 
 -- Doctor table
 CREATE TABLE [dbo].[Doctors] (
@@ -327,7 +328,7 @@ CREATE TABLE [dbo].[TreatmentResults] (
     CONSTRAINT [FK_TreatmentResults_TreatmentRoadmaps_TreatmentRoadmapId] FOREIGN KEY ([TreatmentRoadmapId]) REFERENCES [dbo].[TreatmentRoadmaps] ([TreatmentRoadmapId]) ON DELETE CASCADE
 );
 
-
+select * from TreatmentResults
 INSERT INTO [TreatmentResults] 
     ([TreatmentRoadmapId], [DurationDay], [Stage], [DateTreatmentResult], [Description], [Result])
 VALUES 

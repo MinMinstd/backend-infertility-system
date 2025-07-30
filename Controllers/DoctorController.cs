@@ -352,7 +352,7 @@ namespace infertility_system.Controllers
                 var emailMessage = new EmailMessage(
                     new List<string> { userEmail },
                     "Thông báo lịch hẹn điều trị.",
-                    $"<p>Bạn có lịch hẹn về quy trình <strong>{stageName}</strong> vào ngày <strong>{dto.DateTreatment} lúc {dto.TimeTreatment}.</p>");
+                    $"<p>Bạn có lịch hẹn về quy trình <strong>{stageName}</strong> vào ngày <strong>{dto.DateTreatment:dd/MM/yyyy} lúc {dto.TimeTreatment}.</p>");
 
                 await this.emailService.SendEmail(emailMessage);
 
