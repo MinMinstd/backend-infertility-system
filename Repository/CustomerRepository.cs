@@ -115,5 +115,12 @@
         {
             return await this.context.Customers.ToListAsync();
         }
+
+        public async Task<Customer> GetCustomerByBookingIdAsync(int bookingId)
+        {
+            var booking = await this.context.Bookings.FirstOrDefaultAsync(b => b.BookingId == bookingId);
+            var customer = await this.context.Customers.FirstOrDefaultAsync(c => c.CustomerId == booking.CustomerId);
+            return customer;
+        }
     }
 }
