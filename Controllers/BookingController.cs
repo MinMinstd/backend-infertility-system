@@ -37,7 +37,7 @@
                 var emailMessage = new EmailMessage(
                     new List<string> { userEmail },
                     "Thông báo đặt lịch tư vấn",
-                    "<p>Bạn đã đặt lịch tư vấn ngày <strong>" + bookingDto.Date + "</strong> lúc <strong>" + bookingDto.Time + "</strong>.</p>");
+                    $"<p>Bạn đã đặt lịch tư vấn ngày <strong>{bookingDto.Date:dd/MM/yyyy}</strong> lúc <strong>{bookingDto.Time}</strong>.</p>");
 
                 await this.emailService.SendEmail(emailMessage);
 
@@ -59,7 +59,7 @@
                 var emailMessage = new EmailMessage(
                     new List<string> { userEmail },
                     "Thông báo đặt lịch khám",
-                    "<p>Bạn đã đặt lịch khám ngày <strong>" + bookingDto.Date + "</strong> lúc <strong>" + bookingDto.Time + "</strong>.</p>");
+                    $"<p>Bạn đã đặt lịch tư vấn ngày <strong>{bookingDto.Date:dd/MM/yyyy}</strong> lúc <strong>{bookingDto.Time}</strong>.</p>");
 
                 await this.emailService.SendEmail(emailMessage);
 
