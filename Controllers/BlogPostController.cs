@@ -2,9 +2,7 @@
 using infertility_system.Dtos.BlogPost;
 using infertility_system.Interfaces;
 using infertility_system.Models;
-using infertility_system.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -20,7 +18,7 @@ namespace infertility_system.Controllers
         private readonly IImageService imageService;
         private readonly IMapper mapper;
 
-        public BlogPostController( IBlogPostRepository blogPostRepository, ICustomerRepository customerRepository, IImageService imageService, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        public BlogPostController(IBlogPostRepository blogPostRepository, ICustomerRepository customerRepository, IImageService imageService, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             this.blogPostRepository = blogPostRepository;
             this.customerRepository = customerRepository;
@@ -44,7 +42,7 @@ namespace infertility_system.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> CreateBlogPost(BlogPostDto blogPostDto)
         {
 
@@ -60,7 +58,7 @@ namespace infertility_system.Controllers
             {
                 blogPost.Image = await this.imageService.UploadImageAsync(blogPostDto.ImageFile);
             }
-           
+
             blogPost.CustomerId = customer.CustomerId;
             blogPost.ManagerId = 1;
 
